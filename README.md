@@ -13,7 +13,7 @@ class HelloRest extends RestBundle {
 
     get handlers() {return [
         new ResourceMethod("get", "hello", this.getHello, "text/html"),
-        new ResourceMethod("post", "hello", this.postHello, "application/json" );
+        new ResourceMethod("post", "hello", this.postHello, "application/json" ),
     ]}
 
     getHello(req, res) {
