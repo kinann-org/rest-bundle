@@ -2,7 +2,7 @@
 Simplify REST API creation and maintentance with re-usable REST bundles.
 Encapsulate related REST services in a single JavaScript class that extends RestBundle.
 
-Example: Define a REST bundle comprising a single resource (i.e., `/greeting/hello`)
+**Example:** Define a REST bundle comprising a single resource (i.e., `/greeting/hello`)
 with handlers for GET and POST:
 
 ```JS
@@ -26,7 +26,7 @@ class HelloRest extends RestBundle {
 }
 ```
 
-Add HelloRest into a nodejs application:
+Add HelloRest to a nodejs application:
 
 ```JS
 const HelloRest = require("../src/hello-rest");
