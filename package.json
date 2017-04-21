@@ -1,0 +1,53 @@
+{
+  "name": "rest-bundle",
+  "version": "0.2.0",
+  "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
+  "main": "index.js",
+  "directories": {
+    "test": "test",
+    "src": "src",
+    "doc": "doc"
+  },
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-jshint": "1.1.0",
+    "grunt-contrib-uglify": "2.1.0",
+    "grunt-contrib-watch": "1.0.0",
+    "grunt-jsbeautifier": "^0.2.13",
+    "grunt-mocha-test": "~0.13.2",
+    "grunt-npm-install": "^0.3.1",
+    "grunt-release": "^0.14.0",
+    "grunt-simple-mocha": "0.4.1",
+    "mocha": "^3.2.0",
+    "should": "^11.2.0"
+  },
+  "scripts": {
+    "test": "mocha -w -R min --inline-diffs",
+    "testg": "mocha -w -R min --inline-diffs -g TESTTEST",
+    "testx": "mocha -w --inline-diffs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firepick/rest-bundle.git"
+  },
+  "bin": {
+  },
+  "keywords": [
+    "REST",
+    "resource bundle",
+    "express",
+    "FirePick",
+    "firenodejs"
+  ],
+  "author": "Karl Lew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/firepick/rest-bundle/issues"
+  },
+  "homepage": "https://github.com/firepick/rest-bundle"
+}
