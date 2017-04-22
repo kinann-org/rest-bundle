@@ -17,7 +17,7 @@ const MockExpress = require("../src/mock-express");
         assertHandler("get", "/simple/hello");
         assertHandler("post", "/simple/hello");
     })
-    it("RestBundle generates HTTP200 response", function(done) {
+    it("GET generates HTTP200 response", function(done) {
         var app = new MockExpress();
         var simple = new HelloRest("simple"); // create a resource bundle with root path
         simple.bindExpress(app);
@@ -32,12 +32,29 @@ const MockExpress = require("../src/mock-express");
         });
         return;
     })
-    it("RestBundle generates HTTP500 response", function(done) {
+    it("POST generates HTTP200 response", function(done) {
         var app = new MockExpress();
         var simple = new HelloRest("simple"); // create a resource bundle with root path
         simple.bindExpress(app);
-        var postdata = "goodbye"
+        var postdata = "goodbye";
         app.mockPOST("/simple/hello", postdata, (res) => {
+            res.should.properties({
+                statusCode: 200,
+                type: "application/json",
+                data: {
+                    post: postdata
+                }
+            });
+            app.count_next.should.equal(1);
+            done();
+        });
+    })
+    it("POST generates HTTP500 response for thrown exception", function(done) {
+        var app = new MockExpress();
+        var simple = new HelloRest("simple"); // create a resource bundle with root path
+        simple.bindExpress(app);
+        var postdata = "goodbye";
+        app.mockPOST("/simple/error", postdata, (res) => {
             res.should.properties({
                 statusCode: 500,
                 type: "application/json",

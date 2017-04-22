@@ -10,7 +10,8 @@ const ResourceMethod = RestBundle.ResourceMethod;
             this.greeting = "hello";
             var handlers = [
                 this.resourceMethod("get", "hello", this.getHello, "text/html"),
-                this.resourceMethod("post", "hello", this.onDie),
+                this.resourceMethod("post", "error", this.onDie),
+                this.resourceMethod("post", "hello", this.postHello),
             ];
             Object.defineProperty(this, "handlers", {
                 value: handlers,
@@ -20,6 +21,13 @@ const ResourceMethod = RestBundle.ResourceMethod;
         getHello(req, res) {
             var that = this;
             return that.greeting;
+        }
+
+        postHello(req, res) {
+            var that = this;
+            return {
+                post: req.data,
+            }
         }
 
         onDie(req, res) {

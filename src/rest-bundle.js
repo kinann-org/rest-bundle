@@ -13,9 +13,10 @@ const ResourceMethod = require("./resource-method");
 
         resourceMethod(method, name, handler, mime) {
             var that  = this; // Javascript nonsense
-            return new ResourceMethod(method, name, function(req, res, next) {
+            function thatHandler(req, res, next) {
                 return handler.call(that, req, res, next);
-            }, mime);
+            }
+            return new ResourceMethod(method, name, thatHandler, mime);
         }
 
         get handlers() {
@@ -58,16 +59,16 @@ const ResourceMethod = require("./resource-method");
                         this.process(req, res, next, resource.handler, mime))
                 } else if (method === "POST") {
                     express.post(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler))
+                        this.process(req, res, next, resource.handler, mime))
                 } else if (method === "PUT") {
                     express.put(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler))
+                        this.process(req, res, next, resource.handler, mime))
                 } else if (method === "DELETE") {
                     express.delete(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler))
+                        this.process(req, res, next, resource.handler, mime))
                 } else if (method === "HEAD") {
                     express.head(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler))
+                        this.process(req, res, next, resource.handler, mime))
                 }
             });
         }
