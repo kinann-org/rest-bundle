@@ -23,7 +23,7 @@ const ResourceMethod = RestBundle.ResourceMethod;
         }
 
         onDie(req, res) {
-            throw new Error("goodbye");
+            throw new Error(req.data);
         }
     }
 

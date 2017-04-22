@@ -30,14 +30,26 @@ const ResourceMethod = require("../src/resource-method");
         post(path, cb) {
             this.testPOST[path] = cb;
         }
-        mockHttp(method, path, cb) {
+        mockGET(path, cb) {
+            var that = this;
             var req = {};
             var res = new MockResponse();
-            var promise;
-            var next = () => this.count_next++;
-            var handler = null;
-            method === "get" && (handler = this.testGET[path]);
-            method === "post" && (handler = this.testPOST[path]);
+            function next() { that.count_next++; }
+            var handler = this.testGET[path];
+            if (handler == null) {
+                cb(new MockResponse(404));
+            } else {
+                handler(req,res,next).then((data) => cb(res),(err) => cb(res));
+            }
+        }
+        mockPOST(path, data, cb) {
+            var that = this;
+            var req = {
+                data: data,
+            };
+            var res = new MockResponse();
+            function next() { that.count_next++; }
+            var handler = this.testPOST[path];
             if (handler == null) {
                 cb(new MockResponse(404));
             } else {

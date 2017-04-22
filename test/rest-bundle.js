@@ -21,7 +21,7 @@ const MockExpress = require("../src/mock-express");
         var app = new MockExpress();
         var simple = new HelloRest("simple"); // create a resource bundle with root path
         simple.bindExpress(app);
-        app.mockHttp("get", "/simple/hello", (res) => {
+        app.mockGET("/simple/hello", (res) => {
             res.should.properties({
                 statusCode: 200,
                 type: "text/html",
@@ -36,12 +36,13 @@ const MockExpress = require("../src/mock-express");
         var app = new MockExpress();
         var simple = new HelloRest("simple"); // create a resource bundle with root path
         simple.bindExpress(app);
-        app.mockHttp("post", "/simple/hello", (res) => {
+        var postdata = "goodbye"
+        app.mockPOST("/simple/hello", postdata, (res) => {
             res.should.properties({
                 statusCode: 500,
                 type: "application/json",
                 data: {
-                    error: "goodbye"
+                    error: postdata
                 }
             });
             app.count_next.should.equal(1);
