@@ -7,15 +7,19 @@ const ResourceMethod = RestBundle.ResourceMethod;
     class HelloRest extends RestBundle {
         constructor(name="greeting",options = {}) {
             super(name, options);
+            this.greeting = "hello";
+            var handlers = [
+                this.resourceMethod("get", "hello", this.getHello, "text/html"),
+                this.resourceMethod("post", "hello", this.onDie),
+            ];
+            Object.defineProperty(this, "handlers", {
+                value: handlers,
+            });
         }
 
-        get handlers() {return [
-            new ResourceMethod("get", "hello", this.getHello, "text/html"),
-            new ResourceMethod("post", "hello", this.onDie),
-        ]}
-
         getHello(req, res) {
-            return "hello";
+            var that = this;
+            return that.greeting;
         }
 
         onDie(req, res) {

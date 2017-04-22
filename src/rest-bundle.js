@@ -11,8 +11,11 @@ const ResourceMethod = require("./resource-method");
             this.$onFail = options.onFail || RestBundle.onFail;
         }
 
-        static get ResourceMethod() {
-            return ResourceMethod;
+        resourceMethod(method, name, handler, mime) {
+            var that  = this; // Javascript nonsense
+            return new ResourceMethod(method, name, function(req, res, next) {
+                return handler.call(that, req, res, next);
+            }, mime);
         }
 
         get handlers() {

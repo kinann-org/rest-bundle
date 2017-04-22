@@ -9,20 +9,18 @@ with handlers for GET and POST:
 class HelloRest extends RestBundle {
     constructor(name="greeting",options = {}) {
         super(name, options);
+        var handlers = [
+            this.resourceMethod("get", "hello", this.getHello, "text/html"),
+            this.resourceMethod("post", "hello", this.onDie),
+        ];
+        Object.defineProperty(this, "handlers", {
+            value: handlers,
+        });
     }
 
-    get handlers() {return [
-        new ResourceMethod("get", "hello", this.getHello, "text/html"),
-        new ResourceMethod("post", "hello", this.postHello, "application/json" ),
-    ]}
+    getHello(req, res) { return "hello"; }
 
-    getHello(req, res) {
-        return "hello";
-    }
-
-    postHello(req, res) {
-        throw new Error("goodbye");
-    }
+    postHello(req, res) { throw new Error("goodbye"); }
 }
 ```
 
