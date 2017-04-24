@@ -13,8 +13,10 @@ const express = require("express");
             this.uri_ui = options.uri_ui || ("/"+this.name+"/ui");
             try {
                 this.rest_bundle = path.dirname(require.resolve("rest-bundle"));
+                this.node_modules = path.join(path.dirname(this.rest_bundle), "node_modules");
             } catch (err) {
                 this.rest_bundle = path.dirname(path.dirname(__filename));
+                this.node_modules = path.join(this.rest_bundle, "node_modules");
             }
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
@@ -75,8 +77,10 @@ const express = require("express");
         bindAngular(app) {
             var srcui = path.join(this.rest_bundle,"src/ui");
             app.use(this.uri_ui, express.static(srcui));
-            var node_modules = path.join(this.rest_bundle, "node_modules");
-            app.use(this.uri_ui+"/node_modules", express.static(node_modules));
+
+            // TODO: restrict node_modules exposure 
+            app.use(this.uri_ui+"/node_modules", express.static(this.node_modules));
+
             this.bindResource(app, this.resourceMethod(
                 "get", "ui/app/*", this.getApp, "application/javascript"));
             this.bindResource(app, this.resourceMethod(
