@@ -10,7 +10,7 @@ const express = require("express");
                 throw new Error("bundle name is required");
             }
             this.name = name;
-            this.uri_ui = options.uri_ui || ("/"+this.name+"/ui");
+            this.uribase = "/"+this.name;
             try {
                 this.rest_bundle = path.dirname(require.resolve("rest-bundle"));
                 this.node_modules = path.dirname(this.rest_bundle);
@@ -18,7 +18,7 @@ const express = require("express");
                 this.rest_bundle = path.dirname(path.dirname(__filename));
                 this.node_modules = path.join(this.rest_bundle, "node_modules");
             }
-            this.appjs = options.appjs || path.join(this.rest_bundle, "src/ui/appjs");
+            this.appsrc = options.appsrc || path.join(this.rest_bundle, "src/ui/app.src");
             this.indexhtml = options.indexhtml || path.join(this.rest_bundle, "src/ui/index.src.html");
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
@@ -55,7 +55,7 @@ const express = require("express");
 
         getApp(req, res, next) {
             var tokens = req.url.split("/");
-            var fpath = path.join(this.appjs, tokens[tokens.length-1]);
+            var fpath = path.join(this.appsrc, tokens[tokens.length-1]);
             var str = fs.readFileSync(fpath).toString("UTF-8");
             return str.replace(/REST-BUNDLE/g,this.name);
         }
@@ -77,10 +77,10 @@ const express = require("express");
 
         bindAngular(app) {
             var srcui = path.join(this.rest_bundle,"src/ui");
-            app.use(this.uri_ui, express.static(srcui));
+            app.use(this.uribase + "/ui", express.static(srcui));
 
             // TODO: restrict node_modules exposure 
-            app.use(this.uri_ui+"/node_modules", express.static(this.node_modules));
+            app.use(this.uribase+"/ui/node_modules", express.static(this.node_modules));
 
             this.bindResource(app, this.resourceMethod(
                 "get", "ui/app/*", this.getApp, "application/javascript"));
