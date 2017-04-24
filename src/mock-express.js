@@ -22,6 +22,7 @@ const ResourceMethod = require("../src/resource-method");
         constructor() {
             this.testGET = {};
             this.testPOST = {};
+            this.test_use = {};
             this.count_next = 0;
         }
         get(path, cb) {
@@ -29,6 +30,9 @@ const ResourceMethod = require("../src/resource-method");
         }
         post(path, cb) {
             this.testPOST[path] = cb;
+        }
+        use(path, express) {
+            this.test_use[path] = express;
         }
         mockGET(path, cb) {
             var that = this;

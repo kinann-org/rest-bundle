@@ -1,4 +1,7 @@
 const ResourceMethod = require("./resource-method");
+const path = require("path");
+const fs = require("fs");
+const express = require("express");
 
 (function(exports) {
     class RestBundle {
@@ -7,6 +10,12 @@ const ResourceMethod = require("./resource-method");
                 throw new Error("bundle name is required");
             }
             this.name = name;
+            this.uri_ui = options.uri_ui || ("/"+this.name+"/ui");
+            try {
+                this.rest_bundle = path.dirname(require.resolve("rest-bundle"));
+            } catch (err) {
+                this.rest_bundle = path.dirname(path.dirname(__filename));
+            }
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
         }
@@ -40,6 +49,20 @@ const ResourceMethod = require("./resource-method");
             next && next('route');
         }
 
+        getApp(req, res, next) {
+            var tokens = req.url.split("/");
+            var fpath = path.join(this.rest_bundle, "src/ui/appjs", tokens[tokens.length-1]);
+            var str = fs.readFileSync(fpath).toString("UTF-8");
+            return str.replace(/REST-BUNDLE/g,this.name);
+        }
+
+        getUI(req, res, next) {
+            var tokens = req.url.split("/");
+            var fpath = path.join(this.rest_bundle, "src/ui/index.src.html");
+            var str = fs.readFileSync(fpath).toString("UTF-8");
+            return str.replace(/REST-BUNDLE/g,this.name);
+        }
+
         process(req, res, next, handler, mime) {
             var promise = new Promise((resolve, reject) => resolve(handler(req, res)));
             promise.then(
@@ -49,28 +72,42 @@ const ResourceMethod = require("./resource-method");
             return promise;
         }
 
-        bindExpress(express, handlers = this.handlers) {
-            handlers.forEach((resource) => {
-                var mime = resource.mime || "application/json";
-                var method = (resource.method || "get").toUpperCase();
-                var path = "/" + this.name + "/" + resource.name;
-                if (method === "GET") {
-                    express.get(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler, mime))
-                } else if (method === "POST") {
-                    express.post(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler, mime))
-                } else if (method === "PUT") {
-                    express.put(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler, mime))
-                } else if (method === "DELETE") {
-                    express.delete(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler, mime))
-                } else if (method === "HEAD") {
-                    express.head(path, (req, res, next) =>
-                        this.process(req, res, next, resource.handler, mime))
-                }
-            });
+        bindAngular(app) {
+            var srcui = path.join(this.rest_bundle,"src/ui");
+            app.use(this.uri_ui, express.static(srcui));
+            var node_modules = path.join(this.rest_bundle, "node_modules");
+            app.use(this.uri_ui+"/node_modules", express.static(node_modules));
+            this.bindResource(app, this.resourceMethod(
+                "get", "ui/app/*", this.getApp, "application/javascript"));
+            this.bindResource(app, this.resourceMethod(
+                "get", "ui/", this.getUI, "text/html"));
+        }
+
+        bindResource(app, resource) {
+            var mime = resource.mime || "application/json";
+            var method = (resource.method || "get").toUpperCase();
+            var path = "/" + this.name + "/" + resource.name;
+            if (method === "GET") {
+                app.get(path, (req, res, next) =>
+                    this.process(req, res, next, resource.handler, mime));
+            } else if (method === "POST") {
+                app.post(path, (req, res, next) =>
+                    this.process(req, res, next, resource.handler, mime));
+            } else if (method === "PUT") {
+                app.put(path, (req, res, next) =>
+                    this.process(req, res, next, resource.handler, mime));
+            } else if (method === "DELETE") {
+                app.delete(path, (req, res, next) =>
+                    this.process(req, res, next, resource.handler, mime));
+            } else if (method === "HEAD") {
+                app.head(path, (req, res, next) =>
+                    this.process(req, res, next, resource.handler, mime));
+            }
+        }
+
+        bindExpress(app, handlers = this.handlers) {
+            this.bindAngular(app);
+            handlers.forEach((resource) => this.bindResource(app, resource));
         }
     }
 
