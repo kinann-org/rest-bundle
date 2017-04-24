@@ -13,11 +13,13 @@ const express = require("express");
             this.uri_ui = options.uri_ui || ("/"+this.name+"/ui");
             try {
                 this.rest_bundle = path.dirname(require.resolve("rest-bundle"));
-                this.node_modules = path.join(path.dirname(this.rest_bundle), "node_modules");
+                this.node_modules = path.dirname(this.rest_bundle);
             } catch (err) {
                 this.rest_bundle = path.dirname(path.dirname(__filename));
                 this.node_modules = path.join(this.rest_bundle, "node_modules");
             }
+            this.appjs = options.appjs || path.join(this.rest_bundle, "src/ui/appjs");
+            this.indexhtml = options.indexhtml || path.join(this.rest_bundle, "src/ui/index.src.html");
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
         }
@@ -53,15 +55,14 @@ const express = require("express");
 
         getApp(req, res, next) {
             var tokens = req.url.split("/");
-            var fpath = path.join(this.rest_bundle, "src/ui/appjs", tokens[tokens.length-1]);
+            var fpath = path.join(this.appjs, tokens[tokens.length-1]);
             var str = fs.readFileSync(fpath).toString("UTF-8");
             return str.replace(/REST-BUNDLE/g,this.name);
         }
 
         getUI(req, res, next) {
             var tokens = req.url.split("/");
-            var fpath = path.join(this.rest_bundle, "src/ui/index.src.html");
-            var str = fs.readFileSync(fpath).toString("UTF-8");
+            var str = fs.readFileSync(this.indexhtml).toString("UTF-8");
             return str.replace(/REST-BUNDLE/g,this.name);
         }
 
