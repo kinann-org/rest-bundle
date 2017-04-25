@@ -16,7 +16,7 @@ const express = require("express");
             this.content = options.content || "content";
             this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0],"node_modules");
             this.appdir = options.appdir || "app";
-            this.uiindex = options.uiindex || "index.src.html";
+            this.uiindex = options.uiindex || "app/index.html";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
         }
