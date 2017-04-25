@@ -33,4 +33,17 @@ helloRest.bindExpress(app);
 
 ```
 
+Launch web server:
+
+```JS
+npm start
+```
+
 A RestBundle can be shared for use by others as an npm package.
+
+### Angular 4.0
+The `src/ui` folder is a slightly rearranged copy of [Angular 2 Quickstart](https://github.com/angular/quickstart).
+To see the UI:
+
+1. `npm start`
+1. http://localhost:8080/greeting/ui

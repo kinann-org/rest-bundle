@@ -13,6 +13,7 @@ const express = require("express");
             this.uribase = "/"+this.name;
             this.rest_bundle = path.dirname(path.dirname(__filename));
             this.uidir = options.uidir || path.join(this.rest_bundle, "src/ui");
+            this.content = options.content || "content";
             this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0],"node_modules");
             this.appdir = options.appdir || "app";
             this.uiindex = options.uiindex || "index.src.html";
@@ -71,7 +72,7 @@ const express = require("express");
         }
 
         bindAngular(app) {
-            app.use(this.uribase + "/ui/content", express.static(path.join(this.uidir, "content")));
+            app.use(this.uribase + "/ui/content", express.static(path.join(this.uidir, this.content)));
 
             this.bindResource(app, this.resourceMethod(
                 "get", "ui/app/*", this.getApp, "application/javascript"));
