@@ -14,7 +14,7 @@ const express = require("express");
             this.rest_bundle = path.dirname(path.dirname(__filename));
             this.uidir = options.uidir || path.join(this.rest_bundle, "src/ui");
             this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0],"node_modules");
-            this.appsrc = options.appsrc || "app.src";
+            this.appdir = options.appdir || "app";
             this.uiindex = options.uiindex || "index.src.html";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
@@ -51,7 +51,7 @@ const express = require("express");
 
         getApp(req, res, next) {
             var urlparts = req.url.split("/");
-            var fpath = path.join(this.uidir, this.appsrc, urlparts[urlparts.length-1]);
+            var fpath = path.join(this.uidir, this.appdir, urlparts[urlparts.length-1]);
             var str = fs.readFileSync(fpath).toString("UTF-8");
             return str.replace(/REST-BUNDLE/g,this.name);
         }
@@ -71,13 +71,15 @@ const express = require("express");
         }
 
         bindAngular(app) {
-            app.use(this.uribase + "/ui", express.static(this.uidir));
+            app.use(this.uribase + "/ui/content", express.static(path.join(this.uidir, "content")));
+
+            this.bindResource(app, this.resourceMethod(
+                "get", "ui/app/*", this.getApp, "application/javascript"));
+
 
             // TODO: restrict node_modules exposure 
             app.use(this.uribase+"/ui/node_modules", express.static(this.node_modules));
 
-            this.bindResource(app, this.resourceMethod(
-                "get", "ui/app/*", this.getApp, "application/javascript"));
             this.bindResource(app, this.resourceMethod(
                 "get", "ui/", this.getUI, "text/html"));
         }
