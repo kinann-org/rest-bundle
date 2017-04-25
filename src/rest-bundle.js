@@ -11,13 +11,8 @@ const express = require("express");
             }
             this.name = name;
             this.uribase = "/"+this.name;
-            try {
-                this.rest_bundle = path.dirname(require.resolve("rest-bundle"));
-                this.node_modules = path.dirname(this.rest_bundle);
-            } catch (err) {
-                this.rest_bundle = path.dirname(path.dirname(__filename));
-                this.node_modules = path.join(this.rest_bundle, "node_modules");
-            }
+            this.rest_bundle = path.dirname(path.dirname(__filename));
+            this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0],"node_modules");
             this.appsrc = options.appsrc || path.join(this.rest_bundle, "src/ui/app.src");
             this.indexhtml = options.indexhtml || path.join(this.rest_bundle, "src/ui/index.src.html");
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
