@@ -47,3 +47,7 @@ To see the UI:
 
 1. `npm start`
 1. http://localhost:8080/greeting/ui
+
+In this `hello-rest` example, we create a `<greeting-ui>' Angular AppComponent for our REST service bundle.
+The `<greeting-ui>` selector name is derived from the bundle name ("greeting"), allowing you to build web
+applications with mulitple rest-bundle instances using AppComponents with different names.
