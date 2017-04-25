@@ -19,6 +19,7 @@ const express = require("express");
             this.uiindex = options.uiindex || "app/index.html";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
+            this.app = express(); // express app for bundle
         }
 
         resourceMethod(method, name, handler, mime) {
@@ -71,45 +72,46 @@ const express = require("express");
             return promise;
         }
 
-        bindAngular(app) {
-            app.use(this.uribase + "/ui/content", express.static(path.join(this.uidir, this.content)));
+        bindAngular() {
+            this.app.use("/ui/content", express.static(path.join(this.uidir, this.content)));
 
-            this.bindResource(app, this.resourceMethod(
+            this.bindResource(this.resourceMethod(
                 "get", "ui/app/*", this.getApp, "application/javascript"));
 
 
             // TODO: restrict node_modules exposure 
-            app.use(this.uribase+"/ui/node_modules", express.static(this.node_modules));
+            this.app.use("/ui/node_modules", express.static(this.node_modules));
 
-            this.bindResource(app, this.resourceMethod(
+            this.bindResource(this.resourceMethod(
                 "get", "ui/", this.getUI, "text/html"));
         }
 
-        bindResource(app, resource) {
+        bindResource(resource) {
             var mime = resource.mime || "application/json";
             var method = (resource.method || "get").toUpperCase();
-            var path = "/" + this.name + "/" + resource.name;
+            var path = resource.name.startsWith("/") ? resource.name : ("/" + resource.name);
             if (method === "GET") {
-                app.get(path, (req, res, next) =>
+                this.app.get(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
             } else if (method === "POST") {
-                app.post(path, (req, res, next) =>
+                this.app.post(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
             } else if (method === "PUT") {
-                app.put(path, (req, res, next) =>
+                this.app.put(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
             } else if (method === "DELETE") {
-                app.delete(path, (req, res, next) =>
+                this.app.delete(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
             } else if (method === "HEAD") {
-                app.head(path, (req, res, next) =>
+                this.app.head(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
             }
         }
 
         bindExpress(app, handlers = this.handlers) {
-            this.bindAngular(app);
-            handlers.forEach((resource) => this.bindResource(app, resource));
+            this.bindAngular();
+            handlers.forEach((resource) => this.bindResource(resource));
+            app.use("/" + this.name, this.app);
         }
     }
 
