@@ -12,9 +12,10 @@ const express = require("express");
             this.name = name;
             this.uribase = "/"+this.name;
             this.rest_bundle = path.dirname(path.dirname(__filename));
+            this.uidir = options.uidir || path.join(this.rest_bundle, "src/ui");
             this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0],"node_modules");
-            this.appsrc = options.appsrc || path.join(this.rest_bundle, "src/ui/app.src");
-            this.indexhtml = options.indexhtml || path.join(this.rest_bundle, "src/ui/index.src.html");
+            this.appsrc = options.appsrc || "app.src";
+            this.uiindex = options.uiindex || "index.src.html";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
         }
@@ -49,15 +50,14 @@ const express = require("express");
         }
 
         getApp(req, res, next) {
-            var tokens = req.url.split("/");
-            var fpath = path.join(this.appsrc, tokens[tokens.length-1]);
+            var urlparts = req.url.split("/");
+            var fpath = path.join(this.uidir, this.appsrc, urlparts[urlparts.length-1]);
             var str = fs.readFileSync(fpath).toString("UTF-8");
             return str.replace(/REST-BUNDLE/g,this.name);
         }
 
         getUI(req, res, next) {
-            var tokens = req.url.split("/");
-            var str = fs.readFileSync(this.indexhtml).toString("UTF-8");
+            var str = fs.readFileSync(path.join(this.uidir, this.uiindex)).toString("UTF-8");
             return str.replace(/REST-BUNDLE/g,this.name);
         }
 
@@ -71,8 +71,7 @@ const express = require("express");
         }
 
         bindAngular(app) {
-            var srcui = path.join(this.rest_bundle,"src/ui");
-            app.use(this.uribase + "/ui", express.static(srcui));
+            app.use(this.uribase + "/ui", express.static(this.uidir));
 
             // TODO: restrict node_modules exposure 
             app.use(this.uribase+"/ui/node_modules", express.static(this.node_modules));
