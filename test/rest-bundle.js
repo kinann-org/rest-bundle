@@ -6,9 +6,12 @@ const MockExpress = require("../src/mock-express");
 (typeof describe === 'function') && describe("RestBundle", function() {
     var should = require("should");
 
-    it("bindExpress() binds resource bundle paths to express resource handlers", function() {
+    it("TESTTESTbindExpress() binds resource bundle paths to express resource handlers", function() {
         var app = new MockExpress();
-        var simple = new HelloRest("simple"); // create a resource bundle with root path
+        var appbundle = new MockExpress();
+        var simple = new HelloRest("simple", {
+            app: appbundle,
+        }); // create a resource bundle with root path
         simple.bindExpress(app);
         var assertHandler = (method, path) => {
             method === "get" && app.testGET.should.properties([path]);
@@ -17,7 +20,7 @@ const MockExpress = require("../src/mock-express");
         assertHandler("get", "/simple/hello");
         assertHandler("post", "/simple/hello");
         app.test_use.should.properties([
-            "/simple/ui/content",
+            "/simple/ui/pub",
             "/simple/ui/node_modules",
         ]);
     })
