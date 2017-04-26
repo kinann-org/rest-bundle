@@ -32,7 +32,7 @@
         defaultExtension: 'js',
         meta: {
           './*.js': {
-            loader: 'pub/systemjs-angular-loader.js'
+            loader: 'systemjs-angular-loader.js'
           }
         }
       },

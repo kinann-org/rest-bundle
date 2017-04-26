@@ -1,0 +1,20 @@
+.demo-ui {
+    padding: 5pt;
+    border-radius: 5px;
+    border: 1pt solid #555;
+    background-color: #eee;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    color: #369;
+    font-size: 150%;
+}
+h2 {
+    color: #369;
+    font-size: 130%;
+}
+
+body {
+    font-family: Verdana, Helvetica, sans-serif;
+}

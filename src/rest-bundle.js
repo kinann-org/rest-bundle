@@ -75,7 +75,7 @@ const express = require("express");
             app.use(this.uribase + "/ui/pub", express.static(path.join(this.uidir, this.pub)));
             this.bindResource(app,this.resourceMethod(
                 "get", "/ui/app/*", this.getApp, "application/javascript"));
-            app.use(this.uribase + "/ui/node_modules", express.static(this.node_modules)); 
+            app.use("/node_modules", express.static(this.node_modules)); 
             this.bindResource(app,this.resourceMethod(
                 "get", "/ui", this.getUIHtml, "text/html"));
         }
