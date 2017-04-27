@@ -9,21 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var AppComponent = (function () {
-    function AppComponent() {
+var RestBundleComponent = (function () {
+    function RestBundleComponent() {
         var _this = this;
-        this.name = 'REST_BUNDLE-ui';
+        this.name = 'rest-bundle-ui';
         this.date = new Date();
         setInterval(function () { return (_this.date = new Date()); }, 1000);
     }
-    return AppComponent;
+    return RestBundleComponent;
 }());
-AppComponent = __decorate([
+RestBundleComponent = __decorate([
     core_1.Component({
-        selector: 'REST_BUNDLE-ui',
+        selector: 'rest-bundle-ui',
         template: "<div class=\"rb-root\"><h1>&lt;{{name}}&gt;</h1>{{date}}</div>",
     }),
     __metadata("design:paramtypes", [])
-], AppComponent);
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+], RestBundleComponent);
+exports.RestBundleComponent = RestBundleComponent;
+//# sourceMappingURL=rest_bundle.component.js.map

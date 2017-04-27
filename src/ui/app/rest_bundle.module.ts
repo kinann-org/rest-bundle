@@ -1,11 +1,11 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppComponent }  from './app.component';
+import { RestBundleComponent }  from './rest_bundle.component';
 
 @NgModule({
   imports:      [ BrowserModule ],
-  declarations: [ AppComponent ],
-  bootstrap:    [ AppComponent ]
+  declarations: [ RestBundleComponent ],
+  bootstrap:    [ RestBundleComponent ]
 })
-export class REST_BUNDLE_Module { }
+export class RestBundleModule { }

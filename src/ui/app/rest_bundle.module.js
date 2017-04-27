@@ -7,18 +7,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
-var app_component_1 = require("./app.component");
-var REST_BUNDLE_Module = (function () {
-    function REST_BUNDLE_Module() {
+var rest_bundle_component_1 = require("./rest_bundle.component");
+var RestBundleModule = (function () {
+    function RestBundleModule() {
     }
-    return REST_BUNDLE_Module;
+    return RestBundleModule;
 }());
-REST_BUNDLE_Module = __decorate([
+RestBundleModule = __decorate([
     core_1.NgModule({
         imports: [platform_browser_1.BrowserModule],
-        declarations: [app_component_1.AppComponent],
-        bootstrap: [app_component_1.AppComponent]
+        declarations: [rest_bundle_component_1.RestBundleComponent],
+        bootstrap: [rest_bundle_component_1.RestBundleComponent]
     })
-], REST_BUNDLE_Module);
-exports.REST_BUNDLE_Module = REST_BUNDLE_Module;
+], RestBundleModule);
+exports.RestBundleModule = RestBundleModule;
 //# sourceMappingURL=rest_bundle.module.js.map
