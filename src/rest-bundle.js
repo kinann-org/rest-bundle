@@ -54,12 +54,12 @@ const express = require("express");
             var urlparts = req.url.split("/");
             var fpath = path.join(this.uidir, this.appdir, urlparts[urlparts.length-1]);
             var str = fs.readFileSync(fpath).toString("UTF-8");
-            return str.replace(/REST-BUNDLE/g,this.name);
+            return str.replace(/REST_BUNDLE/g,this.name);
         }
 
         getUIHtml(req, res, next) {
             var str = fs.readFileSync(path.join(this.uidir, this.uiindex)).toString("UTF-8");
-            return str.replace(/REST-BUNDLE/g,this.name);
+            return str.replace(/REST_BUNDLE/g,this.name);
         }
 
         process(req, res, next, handler, mime) {

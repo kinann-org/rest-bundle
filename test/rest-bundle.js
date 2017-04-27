@@ -21,7 +21,7 @@ const MockExpress = require("../src/mock-express");
         assertHandler("post", "/simple/hello");
         app.test_use.should.properties([
             "/simple/ui/pub",
-            "/simple/ui/node_modules",
+            "/node_modules",
         ]);
     })
     it("GET generates HTTP200 response", function(done) {

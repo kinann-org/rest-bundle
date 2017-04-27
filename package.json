@@ -58,7 +58,7 @@
     "should": "^11.2.0"
   },
   "scripts": {
-    "build": "tsc -p src/ui -p demo",
+    "build": "tsc -p src/ui; tsc -p demo",
     "build:watch": "tsc -p src/ui -w",
     "build:e2e": "tsc -p e2e/",
     "serve": "lite-server -c=bs-config.json",
