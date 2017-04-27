@@ -6,13 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles.css">
 
+    <script>console.log("System", typeof System);</script>
     <script src="/node_modules/core-js/client/shim.min.js"></script>
+    <script>console.log("System", System);</script>
     <script src="/node_modules/zone.js/dist/zone.js"></script>
+    <script>console.log("System", typeof System);</script>
     <script src="/node_modules/systemjs/dist/system.src.js"></script>
+    <script>console.log("System", typeof System);</script>
     <script src="systemjs.config.js"></script>
+    <script>console.log("System", typeof System);</script>
+    <script src="tweedle/tweedle.js"></script>
+    <script src="tweedle/tweedledum.js"></script>
+    <script>
+        new gtweedle.Tweedle().say("tweedlejs index.html");
+    </script>
     <script>
       System.import('main.js').catch(function(err){ console.error(err); });
     </script>
+    <script>console.log("System", typeof System);</script>
   </head>
 
   <body>
