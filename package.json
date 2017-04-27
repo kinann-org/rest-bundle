@@ -62,6 +62,7 @@
   },
   "scripts": {
     "build": "tsc -p src/ui; tsc -p demo",
+    "build:aot": "node_modules/.bin/ngc -p src/ui/tsconfig-aot.json",
     "build:watch": "tsc -p src/ui -w",
     "build:e2e": "tsc -p e2e/",
     "serve": "lite-server -c=bs-config.json",

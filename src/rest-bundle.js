@@ -14,9 +14,10 @@ const express = require("express");
             this.rest_bundle = path.dirname(path.dirname(__filename));
             this.uidir = options.uidir || path.join(this.rest_bundle, "src/ui");
             this.pub = options.pub || "pub";
+            this.aot = options.aot || "aot";
             this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0],"node_modules");
             this.appdir = options.appdir || "app";
-            this.uiindex = options.uiindex || "app/index.html";
+            this.uiindex = options.uiindex || "app/index-jit.html";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
         }
@@ -73,6 +74,13 @@ const express = require("express");
 
         bindAngular(app) {
             app.use(this.uribase + "/ui/pub", express.static(path.join(this.uidir, this.pub)));
+            app.use(this.uribase + "/ui/aot", express.static(path.join(this.uidir, this.aot)));
+            this.bindResource(app,this.resourceMethod(
+                "get", "/ui/index-jit.html", this.getApp, "text/html"));
+            this.bindResource(app,this.resourceMethod(
+                "get", "/ui/index-aot.html", this.getApp, "text/html"));
+            this.bindResource(app,this.resourceMethod(
+                "get", "/ui/index-jit.html", this.getApp, "text/html"));
             this.bindResource(app,this.resourceMethod(
                 "get", "/ui/app/*", this.getApp, "application/javascript"));
             app.use("/node_modules", express.static(this.node_modules)); 
