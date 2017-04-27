@@ -80,8 +80,6 @@ const express = require("express");
             this.bindResource(app,this.resourceMethod(
                 "get", "/ui/index-aot.html", this.getApp, "text/html"));
             this.bindResource(app,this.resourceMethod(
-                "get", "/ui/index-jit.html", this.getApp, "text/html"));
-            this.bindResource(app,this.resourceMethod(
                 "get", "/ui/app/*", this.getApp, "application/javascript"));
             app.use("/node_modules", express.static(this.node_modules)); 
             this.bindResource(app,this.resourceMethod(
