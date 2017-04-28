@@ -1,6 +1,8 @@
 # Angular
 *.map
 dist
+src/ui/app/*js
+src/ui/aot
 
 # Logs
 logs
