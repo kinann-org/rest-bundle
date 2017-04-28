@@ -13,7 +13,7 @@ import { Component, Input, ElementRef } from '@angular/core';
         </ul>
     </div>
     <!--bq-->`,
-    styleUrls: ['./rest_bundle.module.css'],
+    styleUrls: ['./rest-bundle.module.css'],
 })
 export class IndexLinkComponent  { 
     name = '?name?';

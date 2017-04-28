@@ -2,6 +2,7 @@ const ResourceMethod = require("./resource-method");
 const path = require("path");
 const fs = require("fs");
 const express = require("express");
+var pkg = require("../package.json");
 
 (function(exports) {
     class RestBundle {
@@ -63,6 +64,14 @@ const express = require("express");
             return str.replace(/REST_BUNDLE/g, this.name);
         }
 
+        getIdentity(req, res, next) {
+            return {
+                name: this.name,
+                type: "RestBundle",
+                version: pkg.version,
+            }
+        }
+
         process(req, res, next, handler, mime) {
             var promise = new Promise((resolve, reject) => resolve(handler(req, res)));
             promise.then(
@@ -115,6 +124,8 @@ const express = require("express");
         bindExpress(app, handlers = this.handlers) {
             this.bindAngular(app);
             handlers.forEach((resource) => this.bindResource(app, resource));
+            this.bindResource(app, this.resourceMethod(
+                "get", "/identity", this.getIdentity));
         }
     }
 

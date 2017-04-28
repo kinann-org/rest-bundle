@@ -73,4 +73,22 @@ const MockExpress = require("../src/mock-express");
             done();
         });
     })
+    it("GET /identity is a default handler", function(done) {
+        var app = new MockExpress();
+        var simple = new HelloRest("simple"); // create a resource bundle with root path
+        simple.bindExpress(app);
+        app.mockGET("/simple/identity", (res) => {
+            res.should.properties({
+                statusCode: 200,
+                type: "application/json",
+            });
+            res.data.should.properties({
+                name: "simple",
+                type: "RestBundle",
+            });
+            res.data.version.should.match(/^[0-9]+.[0-9]+.[0-9]+$/);
+            app.count_next.should.equal(1);
+            done();
+        });
+    })
 })

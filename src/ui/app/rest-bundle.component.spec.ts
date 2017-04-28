@@ -1,4 +1,4 @@
-import { RestBundleComponent } from './rest_bundle.component';
+import { RestBundleComponent } from './rest-bundle.component';
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By }           from '@angular/platform-browser';
