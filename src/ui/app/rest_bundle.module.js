@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var rest_bundle_component_1 = require("./rest_bundle.component");
+var index_link_component_1 = require("./index_link.component");
 var RestBundleModule = (function () {
     function RestBundleModule() {
     }
@@ -16,8 +17,8 @@ var RestBundleModule = (function () {
 RestBundleModule = __decorate([
     core_1.NgModule({
         imports: [platform_browser_1.BrowserModule],
-        declarations: [rest_bundle_component_1.RestBundleComponent],
-        bootstrap: [rest_bundle_component_1.RestBundleComponent]
+        declarations: [rest_bundle_component_1.RestBundleComponent, index_link_component_1.IndexLinkComponent],
+        bootstrap: [rest_bundle_component_1.RestBundleComponent, index_link_component_1.IndexLinkComponent]
     })
 ], RestBundleModule);
 exports.RestBundleModule = RestBundleModule;

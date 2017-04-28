@@ -11,6 +11,7 @@ import * as import1 from '../../app/rest_bundle.module';
 import * as import2 from '@angular/common';
 import * as import3 from '@angular/platform-browser';
 import * as import4 from './rest_bundle.component.ngfactory';
+import * as import5 from './index_link.component.ngfactory';
 class RestBundleModuleInjector extends import0.ɵNgModuleInjector<import1.RestBundleModule> {
   _CommonModule_0:import2.CommonModule;
   _ErrorHandler_1:any;
@@ -40,7 +41,15 @@ class RestBundleModuleInjector extends import0.ɵNgModuleInjector<import1.RestBu
   __Meta_25:import3.Meta;
   __Title_26:import3.Title;
   constructor(parent:import0.Injector) {
-    super(parent,[import4.RestBundleComponentNgFactory],[import4.RestBundleComponentNgFactory]);
+    super(parent,[
+      import4.RestBundleComponentNgFactory,
+      import5.IndexLinkComponentNgFactory
+    ]
+    ,[
+      import4.RestBundleComponentNgFactory,
+      import5.IndexLinkComponentNgFactory
+    ]
+    );
   }
   get _LOCALE_ID_9():any {
     if ((this.__LOCALE_ID_9 == null)) { (this.__LOCALE_ID_9 = import0.ɵn(this.parent.get(import0.LOCALE_ID,(null as any)))); }
@@ -171,4 +180,4 @@ class RestBundleModuleInjector extends import0.ɵNgModuleInjector<import1.RestBu
   }
 }
 export const RestBundleModuleNgFactory:import0.NgModuleFactory<import1.RestBundleModule> = new import0.NgModuleFactory<any>(RestBundleModuleInjector,import1.RestBundleModule);
-//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLm5nZmFjdG9yeS50cyIsInZlcnNpb24iOjMsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIm5nOi8vL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbIiAiXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OyJ9
+//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLm5nZmFjdG9yeS50cyIsInZlcnNpb24iOjMsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIm5nOi8vL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbIiAiXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OyJ9

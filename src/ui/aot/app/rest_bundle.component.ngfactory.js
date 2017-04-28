@@ -5,27 +5,28 @@
  */
 /* tslint:disable */
 "use strict";
-var import0 = require("@angular/core");
-var import1 = require("../../app/rest_bundle.component");
-var styles_RestBundleComponent = [];
-exports.RenderType_RestBundleComponent = import0.ɵcrt({
-    encapsulation: 2,
+var import0 = require("./rest_bundle.module.css.shim.ngstyle");
+var import1 = require("@angular/core");
+var import2 = require("../../app/rest_bundle.component");
+var styles_RestBundleComponent = [import0.styles];
+exports.RenderType_RestBundleComponent = import1.ɵcrt({
+    encapsulation: 0,
     styles: styles_RestBundleComponent,
     data: {}
 });
 function View_RestBundleComponent_0(l) {
-    return import0.ɵvid(0, [
-        (l()(), import0.ɵeld(0, null, null, 3, 'div', [[
+    return import1.ɵvid(0, [
+        (l()(), import1.ɵeld(0, null, null, 3, 'div', [[
                 'class',
                 'rb-root'
             ]
         ], null, null, null, null, null)),
-        (l()(), import0.ɵeld(0, null, null, 1, 'h1', [], null, null, null, null, null)),
-        (l()(), import0.ɵted(null, [
+        (l()(), import1.ɵeld(0, null, null, 1, 'h1', [], null, null, null, null, null)),
+        (l()(), import1.ɵted(null, [
             '<',
             '>'
         ])),
-        (l()(), import0.ɵted(null, [
+        (l()(), import1.ɵted(null, [
             '',
             ''
         ]))
@@ -39,11 +40,11 @@ function View_RestBundleComponent_0(l) {
 }
 exports.View_RestBundleComponent_0 = View_RestBundleComponent_0;
 function View_RestBundleComponent_Host_0(l) {
-    return import0.ɵvid(0, [
-        (l()(), import0.ɵeld(0, null, null, 1, 'rest-bundle-ui', [], null, null, null, View_RestBundleComponent_0, exports.RenderType_RestBundleComponent)),
-        import0.ɵdid(24576, null, 0, import1.RestBundleComponent, [], null, null)
+    return import1.ɵvid(0, [
+        (l()(), import1.ɵeld(0, null, null, 1, 'rest-bundle-ui', [], null, null, null, View_RestBundleComponent_0, exports.RenderType_RestBundleComponent)),
+        import1.ɵdid(24576, null, 0, import2.RestBundleComponent, [], null, null)
     ], null, null);
 }
-exports.RestBundleComponentNgFactory = import0.ɵccf('rest-bundle-ui', import1.RestBundleComponent, View_RestBundleComponent_Host_0, {}, {}, []);
-//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUuY29tcG9uZW50Lm5nZmFjdG9yeS50cyIsInZlcnNpb24iOjMsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIm5nOi8vL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUuY29tcG9uZW50LnRzIiwibmc6Ly8vaG9tZS9rYXJsL3NlYWdhdGUvcmVzdC1idW5kbGUvc3JjL3VpL2FwcC9yZXN0X2J1bmRsZS5jb21wb25lbnQudHMuUmVzdEJ1bmRsZUNvbXBvbmVudC5odG1sIiwibmc6Ly8vaG9tZS9rYXJsL3NlYWdhdGUvcmVzdC1idW5kbGUvc3JjL3VpL2FwcC9yZXN0X2J1bmRsZS5jb21wb25lbnQudHMuUmVzdEJ1bmRsZUNvbXBvbmVudF9Ib3N0Lmh0bWwiXSwic291cmNlc0NvbnRlbnQiOlsiICIsIjxkaXYgY2xhc3M9XCJyYi1yb290XCI+PGgxPiZsdDt7e25hbWV9fSZndDs8L2gxPnt7ZGF0ZX19PC9kaXY+IiwiPHJlc3QtYnVuZGxlLXVpPjwvcmVzdC1idW5kbGUtdWk+Il0sIm1hcHBpbmdzIjoiQUFBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7OztNQ0FBO1FBQUE7UUFBQTtNQUFBO0lBQUE7SUFBcUI7SUFBSTtNQUFBO01BQUE7SUFBQTtJQUFBO0lBQXFCO01BQUE7TUFBQTtJQUFBO0lBQUE7Ozs7SUFBckI7SUFBQTtJQUFxQjtJQUFBOzs7OztJQ0E5QztnQkFBQTs7OzsifQ==
+exports.RestBundleComponentNgFactory = import1.ɵccf('rest-bundle-ui', import2.RestBundleComponent, View_RestBundleComponent_Host_0, {}, {}, []);
+//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUuY29tcG9uZW50Lm5nZmFjdG9yeS50cyIsInZlcnNpb24iOjMsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIm5nOi8vL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUuY29tcG9uZW50LnRzIiwibmc6Ly8vaG9tZS9rYXJsL3NlYWdhdGUvcmVzdC1idW5kbGUvc3JjL3VpL2FwcC9yZXN0X2J1bmRsZS5jb21wb25lbnQudHMuUmVzdEJ1bmRsZUNvbXBvbmVudC5odG1sIiwibmc6Ly8vaG9tZS9rYXJsL3NlYWdhdGUvcmVzdC1idW5kbGUvc3JjL3VpL2FwcC9yZXN0X2J1bmRsZS5jb21wb25lbnQudHMuUmVzdEJ1bmRsZUNvbXBvbmVudF9Ib3N0Lmh0bWwiXSwic291cmNlc0NvbnRlbnQiOlsiICIsIjxkaXYgY2xhc3M9XCJyYi1yb290XCI+PGgxPiZsdDt7e25hbWV9fSZndDs8L2gxPnt7ZGF0ZX19PC9kaXY+IiwiPHJlc3QtYnVuZGxlLXVpPjwvcmVzdC1idW5kbGUtdWk+Il0sIm1hcHBpbmdzIjoiQUFBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7TUNBQTtRQUFBO1FBQUE7TUFBQTtJQUFBO0lBQXFCO0lBQUk7TUFBQTtNQUFBO0lBQUE7SUFBQTtJQUFxQjtNQUFBO01BQUE7SUFBQTtJQUFBOzs7O0lBQXJCO0lBQUE7SUFBcUI7SUFBQTs7Ozs7SUNBOUM7Z0JBQUE7Ozs7In0=
 //# sourceMappingURL=rest_bundle.component.ngfactory.js.map

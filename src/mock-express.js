@@ -4,7 +4,7 @@ const ResourceMethod = require("../src/resource-method");
 (function(exports) {
 
     class MockResponse {
-        constructor(status=200) {
+        constructor(status = 200) {
             this.status(status);
         }
         status(code) {
@@ -38,12 +38,15 @@ const ResourceMethod = require("../src/resource-method");
             var that = this;
             var req = {};
             var res = new MockResponse();
-            function next() { that.count_next++; }
+
+            function next() {
+                that.count_next++;
+            }
             var handler = this.testGET[path];
             if (handler == null) {
                 cb(new MockResponse(404));
             } else {
-                handler(req,res,next).then((data) => cb(res),(err) => cb(res));
+                handler(req, res, next).then((data) => cb(res), (err) => cb(res));
             }
         }
         mockPOST(path, data, cb) {
@@ -52,12 +55,15 @@ const ResourceMethod = require("../src/resource-method");
                 data: data,
             };
             var res = new MockResponse();
-            function next() { that.count_next++; }
+
+            function next() {
+                that.count_next++;
+            }
             var handler = this.testPOST[path];
             if (handler == null) {
                 cb(new MockResponse(404));
             } else {
-                handler(req,res,next).then((data) => cb(res),(err) => cb(res));
+                handler(req, res, next).then((data) => cb(res), (err) => cb(res));
             }
         }
     }

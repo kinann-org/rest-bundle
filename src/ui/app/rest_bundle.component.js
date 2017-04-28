@@ -22,6 +22,7 @@ RestBundleComponent = __decorate([
     core_1.Component({
         selector: 'rest-bundle-ui',
         template: "<div class=\"rb-root\"><h1>&lt;{{name}}&gt;</h1>{{date}}</div>",
+        styleUrls: ['./rest_bundle.module.css'],
     }),
     __metadata("design:paramtypes", [])
 ], RestBundleComponent);

@@ -1,0 +1,17 @@
+.rb-root {
+    padding: 5pt;
+    border-radius: 5px;
+    border: 1pt solid #555;
+    background-color: #eee;
+    font-family: Verdata,sans-serif;
+}
+h1 {
+    font-size: 120%;
+    font-weight: 700;
+    color: #339;
+}
+h2 {
+    font-size: 110%;
+    font-weight: 700;
+    color: #339;
+}

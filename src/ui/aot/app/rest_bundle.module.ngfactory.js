@@ -15,10 +15,17 @@ var import1 = require("../../app/rest_bundle.module");
 var import2 = require("@angular/common");
 var import3 = require("@angular/platform-browser");
 var import4 = require("./rest_bundle.component.ngfactory");
+var import5 = require("./index_link.component.ngfactory");
 var RestBundleModuleInjector = (function (_super) {
     __extends(RestBundleModuleInjector, _super);
     function RestBundleModuleInjector(parent) {
-        return _super.call(this, parent, [import4.RestBundleComponentNgFactory], [import4.RestBundleComponentNgFactory]) || this;
+        return _super.call(this, parent, [
+            import4.RestBundleComponentNgFactory,
+            import5.IndexLinkComponentNgFactory
+        ], [
+            import4.RestBundleComponentNgFactory,
+            import5.IndexLinkComponentNgFactory
+        ]) || this;
     }
     Object.defineProperty(RestBundleModuleInjector.prototype, "_LOCALE_ID_9", {
         get: function () {
@@ -310,5 +317,5 @@ var RestBundleModuleInjector = (function (_super) {
     return RestBundleModuleInjector;
 }(import0.ɵNgModuleInjector));
 exports.RestBundleModuleNgFactory = new import0.NgModuleFactory(RestBundleModuleInjector, import1.RestBundleModule);
-//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLm5nZmFjdG9yeS50cyIsInZlcnNpb24iOjMsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIm5nOi8vL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbIiAiXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OyJ9
+//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLm5nZmFjdG9yeS50cyIsInZlcnNpb24iOjMsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIm5nOi8vL2hvbWUva2FybC9zZWFnYXRlL3Jlc3QtYnVuZGxlL3NyYy91aS9hcHAvcmVzdF9idW5kbGUubW9kdWxlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbIiAiXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OyJ9
 //# sourceMappingURL=rest_bundle.module.ngfactory.js.map

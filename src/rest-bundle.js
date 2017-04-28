@@ -10,12 +10,12 @@ const express = require("express");
                 throw new Error("bundle name is required");
             }
             this.name = name;
-            this.uribase = options.uribase || "/"+this.name;
-            this.rest_bundle = path.dirname(path.dirname(__filename));
-            this.uidir = options.uidir || path.join(this.rest_bundle, "src/ui");
+            this.uribase = options.uribase || "/" + this.name;
+            this.package_dir = path.dirname(path.dirname(__filename));
+            this.uidir = options.uidir || path.join(this.package_dir, "src/ui");
             this.pub = options.pub || "pub";
             this.aot = options.aot || "aot";
-            this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0],"node_modules");
+            this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0], "node_modules");
             this.appdir = options.appdir || "app";
             this.uiindex = options.uiindex || "app/index-jit.html";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
@@ -23,7 +23,7 @@ const express = require("express");
         }
 
         resourceMethod(method, name, handler, mime) {
-            var that  = this; // Javascript nonsense
+            var that = this; // Javascript nonsense
             function thatHandler(req, res, next) {
                 return handler.call(that, req, res, next);
             }
@@ -53,14 +53,14 @@ const express = require("express");
 
         getApp(req, res, next) {
             var urlparts = req.url.split("/");
-            var fpath = path.join(this.uidir, this.appdir, urlparts[urlparts.length-1]);
+            var fpath = path.join(this.uidir, this.appdir, urlparts[urlparts.length - 1]);
             var str = fs.readFileSync(fpath).toString("UTF-8");
-            return str.replace(/REST_BUNDLE/g,this.name);
+            return str.replace(/REST_BUNDLE/g, this.name);
         }
 
         getUIHtml(req, res, next) {
             var str = fs.readFileSync(path.join(this.uidir, this.uiindex)).toString("UTF-8");
-            return str.replace(/REST_BUNDLE/g,this.name);
+            return str.replace(/REST_BUNDLE/g, this.name);
         }
 
         process(req, res, next, handler, mime) {
@@ -75,14 +75,17 @@ const express = require("express");
         bindAngular(app) {
             app.use(this.uribase + "/ui/pub", express.static(path.join(this.uidir, this.pub)));
             app.use(this.uribase + "/ui/aot", express.static(path.join(this.uidir, this.aot)));
-            this.bindResource(app,this.resourceMethod(
+            app.use(this.uribase + "/dist", express.static(path.join(this.package_dir, "dist")));
+            this.bindResource(app, this.resourceMethod(
                 "get", "/ui/index-jit.html", this.getApp, "text/html"));
-            this.bindResource(app,this.resourceMethod(
+            this.bindResource(app, this.resourceMethod(
                 "get", "/ui/index-aot.html", this.getApp, "text/html"));
-            this.bindResource(app,this.resourceMethod(
+            this.bindResource(app, this.resourceMethod(
+                "get", "/ui/index-dist.html", this.getApp, "text/html"));
+            this.bindResource(app, this.resourceMethod(
                 "get", "/ui/app/*", this.getApp, "application/javascript"));
-            app.use("/node_modules", express.static(this.node_modules)); 
-            this.bindResource(app,this.resourceMethod(
+            app.use("/node_modules", express.static(this.node_modules));
+            this.bindResource(app, this.resourceMethod(
                 "get", "/ui", this.getUIHtml, "text/html"));
         }
 
@@ -111,7 +114,7 @@ const express = require("express");
 
         bindExpress(app, handlers = this.handlers) {
             this.bindAngular(app);
-            handlers.forEach((resource) => this.bindResource(app,resource));
+            handlers.forEach((resource) => this.bindResource(app, resource));
         }
     }
 

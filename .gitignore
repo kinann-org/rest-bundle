@@ -1,5 +1,6 @@
-# Typescript
+# Angular
 *.map
+dist
 
 # Logs
 logs

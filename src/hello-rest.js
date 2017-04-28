@@ -5,7 +5,7 @@ const ResourceMethod = RestBundle.ResourceMethod;
 
     // Example of extending RestBundle to define a "hello" REST service
     class HelloRest extends RestBundle {
-        constructor(name="greeting",options = {}) {
+        constructor(name = "greeting", options = {}) {
             super(name, options);
             this.greeting = "hello";
             var handlers = [

@@ -1,6 +1,6 @@
 (function(exports) {
     class ResourceMethod {
-        constructor(method="get", name, handler, mime="application/json",options = {}) {
+        constructor(method = "get", name, handler, mime = "application/json", options = {}) {
             this.name = name;
             this.mime = mime;
             this.method = method;
