@@ -121,7 +121,22 @@ var pkg = require("../package.json");
             }
         }
 
+        bindEjs(app) {
+            app.set("views", "./src/ui/views");
+            app.set("view engine", "ejs");
+            app.get(this.uribase + "/ui/index-aot", (req, res, next) => {
+                res.render("index-aot.ejs", {rest:this.name});
+            });
+            app.get(this.uribase + "/ui/index-dist", (req, res, next) => {
+                res.render("index-dist.ejs", {rest:this.name});
+            });
+            app.get(this.uribase + "/ui/index-jit", (req, res, next) => {
+                res.render("index-jit.ejs", {rest:this.name});
+            });
+        }
+
         bindExpress(app, handlers = this.handlers) {
+            this.bindEjs(app);
             this.bindAngular(app);
             handlers.forEach((resource) => this.bindResource(app, resource));
             this.bindResource(app, this.resourceMethod(

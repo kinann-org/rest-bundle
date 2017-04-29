@@ -24,6 +24,10 @@ const ResourceMethod = require("../src/resource-method");
             this.testPOST = {};
             this.test_use = {};
             this.count_next = 0;
+            this.testConfig = {};
+        }
+        set(name, value) {
+            this.testConfig[name] = value;
         }
         get(path, cb) {
             this.testGET[path] = cb;
