@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { RestBundleComponent }  from './rest-bundle.component';
 import { RestBundleService }  from './rest-bundle.service';
-import { IndexLinkComponent }  from './index_link.component';
+import { IndexLinkComponent }  from './index-link.component';
 
 @NgModule({
     imports:      [ 
