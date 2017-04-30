@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Angular QuickStart</title>
-    <base href="/<%= rest %>/ui/">
+    <base href="/<%= service %>/ui/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="pub/styles.css">
@@ -18,7 +18,9 @@
   </head>
 
   <body>
-    <index-link index="aot" rest="<%= rest %>"></index-link>
-    <rest-bundle-ui rest="<%= rest %>">Loading RestBundleComponent content here ...</rest-bundle-ui>
+    <index-link index="aot" service="<%= service %>"></index-link>
+    <rest-bundle-ui service="<%= service %>" description="AOT RestBundleComponent">
+        Loading RestBundleComponent content here ...
+    </rest-bundle-ui>
   </body>
 </html>

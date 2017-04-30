@@ -104,13 +104,13 @@ var pkg = require("../package.json");
             app.set("views", "./src/ui/views");
             app.set("view engine", "ejs");
             app.get(this.uribase + "/ui/index-aot", (req, res, next) => {
-                res.render("index-aot.ejs", {rest:this.name});
+                res.render("index-aot.ejs", {service:this.name});
             });
             app.get(this.uribase + "/ui/index-dist", (req, res, next) => {
-                res.render("index-dist.ejs", {rest:this.name});
+                res.render("index-dist.ejs", {service:this.name});
             });
             app.get(this.uribase + "/ui/index-jit", (req, res, next) => {
-                res.render("index-jit.ejs", {rest:this.name});
+                res.render("index-jit.ejs", {service:this.name});
             });
         }
 

@@ -15,3 +15,12 @@ h2 {
     font-weight: 700;
     color: #339;
 }
+th {
+    text-align: left;
+}
+caption {
+    font-weight: 700;
+    font-size: 110%;
+    color: #339;
+    text-align: left;
+}
