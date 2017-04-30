@@ -12,7 +12,7 @@ const ResourceMethod = RestBundle.ResourceMethod;
                 this.resourceMethod("get", "hello", this.getHello, "text/html"),
                 this.resourceMethod("post", "error", this.onDie),
                 this.resourceMethod("post", "hello", this.postHello),
-            ];
+            ].concat(super.handlers);
             Object.defineProperty(this, "handlers", {
                 value: handlers,
             });

@@ -1,7 +1,7 @@
 <!DOCTYPE html> <html>
   <head>
     <title>Angular QuickStart</title>
-    <base href="/REST_BUNDLE/ui/">
+    <base href="/<%= rest %>/ui/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="pub/styles.css">
@@ -11,8 +11,8 @@
   </head>
 
   <body>
-    <index-link name="dist"></index-link>
-    <rest-bundle-ui>Loading RestBundleComponent content here ...</rest-bundle-ui>
+    <index-link index="dist" rest="<%= rest %>"></index-link>
+    <rest-bundle-ui rest="<%= rest %>">Loading RestBundleComponent content here ...</rest-bundle-ui>
     <script type="text/javascript" src="../dist/rest-bundle-app.dist.js"></script>
   </body>
 </html>

@@ -14,11 +14,8 @@ var pkg = require("../package.json");
             this.uribase = options.uribase || "/" + this.name;
             this.package_dir = path.dirname(path.dirname(__filename));
             this.uidir = options.uidir || path.join(this.package_dir, "src/ui");
-            this.pub = options.pub || "pub";
-            this.aot = options.aot || "aot";
             this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0], "node_modules");
-            this.appdir = options.appdir || "app";
-            this.uiindex = options.uiindex || "app/index-jit.html";
+            this.ui_index = options.ui_index || "/ui/index-jit";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
         }
@@ -32,7 +29,9 @@ var pkg = require("../package.json");
         }
 
         get handlers() {
-            throw new Error("virtual method must be implemented");
+            return [
+                this.resourceMethod("get", "/identity", this.getIdentity),
+            ];
         }
 
         static onSuccess(req, res, data, next, mime) {
@@ -50,18 +49,6 @@ var pkg = require("../package.json");
             }
             res.send(data);
             next && next('route');
-        }
-
-        getApp(req, res, next) {
-            var urlparts = req.url.split("/");
-            var fpath = path.join(this.uidir, this.appdir, urlparts[urlparts.length - 1]);
-            var str = fs.readFileSync(fpath).toString("UTF-8");
-            return str.replace(/REST_BUNDLE/g, this.name);
-        }
-
-        getUIHtml(req, res, next) {
-            var str = fs.readFileSync(path.join(this.uidir, this.uiindex)).toString("UTF-8");
-            return str.replace(/REST_BUNDLE/g, this.name);
         }
 
         getIdentity(req, res, next) {
@@ -82,20 +69,12 @@ var pkg = require("../package.json");
         }
 
         bindAngular(app) {
-            app.use(this.uribase + "/ui/pub", express.static(path.join(this.uidir, this.pub)));
-            app.use(this.uribase + "/ui/aot", express.static(path.join(this.uidir, this.aot)));
+            app.use(this.uribase + "/ui/pub", express.static(path.join(this.uidir, "pub")));
+            app.use(this.uribase + "/ui/aot", express.static(path.join(this.uidir, "aot")));
+            app.use(this.uribase + "/ui/app", express.static(path.join(this.uidir, "app")));
             app.use(this.uribase + "/dist", express.static(path.join(this.package_dir, "dist")));
-            this.bindResource(app, this.resourceMethod(
-                "get", "/ui/index-jit.html", this.getApp, "text/html"));
-            this.bindResource(app, this.resourceMethod(
-                "get", "/ui/index-aot.html", this.getApp, "text/html"));
-            this.bindResource(app, this.resourceMethod(
-                "get", "/ui/index-dist.html", this.getApp, "text/html"));
-            this.bindResource(app, this.resourceMethod(
-                "get", "/ui/app/*", this.getApp, "application/javascript"));
             app.use("/node_modules", express.static(this.node_modules));
-            this.bindResource(app, this.resourceMethod(
-                "get", "/ui", this.getUIHtml, "text/html"));
+            app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
         }
 
         bindResource(app, resource) {
@@ -135,12 +114,10 @@ var pkg = require("../package.json");
             });
         }
 
-        bindExpress(app, handlers = this.handlers) {
+        bindExpress(app, restHandlers = this.handlers) {
             this.bindEjs(app);
             this.bindAngular(app);
-            handlers.forEach((resource) => this.bindResource(app, resource));
-            this.bindResource(app, this.resourceMethod(
-                "get", "/identity", this.getIdentity));
+            restHandlers.forEach((resource) => this.bindResource(app, resource));
         }
     }
 

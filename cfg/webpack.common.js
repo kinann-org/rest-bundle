@@ -29,14 +29,14 @@ module.exports = {
             }, {
                 test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
                 loader: 'file-loader?name=assets/[name].[hash].[ext]'
-            }, {
+            }, { // application css
                 test: /\.css$/,
                 exclude: helpers.root('src/ui', 'app'),
                 loader: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: 'css-loader?sourceMap'
                 })
-            }, {
+            }, { // NgComponent css
                 test: /\.css$/,
                 include: helpers.root('src/ui', 'app'),
                 loader: 'raw-loader'
@@ -57,8 +57,8 @@ module.exports = {
             name: ['app', 'vendor', 'polyfills']
         }),
 
-        new HtmlWebpackPlugin({
-            template: 'src/ui/app/index-aot.html'
-        })
+        // RestBundle relies on nodejs express EJS templates
+        // to provide custom Angular root html for each named service
+        //new HtmlWebpackPlugin({ template: 'TBD.html' /})
     ]
 };

@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Angular QuickStart</title>
-    <base href="/REST_BUNDLE/ui/">
+    <base href="/<%= rest %>/ui/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="pub/styles.css">
@@ -13,12 +13,12 @@
     <script src="/node_modules/systemjs/dist/system.src.js"></script>
     <script src="pub/systemjs.config.js"></script>
     <script>
-      System.import('app/main-jit.js').catch(function(err){ console.error(err); });
+      System.import('app/main-aot.js').catch(function(err){ console.error(err); });
     </script>
   </head>
 
   <body>
-    <index-link name="jit"></index-link>
-    <rest-bundle-ui>Loading RestBundleComponent content here ...</rest-bundle-ui>
+    <index-link index="aot" rest="<%= rest %>"></index-link>
+    <rest-bundle-ui rest="<%= rest %>">Loading RestBundleComponent content here ...</rest-bundle-ui>
   </body>
 </html>

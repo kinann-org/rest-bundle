@@ -1,0 +1,20 @@
+function build1() {
+    echo -e "BUILD\t:" $*
+    $* >> build.log 2>&1
+    RC=$?; 
+    if [ $RC != 0 ]; then 
+        echo -e "ERROR\t: $RC (see build.log)"
+        grep -e "ERROR" -e "error" -e "Error" $log
+        exit $RC
+    fi
+}
+
+log=build.log
+echo -e "\nSTART\t: `pwd`/$0\t`date`" |& tee -a $log
+rm -f $log
+build1 npm run clean
+build1 npm run build:aot
+build1 npm run build:demo
+build1 npm run build:pack
+build1 npm run build:jit
+echo -e "END\t: `pwd`/$0\t`date`"
