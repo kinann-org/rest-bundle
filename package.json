@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -68,6 +68,7 @@
     "rimraf": "^2.6.1",
     "should": "^11.2.0",
     "style-loader": "^0.16.1",
+    "supertest": "^3.0.0",
     "tslint": "^3.15.1",
     "typescript": "~2.1.0",
     "webpack": "^2.4.1",
@@ -100,7 +101,6 @@
     "test:detail": "mocha -w --inline-diffs",
     "test:once": "karma start karma.conf.js --single-run",
     "z": "echo z"
-
   },
   "repository": {
     "type": "git",

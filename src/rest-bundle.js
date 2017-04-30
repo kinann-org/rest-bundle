@@ -2,6 +2,7 @@ const ResourceMethod = require("./resource-method");
 const path = require("path");
 const fs = require("fs");
 const express = require("express");
+const bodyParser = require("body-parser");
 var pkg = require("../package.json");
 
 (function(exports) {
@@ -115,6 +116,7 @@ var pkg = require("../package.json");
         }
 
         bindExpress(app, restHandlers = this.handlers) {
+            app.use(bodyParser.json());
             this.bindEjs(app);
             this.bindAngular(app);
             restHandlers.forEach((resource) => this.bindResource(app, resource));

@@ -10,7 +10,7 @@ const ResourceMethod = RestBundle.ResourceMethod;
             this.greeting = "hello";
             var handlers = [
                 this.resourceMethod("get", "hello", this.getHello, "text/html"),
-                this.resourceMethod("post", "error", this.onDie),
+                this.resourceMethod("post", "error", this.postDeath),
                 this.resourceMethod("post", "hello", this.postHello),
             ].concat(super.handlers);
             Object.defineProperty(this, "handlers", {
@@ -19,19 +19,17 @@ const ResourceMethod = RestBundle.ResourceMethod;
         }
 
         getHello(req, res) {
-            var that = this;
-            return that.greeting;
+            return this.greeting;
         }
 
         postHello(req, res) {
-            var that = this;
             return {
-                post: req.data,
+                post: req.body,
             }
         }
 
-        onDie(req, res) {
-            throw new Error(req.data);
+        postDeath(req, res) {
+            throw new Error("Sadness");
         }
     }
 
