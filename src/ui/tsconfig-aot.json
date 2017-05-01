@@ -11,7 +11,7 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "files": [
-    "app/rest-bundle.module.ts",
+    "app/app.module.ts",
     "app/main-aot.ts"
   ],
   "angularCompilerOptions": {

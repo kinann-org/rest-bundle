@@ -1,5 +1,5 @@
 import { platformBrowser }    from '@angular/platform-browser';
-import { RestBundleModuleNgFactory } from '../aot/app/rest-bundle.module.ngfactory';
+import { AppModuleNgFactory } from '../aot/app/app.module.ngfactory';
 
 console.log("AOT compiled");
-platformBrowser().bootstrapModuleFactory(RestBundleModuleNgFactory);
+platformBrowser().bootstrapModuleFactory(AppModuleNgFactory);

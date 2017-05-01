@@ -25,4 +25,4 @@ import { IndexLinkComponent }  from './index-link.component';
         IndexLinkComponent,  // top-level component
     ]
 })
-export class RestBundleModule { }
+export class AppModule { }

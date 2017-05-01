@@ -1,5 +1,5 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { RestBundleModule } from '../app/rest-bundle.module';
+import { AppModule } from '../app/app.module';
 
-platformBrowserDynamic().bootstrapModule(RestBundleModule);
+platformBrowserDynamic().bootstrapModule(AppModule);

@@ -12,12 +12,12 @@ var http_1 = require("@angular/http");
 var rest_bundle_component_1 = require("./rest-bundle.component");
 var rest_bundle_service_1 = require("./rest-bundle.service");
 var index_link_component_1 = require("./index-link.component");
-var RestBundleModule = (function () {
-    function RestBundleModule() {
+var AppModule = (function () {
+    function AppModule() {
     }
-    return RestBundleModule;
+    return AppModule;
 }());
-RestBundleModule = __decorate([
+AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
@@ -36,6 +36,6 @@ RestBundleModule = __decorate([
             index_link_component_1.IndexLinkComponent,
         ]
     })
-], RestBundleModule);
-exports.RestBundleModule = RestBundleModule;
-//# sourceMappingURL=rest-bundle.module.js.map
+], AppModule);
+exports.AppModule = AppModule;
+//# sourceMappingURL=app.module.js.map
