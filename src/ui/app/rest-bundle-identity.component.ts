@@ -10,7 +10,7 @@ import 'rxjs/add/operator/toPromise';
                 <caption>&lt;{{name}}&gt;</caption>
                 <tr><th>Description:</th><td>{{description}}</td></tr>
                 <tr><th>Service:</th><td>{{service}}/identity</td></tr>
-                <tr><th>Type:</th><td>{{type}}</td></tr>
+                <tr><th>Package:</th><td>{{package}}</td></tr>
                 <tr><th>Version:</th><td>{{version}}</td></tr>
                 <tr><th>Date:</th><td>{{date}}</td></tr>
             </table>
@@ -22,7 +22,7 @@ import 'rxjs/add/operator/toPromise';
 export class RestBundleIdentityComponent implements OnInit { 
     name = 'rest-bundle-identity'; 
     date = new Date();
-    type = "(type unknown)";
+    package = "(package unknown)";
     version = "(version unknown)";
     service = "/UNKNOWN";
     description = "";
@@ -37,7 +37,7 @@ export class RestBundleIdentityComponent implements OnInit {
             .toPromise()
             .then((res) => {
                 var json = res.json();
-                this.type = json.type || this.type;
+                this.package = json.package || this.package;
                 this.version = json.version || this.version;
             })
             .catch((err:any) => console.log("err", err));

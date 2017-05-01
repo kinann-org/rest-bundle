@@ -4,16 +4,19 @@ import { Component, Input, ElementRef } from '@angular/core';
     selector: 'index-link',
     template: `<!--bq-->
     <div>
-        <h1>RestBundle  index-{{index}}.html</h1>
-        This is the RestBundle home page for the /{{service}} REST service.
+        <h1>/{{service}}/ui/index-{{index}}</h1>
+        This is the home page for the "{{service}}" REST service.
+        The home page is available in different configurations:
+
         <ul>
-            <li><a href="index-jit">/{{service}}/ui/index-jit</a> uses JIT (runtime) compiled Angular components 
-            <li><a href="index-aot">/{{service}}/ui/index-aot</a> uses AOT pre-compiled Angular components 
-            <li><a href="index-dist">/{{service}}/ui/index-dist</a> uses WebPack-ed AOT pre-compiled Angular components
+            <li><a href="index-jit">JIT Development</a> uses JIT (runtime) compiled Angular components 
+            <li><a href="index-aot">AOT Development</a> uses AOT pre-compiled Angular components 
+            <li><a href="index-dist">Production</a> uses WebPack-ed AOT pre-compiled Angular components
         </ul>
+
         Each RestBundle provides a REST service along with one or more Angular user interface components.
-        Here we show the &lt;rest-bundle-identity&gt; Angular component which displays the information returned
-        by the /identity REST GET method of the /{{service}} service.
+        Here we show the <code>&lt;rest-bundle-identity&gt;</code> Angular component which displays the information returned
+        by the <code>/{{service}}/identity</code> REST GET method.
     </div>
     <!--bq-->`,
     styleUrls: ['./rest-bundle.module.css'],

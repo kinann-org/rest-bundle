@@ -14,7 +14,7 @@ const bodyParser = require("body-parser");
             this.uribase = options.uribase || "/" + this.name;
             this.appdir = options.appdir || require.resolve("@angular/core").split("node_modules")[0];
             this.appPkg = require(path.join(this.appdir,"package.json"));
-            this.srcPkg = options.srcPkg || require(path.join(__dirname, "../package.json"));
+            this.srcPkg = options.srcPkg || require("../package.json");
             this.node_modules = path.join(this.appdir, "node_modules");
             this.ui_index = options.ui_index || "/ui/index-jit";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
@@ -55,7 +55,7 @@ const bodyParser = require("body-parser");
         getIdentity(req, res, next) {
             return {
                 name: this.name,
-                type: this.srcPkg.name,
+                package: this.srcPkg.name,
                 version: this.srcPkg.version,
             }
         }
