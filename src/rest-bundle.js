@@ -104,14 +104,18 @@ var pkg = require("../package.json");
         bindEjs(app) {
             app.set("views", "./src/ui/views");
             app.set("view engine", "ejs");
+            var ejsmap = {
+                service: this.name,
+                package: pkg.name,
+            }
             app.get(this.uribase + "/ui/index-aot", (req, res, next) => {
-                res.render("index-aot.ejs", {service:this.name});
+                res.render("index-aot.ejs", ejsmap);
             });
             app.get(this.uribase + "/ui/index-dist", (req, res, next) => {
-                res.render("index-dist.ejs", {service:this.name});
+                res.render("index-dist.ejs", ejsmap);
             });
             app.get(this.uribase + "/ui/index-jit", (req, res, next) => {
-                res.render("index-jit.ejs", {service:this.name});
+                res.render("index-jit.ejs", ejsmap);
             });
         }
 

@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="pub/styles.css">
 
-    <script type="text/javascript" src="../dist/rest-bundle-polyfills.dist.js"></script>
-    <script type="text/javascript" src="../dist/rest-bundle-vendor.dist.js"></script>
+    <script type="text/javascript" src="../dist/<%= package %>-polyfills.dist.js"></script>
+    <script type="text/javascript" src="../dist/<%= package %>-vendor.dist.js"></script>
   </head>
 
   <body>
@@ -15,6 +15,6 @@
     <rest-bundle-ui service="<%= service %>" description="Distribution RestBundleComponent">
         Loading RestBundleComponent content here ...
     </rest-bundle-ui>
-    <script type="text/javascript" src="../dist/rest-bundle-app.dist.js"></script>
+    <script type="text/javascript" src="../dist/<%= package %>-app.dist.js"></script>
   </body>
 </html>
