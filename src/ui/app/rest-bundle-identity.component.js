@@ -10,13 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
-var rest_bundle_service_1 = require("./rest-bundle.service");
 require("rxjs/add/operator/toPromise");
-var RestBundleComponent = (function () {
-    function RestBundleComponent(eref, http) {
+var RestBundleIdentityComponent = (function () {
+    function RestBundleIdentityComponent(eref, http) {
         var _this = this;
         this.http = http;
-        this.name = 'rest-bundle-ui';
+        this.name = 'rest-bundle-identity';
         this.date = new Date();
         this.type = "(type unknown)";
         this.version = "(version unknown)";
@@ -26,7 +25,7 @@ var RestBundleComponent = (function () {
         this.description = eref.nativeElement.getAttribute("description") || this.description;
         setInterval(function () { return (_this.date = new Date()); }, 1000);
     }
-    RestBundleComponent.prototype.ngOnInit = function () {
+    RestBundleIdentityComponent.prototype.ngOnInit = function () {
         var _this = this;
         console.log("ngOnInit");
         this.http.get(this.service + "/identity")
@@ -38,16 +37,16 @@ var RestBundleComponent = (function () {
         })
             .catch(function (err) { return console.log("err", err); });
     };
-    return RestBundleComponent;
+    return RestBundleIdentityComponent;
 }());
-RestBundleComponent = __decorate([
+RestBundleIdentityComponent = __decorate([
     core_1.Component({
-        selector: 'rest-bundle-ui',
+        selector: 'rest-bundle-identity',
         template: "\n        <div class=\"rb-root\">\n            <table>\n                <caption>&lt;{{name}}&gt;</caption>\n                <tr><th>Description:</th><td>{{description}}</td></tr>\n                <tr><th>Service:</th><td>{{service}}/identity</td></tr>\n                <tr><th>Type:</th><td>{{type}}</td></tr>\n                <tr><th>Version:</th><td>{{version}}</td></tr>\n                <tr><th>Date:</th><td>{{date}}</td></tr>\n            </table>\n        </div>\n        ",
         styleUrls: ['./rest-bundle.module.css'],
-        providers: [rest_bundle_service_1.RestBundleService],
+        providers: [],
     }),
     __metadata("design:paramtypes", [core_1.ElementRef, http_1.Http])
-], RestBundleComponent);
-exports.RestBundleComponent = RestBundleComponent;
-//# sourceMappingURL=rest-bundle.component.js.map
+], RestBundleIdentityComponent);
+exports.RestBundleIdentityComponent = RestBundleIdentityComponent;
+//# sourceMappingURL=rest-bundle-identity.component.js.map

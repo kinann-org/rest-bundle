@@ -7,10 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
-var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
-var rest_bundle_component_1 = require("./rest-bundle.component");
-var rest_bundle_service_1 = require("./rest-bundle.service");
+var rest_bundle_identity_component_1 = require("./rest-bundle-identity.component");
 var index_link_component_1 = require("./index-link.component");
 var AppModule = (function () {
     function AppModule() {
@@ -21,18 +19,15 @@ AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
-            forms_1.FormsModule,
             http_1.HttpModule,
         ],
         declarations: [
-            rest_bundle_component_1.RestBundleComponent,
+            rest_bundle_identity_component_1.RestBundleIdentityComponent,
             index_link_component_1.IndexLinkComponent,
         ],
-        providers: [
-            rest_bundle_service_1.RestBundleService,
-        ],
+        providers: [],
         bootstrap: [
-            rest_bundle_component_1.RestBundleComponent,
+            rest_bundle_identity_component_1.RestBundleIdentityComponent,
             index_link_component_1.IndexLinkComponent,
         ]
     })

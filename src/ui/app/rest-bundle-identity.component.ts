@@ -1,10 +1,9 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { RestBundleService } from './rest-bundle.service';
 import 'rxjs/add/operator/toPromise';
 
 @Component({
-    selector: 'rest-bundle-ui',
+    selector: 'rest-bundle-identity',
     template: `
         <div class="rb-root">
             <table>
@@ -18,10 +17,10 @@ import 'rxjs/add/operator/toPromise';
         </div>
         `,
     styleUrls: ['./rest-bundle.module.css'],
-    providers: [ RestBundleService ],
+    providers: [ ],
 })
-export class RestBundleComponent implements OnInit { 
-    name = 'rest-bundle-ui'; 
+export class RestBundleIdentityComponent implements OnInit { 
+    name = 'rest-bundle-identity'; 
     date = new Date();
     type = "(type unknown)";
     version = "(version unknown)";

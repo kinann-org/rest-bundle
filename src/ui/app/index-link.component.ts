@@ -12,7 +12,7 @@ import { Component, Input, ElementRef } from '@angular/core';
             <li><a href="index-dist">/{{service}}/ui/index-dist</a> uses WebPack-ed AOT pre-compiled Angular components
         </ul>
         Each RestBundle provides a REST service along with one or more Angular user interface components.
-        Here we show the &lt;rest-bundle-ui&gt; Angular component which displays the information returned
+        Here we show the &lt;rest-bundle-identity&gt; Angular component which displays the information returned
         by the /identity REST GET method of the /{{service}} service.
     </div>
     <!--bq-->`,
