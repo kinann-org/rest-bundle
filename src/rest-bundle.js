@@ -73,7 +73,7 @@ var pkg = require("../package.json");
             app.use(this.uribase + "/ui/pub", express.static(path.join(this.uidir, "pub")));
             app.use(this.uribase + "/ui/aot", express.static(path.join(this.uidir, "aot")));
             app.use(this.uribase + "/ui/app", express.static(path.join(this.uidir, "app")));
-            app.use(this.uribase + "/dist", express.static(path.join(this.package_dir, "dist")));
+            app.use(this.uribase + "/dist", express.static(path.join(this.node_modules, "../dist")));
             app.use("/node_modules", express.static(this.node_modules));
             app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
         }
