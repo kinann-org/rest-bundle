@@ -12,10 +12,10 @@ const bodyParser = require("body-parser");
             }
             this.name = name;
             this.uribase = options.uribase || "/" + this.name;
-            this.package_dir = path.dirname(path.dirname(__filename));
-            this.uidir = options.uidir || path.join(this.package_dir, "src/ui");
-            this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0], "node_modules");
-            this.rootpkg = require(path.join(this.node_modules,"../package.json"));
+            this.appdir = options.appdir || require.resolve("@angular/core").split("node_modules")[0];
+            this.appPkg = require(path.join(this.appdir,"package.json"));
+            this.srcPkg = options.srcPkg || require(path.join(__dirname, "../package.json"));
+            this.node_modules = path.join(this.appdir, "node_modules");
             this.ui_index = options.ui_index || "/ui/index-jit";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
@@ -55,8 +55,8 @@ const bodyParser = require("body-parser");
         getIdentity(req, res, next) {
             return {
                 name: this.name,
-                type: this.rootpkg.name,
-                version: this.rootpkg.version,
+                type: this.srcPkg.name,
+                version: this.srcPkg.version,
             }
         }
 
@@ -70,10 +70,10 @@ const bodyParser = require("body-parser");
         }
 
         bindAngular(app) {
-            app.use(this.uribase + "/ui/pub", express.static(path.join(this.uidir, "pub")));
-            app.use(this.uribase + "/ui/aot", express.static(path.join(this.uidir, "aot")));
-            app.use(this.uribase + "/ui/app", express.static(path.join(this.uidir, "app")));
-            app.use(this.uribase + "/dist", express.static(path.join(this.node_modules, "../dist")));
+            app.use(this.uribase + "/ui/pub", express.static(path.join(this.appdir, "src/ui/pub")));
+            app.use(this.uribase + "/ui/aot", express.static(path.join(this.appdir, "src/ui/aot")));
+            app.use(this.uribase + "/ui/app", express.static(path.join(this.appdir, "src/ui/app")));
+            app.use(this.uribase + "/dist", express.static(path.join(this.appdir, "dist")));
             app.use("/node_modules", express.static(this.node_modules));
             app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
         }
@@ -106,8 +106,8 @@ const bodyParser = require("body-parser");
             app.set("view engine", "ejs");
             var ejsmap = {
                 service: this.name,
-                package: this.rootpkg.name,
-                version: this.rootpkg.version,
+                package: this.appPkg.name,
+                version: this.appPkg.version,
             }
             app.get(this.uribase + "/ui/index-aot", (req, res, next) => {
                 res.render("index-aot.ejs", ejsmap);
