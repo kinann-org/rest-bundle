@@ -3,7 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
-var pkg = require("../package.json");
 
 (function(exports) {
     class RestBundle {
@@ -16,6 +15,7 @@ var pkg = require("../package.json");
             this.package_dir = path.dirname(path.dirname(__filename));
             this.uidir = options.uidir || path.join(this.package_dir, "src/ui");
             this.node_modules = path.join(require.resolve("@angular/core").split("node_modules")[0], "node_modules");
+            this.rootpkg = require(path.join(this.node_modules,"../package.json"));
             this.ui_index = options.ui_index || "/ui/index-jit";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
@@ -55,8 +55,8 @@ var pkg = require("../package.json");
         getIdentity(req, res, next) {
             return {
                 name: this.name,
-                type: "RestBundle",
-                version: pkg.version,
+                type: this.rootpkg.name,
+                version: this.rootpkg.version,
             }
         }
 
@@ -106,7 +106,8 @@ var pkg = require("../package.json");
             app.set("view engine", "ejs");
             var ejsmap = {
                 service: this.name,
-                package: pkg.name,
+                package: this.rootpkg.name,
+                version: this.rootpkg.version,
             }
             app.get(this.uribase + "/ui/index-aot", (req, res, next) => {
                 res.render("index-aot.ejs", ejsmap);
