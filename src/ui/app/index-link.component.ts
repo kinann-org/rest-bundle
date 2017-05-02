@@ -2,6 +2,13 @@ import { Component, Input, ElementRef } from '@angular/core';
 
 @Component({
     selector: 'index-link',
+    styles: [`
+        h1 {
+            font-size: 120%;
+            font-weight: 700;
+            color: #339;
+        }
+    `],
     template: `<!--bq-->
     <div>
         <h1>/{{service}}/ui/index-{{index}}</h1>
@@ -19,7 +26,6 @@ import { Component, Input, ElementRef } from '@angular/core';
         by the <code>/{{service}}/identity</code> REST GET method.
     </div>
     <!--bq-->`,
-    styleUrls: ['./rest-bundle.module.css'],
 })
 export class IndexLinkComponent  { 
     service = '?service?';

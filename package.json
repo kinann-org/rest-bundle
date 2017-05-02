@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -32,6 +32,7 @@
   "devDependencies": {
     "@angular/compiler-cli": "^4.1.0",
     "@angular/platform-server": "^4.1.0",
+    "@types/core-js": "^0.9.41",
     "@types/jasmine": "2.5.36",
     "@types/node": "^6.0.46",
     "angular2-template-loader": "^0.6.2",
@@ -82,7 +83,7 @@
     "build": "bash scripts/build",
     "build:jit": "tsc -p src/ui/tsconfig-jit.json",
     "build:demo": "tsc -p demo/tsconfig.json",
-    "build:lib": "tsc -p src/ui//tsconfig-lib.json",
+    "build:lib": "tsc -p tsconfig-lib.json",
     "build:aot": "ngc -p src/ui/tsconfig-aot.json && rollup -c cfg/rollup-config.js",
     "build:e2e": "tsc -p e2e/",
     "build:dist": "npm run clean && npm run build:aot && webpack --config cfg/webpack.config.js",

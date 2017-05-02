@@ -16,7 +16,24 @@ import 'rxjs/add/operator/toPromise';
             </table>
         </div>
         `,
-    styleUrls: ['./rest-bundle.module.css'],
+    styles: [`
+        .rb-root {
+            padding: 5pt;
+            border-radius: 5px;
+            border: 1pt solid #555;
+            background-color: #eee;
+            font-family: Verdata,sans-serif;
+        }
+        th {
+            text-align: left;
+        }
+        caption {
+            font-weight: 700;
+            font-size: 110%;
+            color: #339;
+            text-align: left;
+        }
+    `],
     providers: [ ],
 })
 export class RestBundleIdentityComponent implements OnInit { 

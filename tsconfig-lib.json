@@ -2,7 +2,7 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "removeComments": true,
@@ -11,10 +11,13 @@
     "declaration": true
   },
   "exclude": [
-    "aot/**/*.ts",
-    "app/*aot*",
+    "src/ui/aot/**/*.ts",
+    "src/ui/app/*aot*",
     "components.d.ts",
     "components.js",
     "lib/**/*"
+  ],
+  "include": [
+    "src/ui"
   ]
 }
