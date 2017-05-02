@@ -20,7 +20,7 @@ const supertest = require("supertest");
             res.headers["content-type"].should.match(/utf-8/);
             res.body.should.properties({
                 name: "greeting",
-                type: "rest-bundle",
+                package: "rest-bundle",
             });
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });

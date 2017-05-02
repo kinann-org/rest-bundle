@@ -11,6 +11,8 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "exclude": [
+    "components.d.ts",
+    "lib/**",
     "aot/**/*.ts"
   ]
 }
