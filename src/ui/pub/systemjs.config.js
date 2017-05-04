@@ -28,14 +28,6 @@
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
-            "aot/app": {
-                defaultExtension: 'js',
-                meta: {
-                    './*.js': {
-                        loader: 'pub/systemjs-angular-loader.js'
-                    }
-                }
-            },
             "app": {
                 defaultExtension: 'js',
                 meta: {
@@ -46,7 +38,15 @@
             },
             rxjs: {
                 defaultExtension: 'js'
-            }
+            },
+            "aot/app": {
+                defaultExtension: 'js',
+                meta: {
+                    './*.js': {
+                        loader: 'pub/systemjs-angular-loader.js'
+                    }
+                }
+            },
         }
     });
 })(this);

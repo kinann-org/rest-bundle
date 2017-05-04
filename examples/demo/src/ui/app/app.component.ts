@@ -11,29 +11,28 @@ import { RbIdentity } from 'rest-bundle/components';
             background-color: #efe;
             font-family: Arial, Helvetica, sans-serif;
         }
-        h1 {
+        h3 {
             color: #369;
-            font-size: 125%;
+            font-size: 110%;
         }
     `],// styles
     template: `
         <div class="demo-ui">
-            <h1>Demo application root component {{seconds}}</h1>
-            This application component includes the &lt;rest-bundle-identity&gt; library component for each
+            <dt>&lt;demo-ui&gt;</dt>
+            <dd>
+            This application root component includes the &lt;rb-identity&gt; library component for each
             available REST service:
             <div *ngFor='let srv of ["greeting","aloha"]'>
-                <strong>REST service:</strong> {{srv}}
-                <rest-bundle-identity service="{{srv}}">
+                <rb-identity service="{{srv}}">
                     Loading RestBundleIdentityComponent content here ...
-                </rest-bundle-identity>
+                </rb-identity>
             </div>
+            </dd>
         </div>
     `,// template
 })
 export class AppComponent  { 
     name = 'demo-ui'; 
-    seconds = 0;
     constructor() {
-        setInterval(() => (this.seconds++), 1000);
     }
 }

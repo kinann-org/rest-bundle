@@ -1,2 +1,2 @@
-exports.RbIdentity = require('./lib/rest-bundle-identity.component').RbIdentity;
-exports.RbModule = require('./lib/rest-bundle-identity.component').RbModule;
+exports.RbIdentity = require('./lib/rb-identity.component').RbIdentity;
+exports.RbModule = require('./lib/rb.module').RbModule;

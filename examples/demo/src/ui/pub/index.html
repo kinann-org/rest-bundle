@@ -2,30 +2,34 @@
 <html>
   <head>
     <title>Demo</title>
+    <base href="/demo/ui/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="styles.css">
 
     <script src="/node_modules/core-js/client/shim.min.js"></script>
     <script src="/node_modules/zone.js/dist/zone.js"></script>
   </head>
 
-  <body>
+  <body override>
     <h1>Demo Angular Application</h1>
-    The Demo application shows how to use RestBundle NgModules
-    inside an Angular application. Here is the application's own AppComponent:
+    The Demo application shows how to include library components 
+    inside an Angular application component.  In addition, we will override
+    the component CSS of the included components.
+    Here is the application's own AppComponent (green) with 
+    two RbIdentity components (blue):
     <demo-ui>Loading AppComponent content here ...</demo-ui>
 
     <h2>RestBundle Applications</h2>
-    Each RestBundle has its own standalone user interface:
+    Each RestBundle also has its own standalone user interface:
     <ul>
       <li><a href="/greeting/ui">greeting RestBundle</a></li>
     </ul>
   </body>
   <!-- load after body -->
   <script src="/node_modules/systemjs/dist/system.src.js"></script>
-  <script src="systemjs.config.js"></script>
+  <script src="pub/systemjs.config.js"></script>
   <script>
-    System.import('../app/main-jit.js').catch(function(err){ console.error(err); });
+    System.import('app/main-jit.js').catch(function(err){ console.error(err); });
   </script>
+  <link rel="stylesheet" href="pub/styles.css"><!-- override component styles -->
 </html>

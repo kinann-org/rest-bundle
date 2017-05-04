@@ -11,18 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var AppComponent = (function () {
     function AppComponent() {
-        var _this = this;
         this.name = 'demo-ui';
-        this.seconds = 0;
-        setInterval(function () { return (_this.seconds++); }, 1000);
     }
     return AppComponent;
 }());
 AppComponent = __decorate([
     core_1.Component({
         selector: 'demo-ui',
-        styles: ["\n        .demo-ui {\n            padding: 5pt;\n            border-radius: 5px;\n            border: 1pt solid #5a5;\n            background-color: #efe;\n            font-family: Arial, Helvetica, sans-serif;\n        }\n        h1 {\n            color: #369;\n            font-size: 125%;\n        }\n    "],
-        template: "\n        <div class=\"demo-ui\">\n            <h1>Demo application root component {{seconds}}</h1>\n            This application component includes the &lt;rest-bundle-identity&gt; library component for each\n            available REST service:\n            <div *ngFor='let srv of [\"greeting\",\"aloha\"]'>\n                <strong>REST service:</strong> {{srv}}\n                <rest-bundle-identity service=\"{{srv}}\">\n                    Loading RestBundleIdentityComponent content here ...\n                </rest-bundle-identity>\n            </div>\n        </div>\n    ",
+        styles: ["\n        .demo-ui {\n            padding: 5pt;\n            border-radius: 5px;\n            border: 1pt solid #5a5;\n            background-color: #efe;\n            font-family: Arial, Helvetica, sans-serif;\n        }\n        h3 {\n            color: #369;\n            font-size: 110%;\n        }\n    "],
+        template: "\n        <div class=\"demo-ui\">\n            <dt>&lt;demo-ui&gt;</dt>\n            <dd>\n            This application root component includes the &lt;rb-identity&gt; library component for each\n            available REST service:\n            <div *ngFor='let srv of [\"greeting\",\"aloha\"]'>\n                <rb-identity service=\"{{srv}}\">\n                    Loading RestBundleIdentityComponent content here ...\n                </rb-identity>\n            </div>\n            </dd>\n        </div>\n    ",
     }),
     __metadata("design:paramtypes", [])
 ], AppComponent);

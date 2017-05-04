@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var platform_browser_1 = require("@angular/platform-browser");
+//import { RbModule } from 'rest-bundle/components';
 var components_1 = require("rest-bundle/components");
 var app_component_1 = require("./app.component");
 var AppModule = (function () {
@@ -20,9 +21,9 @@ AppModule = __decorate([
         imports: [
             platform_browser_1.BrowserModule,
             http_1.HttpModule,
-            components_1.RbModule,
         ],
         declarations: [
+            components_1.RbIdentity,
             app_component_1.AppComponent,
         ],
         bootstrap: [
