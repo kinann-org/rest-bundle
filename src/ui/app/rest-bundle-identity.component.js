@@ -15,12 +15,12 @@ var RestBundleIdentityComponent = (function () {
     function RestBundleIdentityComponent(eref, http) {
         var _this = this;
         this.http = http;
+        this.service = "/UNKNOWN";
+        this.description = "";
         this.name = 'rest-bundle-identity';
         this.date = new Date();
         this.package = "(package unknown)";
         this.version = "(version unknown)";
-        this.service = "/UNKNOWN";
-        this.description = "";
         this.service = "/" + eref.nativeElement.getAttribute("service") || "expected attribute:service";
         this.description = eref.nativeElement.getAttribute("description") || this.description;
         setInterval(function () { return (_this.date = new Date()); }, 1000);
@@ -39,6 +39,14 @@ var RestBundleIdentityComponent = (function () {
     };
     return RestBundleIdentityComponent;
 }());
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Object)
+], RestBundleIdentityComponent.prototype, "service", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Object)
+], RestBundleIdentityComponent.prototype, "description", void 0);
 RestBundleIdentityComponent = __decorate([
     core_1.Component({
         selector: 'rest-bundle-identity',

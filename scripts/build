@@ -14,7 +14,6 @@ echo -e "\nSTART\t: `pwd`/$0\t`date`" |& tee -a $log
 rm -f $log
 build1 npm run clean
 build1 npm run build:aot
-build1 npm run build:demo
 build1 npm run build:pack
 build1 npm run build:jit
 build1 npm run build:lib

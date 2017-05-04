@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Input } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
@@ -37,12 +37,13 @@ import 'rxjs/add/operator/toPromise';
     providers: [ ],
 })
 export class RestBundleIdentityComponent implements OnInit { 
+    @Input() service = "/UNKNOWN";
+    @Input() description = "";
+
     name = 'rest-bundle-identity'; 
     date = new Date();
     package = "(package unknown)";
     version = "(version unknown)";
-    service = "/UNKNOWN";
-    description = "";
     constructor(eref:ElementRef, public http:Http) {
         this.service = "/" + eref.nativeElement.getAttribute("service") || "expected attribute:service";
         this.description = eref.nativeElement.getAttribute("description") || this.description;

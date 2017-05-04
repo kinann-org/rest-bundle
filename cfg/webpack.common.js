@@ -16,32 +16,31 @@ module.exports = {
 
     module: {
         rules: [{
-                test: /\.ts$/,
-                loaders: [{
-                    loader: 'awesome-typescript-loader',
-                    options: {
-                        configFileName: helpers.root('src/ui', 'tsconfig-dist.json')
-                    }
-                }, 'angular2-template-loader']
-            }, {
-                test: /\.html$/,
-                loader: 'html-loader'
-            }, {
-                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-                loader: 'file-loader?name=assets/[name].[hash].[ext]'
-            }, { // application css
-                test: /\.css$/,
-                exclude: helpers.root('src/ui', 'app'),
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader?sourceMap'
-                })
-            }, { // NgComponent css
-                test: /\.css$/,
-                include: helpers.root('src/ui', 'app'),
-                loader: 'raw-loader'
-            }
-        ]
+            test: /\.ts$/,
+            loaders: [{
+                loader: 'awesome-typescript-loader',
+                options: {
+                    configFileName: helpers.root('src/ui', 'tsconfig-dist.json')
+                }
+            }, 'angular2-template-loader']
+        }, {
+            test: /\.html$/,
+            loader: 'html-loader'
+        }, {
+            test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+            loader: 'file-loader?name=assets/[name].[hash].[ext]'
+        }, { // application css
+            test: /\.css$/,
+            exclude: helpers.root('src/ui', 'app'),
+            loader: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: 'css-loader?sourceMap'
+            })
+        }, { // NgComponent css
+            test: /\.css$/,
+            include: helpers.root('src/ui', 'app'),
+            loader: 'raw-loader'
+        }]
     },
 
     plugins: [

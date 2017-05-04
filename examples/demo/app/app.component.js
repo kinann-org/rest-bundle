@@ -21,7 +21,8 @@ var AppComponent = (function () {
 AppComponent = __decorate([
     core_1.Component({
         selector: 'demo-ui',
-        template: "<div class=\"demo-ui\">demo-ui AppComponent {{seconds}}</div>",
+        styles: ["\n        .demo-ui {\n            padding: 5pt;\n            border-radius: 5px;\n            border: 1pt solid #5a5;\n            background-color: #efe;\n            font-family: Arial, Helvetica, sans-serif;\n        }\n        h1 {\n            color: #369;\n            font-size: 125%;\n        }\n    "],
+        template: "\n        <div class=\"demo-ui\">\n            <h1>Demo application root component {{seconds}}</h1>\n            This application component includes the library component &lt;rest-bundle-identity&gt;:\n            <div *ngFor='let srv of [\"greeting\",\"aloha\"]'>\n                {{srv}}\n                <rest-bundle-identity [service]=\"srv\">\n                    Loading RestBundleIdentityComponent content here ...\n                </rest-bundle-identity>\n            </div>\n            two:\n            <rest-bundle-identity service=\"aloha\">\n                Loading RestBundleIdentityComponent content here ...\n            </rest-bundle-identity>\n        </div>\n    ",
     }),
     __metadata("design:paramtypes", [])
 ], AppComponent);

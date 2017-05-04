@@ -12,6 +12,7 @@
   },
   "exclude": [
     "components.d.ts",
+    "app/main-aot.ts",
     "lib/**",
     "aot/**/*.ts"
   ]
