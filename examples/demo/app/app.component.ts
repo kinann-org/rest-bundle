@@ -18,17 +18,14 @@ import { Component } from '@angular/core';
     template: `
         <div class="demo-ui">
             <h1>Demo application root component {{seconds}}</h1>
-            This application component includes the library component &lt;rest-bundle-identity&gt;:
+            This application component includes the &lt;rest-bundle-identity&gt; library component for each
+            available REST service:
             <div *ngFor='let srv of ["greeting","aloha"]'>
-                {{srv}}
+                <strong>REST service:</strong> /{{srv}}
                 <rest-bundle-identity [service]="srv">
                     Loading RestBundleIdentityComponent content here ...
                 </rest-bundle-identity>
             </div>
-            two:
-            <rest-bundle-identity service="aloha">
-                Loading RestBundleIdentityComponent content here ...
-            </rest-bundle-identity>
         </div>
     `,// template
 })

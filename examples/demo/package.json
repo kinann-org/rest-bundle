@@ -29,7 +29,7 @@
     "systemjs": "0.19.40",
     "zone.js": "^0.8.4",
 
-    "rest-bundle": "^0.9.11"
+    "rest-bundle": "^0.9.12"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^4.1.0",

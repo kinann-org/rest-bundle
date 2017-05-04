@@ -1,7 +1,7 @@
-import { ElementRef, OnInit } from '@angular/core';
+import { ElementRef, AfterViewInit } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-export declare class RestBundleIdentityComponent implements OnInit {
+export declare class RestBundleIdentityComponent implements AfterViewInit {
     http: Http;
     service: string;
     description: string;
@@ -10,5 +10,5 @@ export declare class RestBundleIdentityComponent implements OnInit {
     package: string;
     version: string;
     constructor(eref: ElementRef, http: Http);
-    ngOnInit(): void;
+    ngAfterViewInit(): void;
 }

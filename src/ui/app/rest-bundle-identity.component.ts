@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, Input } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
@@ -36,7 +36,7 @@ import 'rxjs/add/operator/toPromise';
     `],
     providers: [ ],
 })
-export class RestBundleIdentityComponent implements OnInit { 
+export class RestBundleIdentityComponent implements AfterViewInit { 
     @Input() service = "/UNKNOWN";
     @Input() description = "";
 
@@ -49,7 +49,7 @@ export class RestBundleIdentityComponent implements OnInit {
         this.description = eref.nativeElement.getAttribute("description") || this.description;
         setInterval(() => (this.date = new Date()), 1000);
     }
-    ngOnInit() {
+    ngAfterViewInit() {
         console.log("ngOnInit");
         this.http.get(this.service + "/identity")
             .toPromise()

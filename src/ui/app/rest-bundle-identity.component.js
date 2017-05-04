@@ -25,7 +25,7 @@ var RestBundleIdentityComponent = (function () {
         this.description = eref.nativeElement.getAttribute("description") || this.description;
         setInterval(function () { return (_this.date = new Date()); }, 1000);
     }
-    RestBundleIdentityComponent.prototype.ngOnInit = function () {
+    RestBundleIdentityComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
         console.log("ngOnInit");
         this.http.get(this.service + "/identity")
