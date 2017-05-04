@@ -11,6 +11,6 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "files": [
-    "main.ts"
+    "app/main-jit.ts"
   ]
 }

@@ -25,7 +25,7 @@
     "body-parser": "^1.14.1",
     "core-js": "^2.4.1",
     "express": "^4.13.3",
-    "rest-bundle": "^0.9.16",
+    "rest-bundle": "^0.9.17",
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
     "zone.js": "^0.8.4"
@@ -72,7 +72,8 @@
   },
   "scripts": {
     "build": "npm run build:jit",
-    "build:jit": "tsc -p tsconfig-jit.json",
+    "build:aot": "ngc -p src/ui/tsconfig-aot.json && rollup -c cfg/rollup-config.js",
+    "build:jit": "tsc -p src/ui/tsconfig-jit.json",
     "build:watch": "tsc -p src/ui/tsconfig-aot.json -w",
     "clean": "rm -f *.log*",
     "lint": "tslint ./src/**/*.ts -t verbose",
@@ -80,7 +81,7 @@
     "protractor": "protractor protractor.config.js",
     "serve": "lite-server -c=cfg/bs-config.json",
     "serve:e2e": "lite-server -c=cfg/bs-config.e2e.json",
-    "start": "node hello-node.js ",
+    "start": "node scripts/demo-node.js ",
     "start:ts": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "test": "npm run test:node",
     "test:node": "mocha -w -R min --inline-diffs",

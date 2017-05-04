@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RbIdentity } from 'rest-bundle/components';
 
 @Component({
     selector: 'demo-ui',

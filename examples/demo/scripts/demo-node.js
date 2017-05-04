@@ -4,10 +4,13 @@ const path = require("path");
 const express = require('express');
 const app = module.exports = express();
 
-app.use("/demo", express.static(path.join(__dirname, "../demo")));
+app.get("/demo/ui", (req,res) => {
+    res.redirect("/demo/ui/pub/index.html");
+});
+app.use("/demo/ui", express.static(path.join(__dirname, "../src/ui")));
 
 // bind in HelloRest service
-const HelloRest = require("./hello-rest");
+const HelloRest = require("../src/hello-rest");
 var helloRest = new HelloRest("greeting");
 helloRest.bindExpress(app);
 var alohaRest = new HelloRest("aloha");
