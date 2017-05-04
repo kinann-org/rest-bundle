@@ -27,7 +27,6 @@ AppModule = __decorate([
         ],
         bootstrap: [
             app_component_1.AppComponent,
-            components_1.RestBundleIdentityComponent,
         ]
     })
 ], AppModule);

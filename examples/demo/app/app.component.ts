@@ -20,17 +20,12 @@ import { Component } from '@angular/core';
             <h1>Demo application root component {{seconds}}</h1>
             This application component includes the &lt;rest-bundle-identity&gt; library component for each
             available REST service:
-                <rest-bundle-identity [service]="greeting">
-                    Loading RestBundleIdentityComponent content here ...
-                </rest-bundle-identity>
             <div *ngFor='let srv of ["greeting","aloha"]'>
                 <strong>REST service:</strong> {{srv}}
-                <rest-bundle-identity [service]="srv">
+                <rest-bundle-identity service="{{srv}}">
                     Loading RestBundleIdentityComponent content here ...
                 </rest-bundle-identity>
             </div>
-                <!--
-            -->
         </div>
     `,// template
 })
