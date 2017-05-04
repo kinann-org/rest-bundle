@@ -74,7 +74,7 @@ const bodyParser = require("body-parser");
             app.use(this.uribase + "/ui/pub", express.static(path.join(this.svcDir, "src/ui/pub")));
             app.use(this.uribase + "/ui/aot", express.static(path.join(this.svcDir, "src/ui/aot")));
             app.use(this.uribase + "/ui/app", express.static(path.join(this.svcDir, "src/ui/app")));
-            app.use(this.uribase + "/dist", express.static(path.join(this.svcDir, "dist")));
+            app.use(this.uribase + "/dist", express.static(path.join(this.appDir, "dist")));
             app.use("/node_modules", express.static(this.node_modules));
             app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
         }
@@ -103,7 +103,7 @@ const bodyParser = require("body-parser");
         }
 
         bindEjs(app) {
-            app.set("views", "./src/ui/views");
+            app.set("views", path.join(this.svcDir, "src/ui/views"));
             app.set("view engine", "ejs");
             var ejsmap = {
                 service: this.name,
