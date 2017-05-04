@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit, AfterViewInit, Input } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
@@ -7,9 +7,9 @@ import 'rxjs/add/operator/toPromise';
     template: `
         <div class="rb-root">
             <table>
-                <caption>&lt;{{name}}&gt;</caption>
+                <caption>&lt;{{name}}&gt; #{{inst}}</caption>
                 <tr><th>Description:</th><td>{{description}}</td></tr>
-                <tr><th>Service:</th><td>{{service}}/identity</td></tr>
+                <tr><th>REST Service:</th><td>/{{service}}/identity</td></tr>
                 <tr><th>Package:</th><td>{{package}}</td></tr>
                 <tr><th>Version:</th><td>{{version}}</td></tr>
                 <tr><th>Date:</th><td>{{date}}</td></tr>
@@ -37,26 +37,29 @@ import 'rxjs/add/operator/toPromise';
     providers: [ ],
 })
 export class RestBundleIdentityComponent implements AfterViewInit { 
-    @Input() service = "/UNKNOWN";
+    static rbicInst = 0;
+    @Input() service :string;
     @Input() description = "";
 
+    inst = ++RestBundleIdentityComponent.rbicInst;
     name = 'rest-bundle-identity'; 
     date = new Date();
     package = "(package unknown)";
     version = "(version unknown)";
     constructor(eref:ElementRef, public http:Http) {
-        this.service = "/" + eref.nativeElement.getAttribute("service") || "expected attribute:service";
+        this.service = eref.nativeElement.getAttribute("service");
         this.description = eref.nativeElement.getAttribute("description") || this.description;
         setInterval(() => (this.date = new Date()), 1000);
     }
     ngAfterViewInit() {
-        console.log("ngOnInit");
-        this.http.get(this.service + "/identity")
+        console.log("ngAfterViewInit", this.inst, this.service);
+        var that = this;
+        this.service && this.http.get("/" + that.service + "/identity")
             .toPromise()
             .then((res) => {
                 var json = res.json();
-                this.package = json.package || this.package;
-                this.version = json.version || this.version;
+                that.package = json.package || that.package;
+                that.version = json.version || that.version;
             })
             .catch((err:any) => console.log("err", err));
     }

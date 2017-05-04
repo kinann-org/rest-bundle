@@ -25,11 +25,10 @@
     "body-parser": "^1.14.1",
     "core-js": "^2.4.1",
     "express": "^4.13.3",
+    "rest-bundle": "^0.9.13",
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
-    "zone.js": "^0.8.4",
-
-    "rest-bundle": "^0.9.12"
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^4.1.0",

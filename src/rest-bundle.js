@@ -106,8 +106,8 @@ const bodyParser = require("body-parser");
             app.set("view engine", "ejs");
             var ejsmap = {
                 service: this.name,
-                package: this.appPkg.name,
-                version: this.appPkg.version,
+                package: this.srcPkg.name,
+                version: this.srcPkg.version,
             }
             app.get(this.uribase + "/ui/index-aot", (req, res, next) => {
                 res.render("index-aot.ejs", ejsmap);
