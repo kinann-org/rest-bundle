@@ -8,29 +8,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var http_1 = require("@angular/http");
-var rest_bundle_identity_component_1 = require("./rest-bundle-identity.component");
-var index_link_component_1 = require("./index-link.component");
-var AppModule = (function () {
-    function AppModule() {
+var rb_identity_component_1 = require("./rb-identity.component");
+var rb_index_links_component_1 = require("./rb-index-links.component");
+var RbModule = (function () {
+    function RbModule() {
     }
-    return AppModule;
+    return RbModule;
 }());
-AppModule = __decorate([
+RbModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
             http_1.HttpModule,
         ],
         declarations: [
-            rest_bundle_identity_component_1.RestBundleIdentityComponent,
-            index_link_component_1.IndexLinkComponent,
+            rb_identity_component_1.RbIdentity,
+            rb_index_links_component_1.RbIndexLinks,
         ],
         providers: [],
         bootstrap: [
-            rest_bundle_identity_component_1.RestBundleIdentityComponent,
-            index_link_component_1.IndexLinkComponent,
+            rb_identity_component_1.RbIdentity,
+            rb_index_links_component_1.RbIndexLinks,
         ]
     })
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+], RbModule);
+exports.RbModule = RbModule;
+//# sourceMappingURL=rb.module.js.map

@@ -1,5 +1,5 @@
 import { platformBrowser }    from '@angular/platform-browser';
-import { AppModuleNgFactory } from '../aot/app/app.module.ngfactory';
+import { RbModuleNgFactory } from '../aot/app/rb.module.ngfactory';
 
 console.log("AOT compiled");
-platformBrowser().bootstrapModuleFactory(AppModuleNgFactory);
+platformBrowser().bootstrapModuleFactory(RbModuleNgFactory);

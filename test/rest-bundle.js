@@ -64,7 +64,7 @@ const supertest = require("supertest");
             res.headers["content-type"].should.match(/html/);
             res.headers["content-type"].should.match(/utf-8/);
             res.text.should.match(/<html>/);
-            res.text.should.match(/<index-link index="jit"/);
+            res.text.should.match(/<rb-index-links index="jit"/);
             res.text.should.match(/service="greeting"/); // EJS injects service name
         }).end((err,res) => {if (err) throw err; else done(); });
     })

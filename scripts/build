@@ -4,7 +4,7 @@ function build1() {
     RC=$?; 
     if [ $RC != 0 ]; then 
         echo -e "ERROR\t: $RC (see build.log)"
-        grep -e "ERROR" -e "error" -e "Error" $log
+        grep -v -e 'npm ERR' -e '^> ' $log 
         exit $RC
     fi
 }

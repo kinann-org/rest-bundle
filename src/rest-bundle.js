@@ -12,10 +12,11 @@ const bodyParser = require("body-parser");
             }
             this.name = name;
             this.uribase = options.uribase || "/" + this.name;
-            this.appdir = options.appdir || require.resolve("@angular/core").split("node_modules")[0];
-            this.appPkg = require(path.join(this.appdir,"package.json"));
+            this.appDir = options.appDir || require.resolve("@angular/core").split("node_modules")[0];
+            this.svcDir = options.svcDir || path.join(__dirname, "..");
+            this.appPkg = require(path.join(this.appDir,"package.json"));
             this.srcPkg = options.srcPkg || require("../package.json");
-            this.node_modules = path.join(this.appdir, "node_modules");
+            this.node_modules = path.join(this.appDir, "node_modules");
             this.ui_index = options.ui_index || "/ui/index-jit";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
@@ -70,10 +71,10 @@ const bodyParser = require("body-parser");
         }
 
         bindAngular(app) {
-            app.use(this.uribase + "/ui/pub", express.static(path.join(this.appdir, "src/ui/pub")));
-            app.use(this.uribase + "/ui/aot", express.static(path.join(this.appdir, "src/ui/aot")));
-            app.use(this.uribase + "/ui/app", express.static(path.join(this.appdir, "src/ui/app")));
-            app.use(this.uribase + "/dist", express.static(path.join(this.appdir, "dist")));
+            app.use(this.uribase + "/ui/pub", express.static(path.join(this.svcDir, "src/ui/pub")));
+            app.use(this.uribase + "/ui/aot", express.static(path.join(this.svcDir, "src/ui/aot")));
+            app.use(this.uribase + "/ui/app", express.static(path.join(this.svcDir, "src/ui/app")));
+            app.use(this.uribase + "/dist", express.static(path.join(this.svcDir, "dist")));
             app.use("/node_modules", express.static(this.node_modules));
             app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
         }
