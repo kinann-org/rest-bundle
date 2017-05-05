@@ -14,6 +14,9 @@ import { RbIndexLinks }  from './rb-index-links.component';
         RbIdentity, 
         RbIndexLinks,
     ],
+    exports: [
+        RbIdentity,
+    ],
     providers: [
     ],
     bootstrap:    [ 
