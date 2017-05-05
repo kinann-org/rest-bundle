@@ -25,7 +25,7 @@
     "body-parser": "^1.14.1",
     "core-js": "^2.4.1",
     "express": "^4.13.3",
-    "rest-bundle": "^0.9.21",
+    "rest-bundle": "^0.9.22",
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
     "zone.js": "^0.8.4"
@@ -75,7 +75,7 @@
     "build:aot": "ngc -p src/ui/tsconfig-aot.json && rollup -c cfg/rollup-config.js",
     "build:jit": "tsc -p src/ui/tsconfig-jit.json",
     "build:watch": "tsc -p src/ui/tsconfig-aot.json -w",
-    "clean": "rm -f *.log*",
+    "clean": "rm -f *.log*; rimraf dist && rimraf src/ui/aot && rimraf lib",
     "lint": "tslint ./src/**/*.ts -t verbose",
     "pretest:once": "npm run build",
     "protractor": "protractor protractor.config.js",

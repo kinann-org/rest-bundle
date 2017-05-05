@@ -10,7 +10,7 @@ import { AppComponent }  from './app.component';
     imports:      [ 
         BrowserModule,
         HttpModule,
-        RbModule,
+        RbModule.forRoot(),
     ],
     declarations: [ 
         AppComponent,

@@ -10,12 +10,18 @@ var platform_browser_1 = require("@angular/platform-browser");
 var http_1 = require("@angular/http");
 var rb_identity_component_1 = require("./rb-identity.component");
 var rb_index_links_component_1 = require("./rb-index-links.component");
-var RbModule = (function () {
+var RbModule = RbModule_1 = (function () {
     function RbModule() {
     }
+    RbModule.forRoot = function () {
+        return {
+            ngModule: RbModule_1,
+            providers: [],
+        };
+    };
     return RbModule;
 }());
-RbModule = __decorate([
+RbModule = RbModule_1 = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
@@ -36,4 +42,5 @@ RbModule = __decorate([
     })
 ], RbModule);
 exports.RbModule = RbModule;
+var RbModule_1;
 //# sourceMappingURL=rb.module.js.map

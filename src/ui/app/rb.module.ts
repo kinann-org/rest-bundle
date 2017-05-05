@@ -1,4 +1,7 @@
-import { NgModule }      from '@angular/core';
+import { 
+    NgModule, 
+    ModuleWithProviders  //TODO: Remove this
+}      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 
@@ -24,4 +27,11 @@ import { RbIndexLinks }  from './rb-index-links.component';
         RbIndexLinks,  // top-level component
     ]
 })
-export class RbModule { }
+export class RbModule { 
+    public static forRoot(): ModuleWithProviders { // TODO: remove this
+        return {
+            ngModule: RbModule,
+            providers: [ ],
+        };
+    }
+}

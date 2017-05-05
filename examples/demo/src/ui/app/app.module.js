@@ -20,7 +20,7 @@ AppModule = __decorate([
         imports: [
             platform_browser_1.BrowserModule,
             http_1.HttpModule,
-            components_1.RbModule,
+            components_1.RbModule.forRoot(),
         ],
         declarations: [
             app_component_1.AppComponent,
