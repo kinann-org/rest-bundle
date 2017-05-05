@@ -1,0 +1,20 @@
+<!DOCTYPE html> <html>
+  <head>
+    <title><%= package %></title>
+    <base href="/<%= service %>/ui/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="pub/styles.css">
+
+    <script type="text/javascript" src="../dist/polyfills.dist.js"></script>
+    <script type="text/javascript" src="../dist/vendor.dist.js"></script>
+  </head>
+
+  <body>
+    <rb-index-links index="dist" service="<%= service %>"></rb-index-links>
+    <rb-identity service="<%= service %>" description="Distribution RbIdentity">
+        Loading RbIdentity content here ...
+    </rb-identity>
+    <script type="text/javascript" src="../dist/app.dist.js"></script>
+  </body>
+</html>
