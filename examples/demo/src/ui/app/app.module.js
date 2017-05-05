@@ -9,7 +9,6 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var platform_browser_1 = require("@angular/platform-browser");
 var components_1 = require("rest-bundle/components");
-//import { RbIdentity } from 'rest-bundle/components';
 var app_component_1 = require("./app.component");
 var AppModule = (function () {
     function AppModule() {
