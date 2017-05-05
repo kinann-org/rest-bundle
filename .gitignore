@@ -1,5 +1,6 @@
 # Angular
-*.map
+src/**/*.map
+examples/**/*.map
 dist
 src/ui/aot
 
