@@ -1,0 +1,33 @@
+{
+  "name": "vue-app",
+  "description": "A Vue.js project",
+  "version": "1.0.0",
+  "author": "firepick1 (localhost) <karl@firepick.org>",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:vue",
+    "build:vue": "cross-env NODE_ENV=production webpack --config cfg/webpack.config.js --progress --hide-modules",
+    "clean": "rm *.log*; rimraf dist",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config cfg/webpack.config.js --open --hot",
+    "start": "scripts/demo-node.js"
+  },
+  "dependencies": {
+    "rest-bundle": "^0.9.23",
+    "rimraf": "^2.6.1",
+    "vue": "^2.2.1",
+    "vuex": "^2.3.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.0.0",
+    "babel-preset-latest": "^6.0.0",
+    "cross-env": "^3.0.0",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
+    "rimraf": "^2.6.1",
+    "vue-loader": "^11.1.4",
+    "vue-template-compiler": "^2.2.1",
+    "webpack": "^2.2.0",
+    "webpack-dev-server": "^2.2.0"
+  }
+}

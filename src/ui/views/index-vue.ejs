@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= package %></title>
+        <base href="/<%= service %>/ui/">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="pub/styles.css">
+        <script src="https://unpkg.com/vue"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script type="application/ecmascript" src="pub/RbIdentity.vue"></script>
+
+        <script >
+            Vue.$http = axios;
+            var RbIdenity_instances = 0;
+            class RbIdentity { 
+                constructor(eref, http) {
+                    this.instance = ++RbIdentity_instances;
+                    this.name = 'rb-identity'; 
+                    this.package = "(package unknown)";
+                    this.version = "(version unknown)";
+                    this.service = eref.nativeElement.getAttribute("service");
+                }
+                ngAfterViewInit() {
+                    var that = this;
+                    this.service && this.http.get("/" + that.service + "/identity")
+                        .toPromise()
+                        .then((res) => {
+                            var json = res.json();
+                            that.package = json.package || that.package;
+                            that.version = json.version || that.version;
+                        })
+                        .catch((err) => console.log("err", err));
+                }
+            }//class
+        </script>
+    </head>
+
+    <body>
+        <h1>/<%= service %>/ui/index-vue</h1>
+        <div id="app">
+            {{message}}
+            <rb-identity service="<%= service %>">fluffy</rb-identity>
+        <!--
+        <rb-index-links index="jit" service="<%= service %>"></rb-index-links>
+        <rb-identity service="<%= service %>" description="JIT RbIdentity">
+            Loading RbIdentity content here ...
+        </rb-identity>
+        -->
+        </div>
+    </body>
+    <script>
+        Vue.component("rb-identity", {
+            template:`
+                <div class="rb-component rb-identity">
+                    <table>
+                        <tr><th>Component:</th><td>&lt;{{name}}&gt; #{{instance}}</td></tr>
+                        <tr><th>Package:</th><td>{{package}}@{{version}}</td></tr>
+                        <tr><th>Description:</th><td>Displays REST response for <code>/{{service || "NO-SERVICE"}}/identity</code></td></tr>
+                    </table>
+                </div>
+            `,//template
+            data: () => { 
+                return {
+                    instance: 1,
+                    service: "TBD",
+                    name: "TBD",
+                    package: "TBD",
+                    version: "TBD",
+                }
+            },
+            created: () => {
+                console.log("rb-identity vue created");
+                Vue.$http.get("/<%= service %>/identity")
+                    .then(response => {
+                        console.log("response", response);
+                    })
+                    .catch(err => {
+                    })
+            },
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+            }
+        })
+    </script>
+</html>
