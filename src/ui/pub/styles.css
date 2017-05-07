@@ -1,3 +1,13 @@
+.rb-component {
+    padding: 5pt;
+    border-radius: 5px;
+    border: 1pt solid #555;
+    background-color: #eee;
+    font-family: Verdata,sans-serif;
+    }
+th {
+    text-align: left;
+}
 body {
     font-family: Verdata,sans-serif;
 }

@@ -119,6 +119,9 @@ const bodyParser = require("body-parser");
             app.get(this.uribase + "/ui/index-jit", (req, res, next) => {
                 res.render("index-jit.ejs", ejsmap);
             });
+            app.get(this.uribase + "/ui/index-vue", (req, res, next) => {
+                res.render("index-vue.ejs", ejsmap);
+            });
         }
 
         bindExpress(app, restHandlers = this.handlers) {

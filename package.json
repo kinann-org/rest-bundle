@@ -22,11 +22,13 @@
     "@angular/platform-server": "^4.1.0",
     "@angular/router": "^4.1.0",
     "angular-in-memory-web-api": "~0.3.0",
+    "axios": "^0.16.1",
     "body-parser": "^1.14.1",
     "core-js": "^2.4.1",
     "express": "^4.13.3",
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
+    "vue": "^2.3.2",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
