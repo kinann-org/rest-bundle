@@ -2,7 +2,7 @@
 
 <div class="rb-component rb-identity">
     <table>
-        <tr><th>Component:</th><td>&lt;{{name}}&gt; #{{instance}}</td></tr>
+        <tr><th>Component:</th><td>&lt;{{selector}}&gt; {{stateType}}#{{stateId}}</td></tr>
         <tr><th>Package:</th><td>{{package}}@{{version}}</td></tr>
         <tr><th>Description:</th><td>Displays REST response for <code>/{{service || "NO-SERVICE"}}/identity</code></td></tr>
     </table>
@@ -11,33 +11,33 @@
 </template><!- ==================== --> <script>
 
 var axios = require("axios");
-var name = "rb-identity";
+const debug = process.env.NODE_ENV !== 'production'
 
 export default {
-    name: name,
     props: {
         service: {
             type: String,
             required: true,
         }
     },
+    computed: {
+        selector() {
+            return this.$options._componentTag;
+        },
+    },
     data() {
-        console.log("RbIdentity vue data", this.service);
-        return {
-            name: name,
+        var data = {
+            stateName: this.service,
+            stateType: this.$options._componentTag + "_state",
             package: "tbd",
             version: "tbd",
         }
+        this.$store.commit("registerData", data);
+        return data;
     },
-    computed: {
-        instance() {
-            return 432;
-        }
-    },
-    mounted() {
-        console.log("rb-identity beforeMount", this.service);
-        this.$store.commit("addRestBundle", { name: this.service });
-        axios.get("/" + this.service + "/identity")
+    beforeMount() {
+        var origin = debug ? "http://localhost:8080" : location.href;
+        axios.get(origin + "/" + this.service + "/identity")
             .then((res) => {
                 var json = res.data;
                 this.package = json.package || this.package;

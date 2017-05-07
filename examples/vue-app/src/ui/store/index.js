@@ -7,20 +7,17 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
     state: {
-        restBundles: {
-        },
     },  
     getters: {
-        restBundles: (state, getters) => {
-            console.log("getters restBundles", state.restBundles);
-            return Object.keys(state.restBundles);
-        }
+        dataOfType: (state, getters) => ((stateType) => state[stateType]),
     },
     mutations: {
-        addRestBundle(state, rb) {
-            console.log("addRestBundle", rb);
-            Vue.set(state.restBundles, rb.name, rb);
-            console.log("addRestBundle", state.restBundles);
+        registerData(state, data) {
+            let stateType = data.stateType || "UNKNOWN_stateType";
+            state[stateType] || Vue.set(state, stateType, {});
+            Vue.set(state[stateType], data.stateName, data);
+            debug && console.log("store.registerData", stateType, data.stateName);
+            data.stateId = Object.keys(state[stateType]).length;
         },
     },
 });

@@ -2,11 +2,8 @@
   <div id="app">
     <h1> <img src="./assets/logo.png" height="25px"> {{msg}}</h1>
     This application currently has the following RestBundles:
-    <rb-identity service="greeting">(Loading rb-identity)..</rb-identity>
-    <rb-identity service="aloha">(Loading rb-identity)..</rb-identity>
-    <template v-for="s of $store.getters.restBundles">
-        restBunde:{{s}}
-        <rb-identity :service="s">(Loading rb-identity)..</rb-identity>
+    <template v-for='service of ["greeting", "aloha"]'>
+        <rb-identity :service="service">(Loading rb-identity)..</rb-identity>
     </template>
 
   </div>

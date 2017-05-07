@@ -7,6 +7,11 @@ const app = module.exports = express();
 app.get("/", (req,res) => {
     res.redirect("/demo/index.html");
 });
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
 app.use("/demo", express.static(path.join(__dirname, "../src/ui")));
 app.use("/dist", express.static(path.join(__dirname, "../dist")));
 
