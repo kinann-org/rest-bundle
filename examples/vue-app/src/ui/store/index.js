@@ -9,7 +9,12 @@ export default new Vuex.Store({
     state: {
     },  
     getters: {
-        dataOfType: (state, getters) => ((stateType) => state[stateType]),
+        stateData: (state) => ((stateType,stateName) => {
+            var typeData = state[stateType];
+            return typeData == null || stateName == null 
+                ? typeData 
+                : typeData[stateName];
+        }),
     },
     mutations: {
         registerData(state, data) {

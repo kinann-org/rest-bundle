@@ -2,9 +2,13 @@
   <div id="app">
     <h1> <img src="./assets/logo.png" height="25px"> {{msg}}</h1>
     This application currently has the following RestBundles:
-    <template v-for='service of ["greeting", "aloha"]'>
-        <rb-identity :service="service">(Loading rb-identity)..</rb-identity>
+    <template v-for='service of ["greeting", "aloha", "bad-service"]'>
+        <rb-identity :service="service"></rb-identity>
     </template>
+    <rb-identity service="greeting">
+        Service components all share the same Vuex.Store data state. In this case, 
+        the "greeting" service has two components that share the same state.
+    </rb-identity>
 
   </div>
 
