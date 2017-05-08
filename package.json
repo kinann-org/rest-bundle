@@ -29,6 +29,7 @@
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
     "vue": "^2.3.2",
+    "vuex": "^2.3.1",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
@@ -58,7 +59,6 @@
     "null-loader": "^0.1.1",
     "protractor": "^4.0.0",
     "raw-loader": "^0.5.1",
-    "rimraf": "^2.6.1",
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
@@ -69,7 +69,14 @@
     "tslint": "^3.15.1",
     "typescript": "~2.2.0",
     "webpack": "^2.4.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.0.0",
+    "babel-preset-latest": "^6.0.0",
+    "cross-env": "^3.0.0",
+    "vue-loader": "^11.1.4",
+    "vue-template-compiler": "^2.2.1",
+    "webpack-dev-server": "^2.2.0"
   },
   "scripts": {
     "build": "bash scripts/build",
@@ -79,8 +86,11 @@
     "build:jit": "tsc -p src/ui/tsconfig-jit.json",
     "build:lib": "tsc -p tsconfig-lib.json",
     "build:pack": "webpack --config cfg/webpack.config.js",
+    "build:vue": "cross-env NODE_ENV=production webpack --config cfg/webpack.vue.js --progress --hide-modules",
     "build:watch": "tsc -p src/ui/tsconfig-aot.json -w",
     "clean": "rm -f *.log*; rimraf dist && rimraf src/ui/aot && rimraf lib",
+    "dev": "concurrently \"scripts/demo-node.js\" \"npm run dev:vue\"",
+    "dev:vue": "cross-env NODE_ENV=development webpack-dev-server --config cfg/webpack.vue.js --open --hot",
     "e2e": "concurrently \"npm run serve:e2e\" \"npm run protractor\" --kill-others --success first",
     "lint": "tslint ./src/**/*.ts -t verbose",
     "pree2e": "npm run build:e2e",
