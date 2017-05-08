@@ -10,7 +10,7 @@ app.get("/demo/ui", (req,res) => {
 app.use("/demo/ui", express.static(path.join(__dirname, "../src/ui")));
 
 // bind in HelloRest service
-const HelloRest = require("../src/hello-rest");
+const HelloRest = require("../test/hello-rest");
 var helloRest = new HelloRest("greeting");
 helloRest.bindExpress(app);
 var alohaRest = new HelloRest("aloha");

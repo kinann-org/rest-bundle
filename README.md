@@ -27,7 +27,7 @@ class HelloRest extends RestBundle {
 Add HelloRest to a nodejs application:
 
 ```JS
-const HelloRest = require("../src/hello-rest");
+const HelloRest = require("../test/hello-rest");
 var helloRest = new HelloRest("greeting");
 helloRest.bindExpress(app);
 
