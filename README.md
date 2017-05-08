@@ -41,13 +41,9 @@ npm start
 
 A RestBundle can be shared for use by others as an npm package.
 
-### Angular 4.0
-The `src/ui` folder is a slightly rearranged copy of [Angular 2 Quickstart](https://github.com/angular/quickstart).
-To see the UI:
+### Vue 2
+RestBundle relies on [Vue.js](https://vuejs.org/) for modular web components.
 
-1. `npm start`
-1. http://localhost:8080/greeting/ui
+1. `npm run dev`
+1. http://localhost:4000/greeting/ui
 
-In this `hello-rest` example, we create a `<greeting-ui>' Angular AppComponent for our REST service bundle.
-The `<greeting-ui>` selector name is derived from the bundle name ("greeting"), allowing you to build web
-applications with mulitple rest-bundle instances using AppComponents with different names.

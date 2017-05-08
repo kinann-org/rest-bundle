@@ -1,8 +1,0 @@
-{
-  "server": {
-    "baseDir": "src/ui",
-    "routes": {
-      "/node_modules": "node_modules"
-    }
-  }
-}
