@@ -4,7 +4,7 @@ const supertest = require("supertest");
     var should = require("should");
 
     it("GET /hello generates HTTP200 response", function(done) {
-        var app = require("../scripts/hello-node.js");
+        var app = require("../scripts/server.js");
         supertest(app).get("/greeting/hello").expect((res) => {
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/html/);
@@ -13,7 +13,7 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("GET /identity generates HTTP200 response", function(done) {
-        var app = require("../scripts/hello-node.js");
+        var app = require("../scripts/server.js");
         supertest(app).get("/greeting/identity").expect((res) => {
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
@@ -26,7 +26,7 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST /identity generates HTTP200 response", function(done) {
-        var app = require("../scripts/hello-node.js");
+        var app = require("../scripts/server.js");
         supertest(app).post("/greeting/hello").send({greeting:"smile"}).expect((res) => {
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
@@ -39,7 +39,7 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST generates HTTP500 response for thrown exception", function(done) {
-        var app = require("../scripts/hello-node.js");
+        var app = require("../scripts/server.js");
         supertest(app).post("/greeting/error").send({greeting:"whoa"}).expect((res) => {
             res.statusCode.should.equal(500);
             res.headers["content-type"].should.match(/json/);
@@ -50,7 +50,7 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("GET /ui returns index HTML", function(done) {
-        var app = require("../scripts/hello-node.js");
+        var app = require("../scripts/server.js");
 
         supertest(app).get("/greeting/ui").expect((res) => {
             res.statusCode.should.equal(302); // redirect
@@ -68,12 +68,12 @@ const supertest = require("supertest");
             res.text.should.match(/service="greeting"/); // EJS injects service name
         }).end((err,res) => {if (err) throw err; else done(); });
     })
-    it("GET /ui/app returns Angular static content", function(done) {
-        var app = require("../scripts/hello-node.js");
+    it("GET /ui/index.html returns Angular static content", function(done) {
+        var app = require("../scripts/server.js");
 
-        supertest(app).get("/greeting/ui/app/main-jit.js").expect((res) => {
-            res.statusCode.should.equal(200); // redirect
-            res.headers["content-type"].should.match(/application\/javascript/);
+        supertest(app).get("/min/ui/index-service").expect((res) => {
+            res.statusCode.should.equal(200); 
+            res.headers["content-type"].should.match(/text\/html/);
             res.text.should.match(/bootstrapModule/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })

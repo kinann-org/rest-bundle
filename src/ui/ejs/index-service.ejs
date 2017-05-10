@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <base href="/">
-    <title>vue-app</title>
+    <title><%= service %></title>
+    <base href="/<%= service %>/ui/">
     <link rel="stylesheet" href="assets/styles.css"><!-- override component styles -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -11,8 +11,8 @@
         integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
   </head>
   <body override>
-    <h3>rest-bundle src/ui/index.html</h3>
-    <div id="app"></div>
-    <script src="/dist/build-app.js"></script>
+    <h1>/<%= service %>/ui</h1>
+    <div id="service">src/ui/ejs/index-service.ejs</div>
+    <script src="/dist/build-service.js"></script>
   </body>
 </html>

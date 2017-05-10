@@ -1,17 +1,7 @@
 <template>
-  <div id="app">
-    <h3> <img src="./assets/logo.png" height="25px"> {{msg}}</h3>
-    This Vue component verifies and displays the status of three RestBundle 
-    REST services (i.e., "/test",  "/greeting" and "/aloha").
-    To see this, use the <code>rest-bundle</code> script to launch services 
-    named in the command line.
-    For example, you can launch the application with:
-    <ul>
-        <li><code>scripts/rest-bundle test </code></li>
-        <li><code>scripts/rest-bundle test greeting</code></li>
-        <li><code>scripts/rest-bundle test greeting aloha</code></li>
-        <li>etc.</li>
-    </ul>
+  <div class="rb-service" id="service">
+    <h1> <img src="./assets/logo.png" height="25px"> {{msg}}</h1>
+    This is the Vue component for the "{{service}}" RestBundle service.
     <template v-for='service of ["test", "greeting", "aloha"]'>
         <rb-identity :service="service"></rb-identity>
     </template>
@@ -22,10 +12,10 @@
 import RbIdentity from './RbIdentity.vue';
 
 export default {
-    name: 'app',
+    name: 'service',
     data () {
         return {
-            msg: 'App.vue component'
+            msg: 'Service.vue component'
         }
     },
     computed: {
@@ -34,21 +24,26 @@ export default {
         },
     },
     components: {
-        RbIdentity,
+        RbIdentity
     },
 }
 
 </script><!-- ====================================== --> <style>
 
-#app {
-    border: 1pt solid black;
+.rb-service {
+    border: 1pt solid #eee;
     border-radius: 5px;
     background-color: #eee;
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
+    margin-top: 60px;
     padding: 5px;
+}
+
+h1, h2 {
+  font-weight: normal;
 }
 
 a {

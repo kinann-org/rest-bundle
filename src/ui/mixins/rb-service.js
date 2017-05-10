@@ -30,7 +30,7 @@ module.exports = {
         },
     },
     beforeMount() {
-        this.origin = debug ? "http://localhost:8080" : location.href;
+        this.origin = debug ? "http://localhost:8080" : location.origin;
         axios.get(this.origin + "/" + this.service + "/identity")
             .then((res) => {
                 var json = res.data;

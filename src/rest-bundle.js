@@ -17,7 +17,7 @@ const bodyParser = require("body-parser");
             this.appPkg = require(path.join(this.appDir,"package.json"));
             this.srcPkg = options.srcPkg || require("../package.json");
             this.node_modules = path.join(this.appDir, "node_modules");
-            this.ui_index = options.ui_index || "/ui/index-jit";
+            this.ui_index = options.ui_index || "/ui/index-service";
             this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
             this.$onFail = options.onFail || RestBundle.onFail;
         }
@@ -70,15 +70,6 @@ const bodyParser = require("body-parser");
             return promise;
         }
 
-        bindAngular(app) {
-            app.use(this.uribase + "/ui/pub", express.static(path.join(this.svcDir, "src/ui/pub")));
-            app.use(this.uribase + "/ui/aot", express.static(path.join(this.svcDir, "src/ui/aot")));
-            app.use(this.uribase + "/ui/app", express.static(path.join(this.svcDir, "src/ui/app")));
-            app.use(this.uribase + "/dist", express.static(path.join(this.appDir, "dist")));
-            app.use("/node_modules", express.static(this.node_modules));
-            app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
-        }
-
         bindResource(app, resource) {
             var mime = resource.mime || "application/json";
             var method = (resource.method || "get").toUpperCase();
@@ -102,33 +93,32 @@ const bodyParser = require("body-parser");
             }
         }
 
+        bindUI(app) {
+            app.use(this.uribase + "/dist", express.static(path.join(this.appDir, "dist")));
+            app.use("/node_modules", express.static(this.node_modules));
+            app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
+            app.use(this.uribase + "/ui", express.static(path.join(this.appDir, "src/ui")));
+        }
+
         bindEjs(app) {
-            app.set("views", path.join(this.svcDir, "src/ui/views"));
+            app.set("views", path.join(this.svcDir, "src/ui/ejs"));
             app.set("view engine", "ejs");
             var ejsmap = {
                 service: this.name,
                 package: this.srcPkg.name,
                 version: this.srcPkg.version,
             }
-            app.get(this.uribase + "/ui/index-aot", (req, res, next) => {
-                res.render("index-aot.ejs", ejsmap);
-            });
-            app.get(this.uribase + "/ui/index-dist", (req, res, next) => {
-                res.render("index-dist.ejs", ejsmap);
-            });
-            app.get(this.uribase + "/ui/index-jit", (req, res, next) => {
-                res.render("index-jit.ejs", ejsmap);
-            });
-            app.get(this.uribase + "/ui/index-vue", (req, res, next) => {
-                res.render("index-vue.ejs", ejsmap);
+            app.get(this.uribase + "/ui/index-service", (req, res, next) => {
+                res.render("index-service.ejs", ejsmap);
             });
         }
 
         bindExpress(app, restHandlers = this.handlers) {
             app.use(bodyParser.json());
             this.bindEjs(app);
-            this.bindAngular(app);
+            this.bindUI(app);
             restHandlers.forEach((resource) => this.bindResource(app, resource));
+            return this;
         }
     }
 

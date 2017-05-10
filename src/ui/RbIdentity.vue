@@ -1,29 +1,37 @@
 <template>
 
 <div class="rb-component rb-identity" v-bind:class="{danger: error}">
-    <table>
-        <tr><th>Component:</th><td>&lt;{{selector}}&gt; {{stateType}}#{{stateId}}</td></tr>
-        <tr><th>Description:</th><td><slot>Displays identity of "{{service}}" RestBundle service</slot></td></tr>
-        <tr><th>REST:</th><td><code>GET {{origin}}/{{service || "NO-SERVICE"}}/identity</code> {{error}}</td></tr>
-        <tr><th>Package:</th><td>{{package}}@{{version}}</td></tr>
-    </table>
+    <gr>
+        <gc v-if="error" ><gd1><span class="glyphicon glyphicon-remove"></span></gd1></gc>
+        <gc v-else><gd1><span class="glyphicon glyphicon-ok icon-ok"></span></gd1></gc>
+        <gc>
+            <gr><gh3>Component:</gh3><gd8>&lt;{{selector}}&gt; {{stateType}}#{{stateId}}</gd8></gr>
+            <gr><gh3>Description:</gh3><gd8><slot>Displays identity of "{{service}}" RestBundle service</slot></gd8></gr>
+            <gr>
+                <gh3>REST:</gh3>
+                <gd8>
+                    GET <a :href="origin+'/'+service+'/identity'" target="_blank">{{origin}}/{{service}}/identity</a> 
+                    {{error}}
+                </gd8>
+            </gr>
+            <gr><gh3>Package:</gh3><gd8>{{package}}@{{version}}</gd8></gr>
+        </gc>
+    </gr>
 </div>
 
 </template><!- ==================== --> <script>
+
+import grid from './grid/grid.vue';
 
 var RbService = require("./mixins/rb-service.js");
 
 export default {
     mixins: [RbService],
+    components: Object.assign({}, grid),
 }
 
 </script><!-- ================= --><style>
 
-.rb-component {
-    border: 1pt solid #888;
-    background-color: #eee;
-    margin: 0.1em;
-}
 .danger {
     color: #800 !important;
     background-color: #fee !important;

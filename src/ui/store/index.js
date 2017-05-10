@@ -9,16 +9,18 @@ export default new Vuex.Store({
     state: {
     },  
     getters: {
-        stateData: (state) => ((stateType,stateName) => {
-            var typeData = state[stateType];
-            return typeData == null || stateName == null 
-                ? typeData 
-                : typeData[stateName];
-        }),
+        stateData: function(state) { 
+            return function(stateType,stateName) {
+                var typeData = state[stateType];
+                return typeData == null || stateName == null 
+                    ? typeData 
+                    : typeData[stateName];
+            };
+        },
     },
     mutations: {
-        registerData(state, data) {
-            let stateType = data.stateType || "UNKNOWN_stateType";
+        registerData: function(state, data) {
+            var stateType = data.stateType || "UNKNOWN_stateType";
             state[stateType] || Vue.set(state, stateType, {});
             Vue.set(state[stateType], data.stateName, data);
             debug && console.log("store.registerData", stateType, data.stateName);
