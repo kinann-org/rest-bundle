@@ -8,27 +8,37 @@ var gridCell = function(cols) { return function() { return {
     width: (Number(cols) * colWidth) + "em",
 }}};
 
+var methods = {
+    emitClick: function() {
+        this.$emit("click");
+    }
+};
+
 var components = {
     grid: Vue.component("grid", { 
         template: '<div class="grid" ><slot></slot></div>',
     }),
     gr: Vue.component("gr", { 
-        template: '<div class="grid-row" ><slot></slot></div>',
+        template: '<div class="grid-row" @click="emitClick()" ><slot></slot></div>',
+        methods,
     }),
     gc: Vue.component("gc", { 
-        template: '<div class="grid-column" ><slot></slot></div>',
+        template: '<div class="grid-column" @click="emitClick()" ><slot></slot></div>',
+        methods,
     }),
 }
-for (var i = 1; i<=12; i++) {
-    var gdi = "gd" + i;
+for (let i = 1; i<=12; i++) {
+    let gdi = "gd" + i;
     components[gdi] = Vue.component(gdi, {
         computed: { cellStyle: gridCell(i) },
-        template: '<div class="grid-cell grid-cell-data" :style="cellStyle"><slot></slot></div>',
+        template: '<div class="grid-cell grid-cell-data" :style="cellStyle" @click="emitClick()" ><slot></slot></div>',
+        methods,
     });
     var ghi = "gh" + i;
     components[ghi] = Vue.component(ghi, {
         computed: { cellStyle: gridCell(i) },
-        template: '<div class="grid-cell grid-cell-header" :style="cellStyle"><slot></slot></div>',
+        template: '<div class="grid-cell grid-cell-header" :style="cellStyle" @click="emitClick()" ><slot></slot></div>',
+        methods,
     });
 }
 
@@ -62,6 +72,13 @@ export default components;
     flex-wrap: wrap;
     padding-left:0.2em;
     padding-right:0.2em;
+}
+[clickable] {
+    cursor: pointer;
+}
+[clickable]:hover{
+    border-radius: 5px;
+    border: 1px solid #d0d0d0;
 }
 
 </style>
