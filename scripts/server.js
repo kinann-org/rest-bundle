@@ -5,11 +5,11 @@ const express = require('express');
 const app = module.exports = express();
 const RestBundle = require("../src/rest-bundle");
 
-var services = [];
-process.argv.forEach((val, index) => {
-    (index > 1 && val[0] !== '-') && services.push(val);
+console.log("");// skip junk
+var services = ["test"];
+process.argv[1].match(__filename) && process.argv.forEach((val, index) => {
+    (index > 1 && val[0] !== '-' && val[0] !== "test") && services.push(val);
 });
-(services.length === 0) && services.push("test"); // default
 
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

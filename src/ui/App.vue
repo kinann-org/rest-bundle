@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <h3> <img src="./assets/logo.png" height="25px"> {{msg}}</h3>
-    This Vue component verifies and displays the status of three RestBundle 
+    This is root Vue component for testing this package.
+    The component verifies and displays the status of three RestBundle 
     REST services (i.e., "/test",  "/greeting" and "/aloha").
     To see this, use the <code>rest-bundle</code> script to launch services 
     named in the command line.

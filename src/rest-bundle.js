@@ -24,6 +24,9 @@ const bodyParser = require("body-parser");
 
         resourceMethod(method, name, handler, mime) {
             var that = this; // Javascript nonsense
+            if (handler == null) {
+                throw new Error("resourceMethod("+method+", "+name+", ?handler?, ...) handler is required");
+            }
             function thatHandler(req, res, next) {
                 return handler.call(that, req, res, next);
             }
@@ -33,6 +36,8 @@ const bodyParser = require("body-parser");
         get handlers() {
             return [
                 this.resourceMethod("get", "/identity", this.getIdentity),
+                this.resourceMethod("post", "/identity", this.postIdentity),
+                this.resourceMethod("post", "/echo", this.postEcho),
             ];
         }
 
@@ -46,6 +51,7 @@ const bodyParser = require("body-parser");
         static onFail(req, res, err, next) {
             res.status(500);
             res.type("application/json");
+            console.log("HTTP\t:", req.url, "=> HTTP500", err);
             var data = {
                 error: err.message,
             }
@@ -59,6 +65,14 @@ const bodyParser = require("body-parser");
                 package: this.srcPkg.name,
                 version: this.srcPkg.version,
             }
+        }
+
+        postIdentity(req, res, next) {
+            throw new Error("POST not supported: " + JSON.stringify(req.body));
+        }
+
+        postEcho(req, res, next) {
+            return req.body;
         }
 
         process(req, res, next, handler, mime) {
