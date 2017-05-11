@@ -18,11 +18,27 @@ var components = {
     grid: Vue.component("grid", { 
         template: '<div class="grid" ><slot></slot></div>',
     }),
-    gd: Vue.component("gd", {
+    "g-number": Vue.component("g-number", {
+        template: '<div class="grid-cell grid-cell-data grid-number" @click="emitClick()" ><slot></slot></div>',
+        methods,
+    }),
+    "g-text": Vue.component("g-text", {
+        template: '<div class="grid-cell grid-cell-data grid-text" @click="emitClick()" ><slot></slot></div>',
+        methods,
+    }),
+    "g-symbol": Vue.component("g-symbol", {
+        template: '<div class="grid-cell grid-cell-data grid-symbol" @click="emitClick()" ><slot></slot></div>',
+        methods,
+    }),
+    "g-label": Vue.component("g-label", {
+        template: '<div class="grid-cell grid-cell-header grid-label" @click="emitClick()" ><slot></slot></div>',
+        methods,
+    }),
+    "g-data": Vue.component("g-data", {
         template: '<div class="grid-cell grid-cell-data" @click="emitClick()" ><slot></slot></div>',
         methods,
     }),
-    gh: Vue.component("gh", {
+    "g-header": Vue.component("g-header", {
         template: '<div class="grid-cell grid-cell-header" @click="emitClick()" ><slot></slot></div>',
         methods,
     }),
@@ -36,43 +52,8 @@ components["g-row"] = Vue.component("g-row", {
     methods,
 });
 
-for (let i = 1; i<=12; i++) {
-    let gdi = "gd" + i;
-    components[gdi] = Vue.component(gdi, {
-        computed: { cellStyle: gridCell(i) },
-        template: '<div class="grid-cell grid-cell-data" :style="cellStyle" @click="emitClick()" ><slot></slot></div>',
-        methods,
-    });
-    var ghi = "gh" + i;
-    components[ghi] = Vue.component(ghi, {
-        computed: { cellStyle: gridCell(i) },
-        template: '<div class="grid-cell grid-cell-header" :style="cellStyle" @click="emitClick()" ><slot></slot></div>',
-        methods,
-    });
-}
-
-var directives = {
-    "gtext": Vue.directive('gtext', function (el, binding) {
-        var c = el.getAttribute("class") || "";
-        el.setAttribute("class", c + " grid-text");
-    }),
-    "gsymbol": Vue.directive('gsymbol', function (el, binding) {
-        var c = el.getAttribute("class") || "";
-        el.setAttribute("class", c + " grid-symbol");
-    }),
-    "gnumber": Vue.directive('gnumber', function (el, binding) {
-        var c = el.getAttribute("class") || "";
-        el.setAttribute("class", c + " grid-number");
-    }),
-    "glabel": Vue.directive('glabel', function (el, binding) {
-        var c = el.getAttribute("class") || "";
-        el.setAttribute("class", c + " grid-label");
-    }),
-};
-
 export default {
     components,
-    directives,
 };
 
 </script><style>
@@ -98,7 +79,6 @@ export default {
 .grid-cell-data, grid-cell-header {
     vertical-align: top;
     padding: 0.1em;
-    width: 6em;
 }
 .grid-cell-header {
     font-weight: 700;
@@ -117,12 +97,10 @@ export default {
 .grid-label {
     width: 9em;
 }
-[clickable] {
-    cursor: pointer;
-}
 [clickable]:hover{
     border-radius: 5px;
     border: 1px solid #d0d0d0;
+    cursor: pointer;
 }
 
 </style>

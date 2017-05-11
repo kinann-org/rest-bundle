@@ -2,29 +2,32 @@
 
     <g-row class="rb-component rb-identity" >
         <g-column> 
-            <gd v-gsymbol clickable @click='showDetail=!showDetail' >
+            <g-symbol clickable @click='showDetail=!showDetail' >
                 <span :class='"glyphicon "+(error? "glyphicon-remove text-danger" : "glyphicon-ok text-success")'></span>
-            </gd> 
+            </g-symbol> 
         </g-column>
-        <g-column>
-            <g-row><gh v-glabel>Service:</gh><gd v-gtext><code>/{{service}}</code></gd></g-row>
-            <g-row><gh v-glabel>showDetail:</gh><gd v-gtext>{{showDetail}}</gd></g-row>
-            <g-row><gh v-glabel>Component:</gh><gd v-gtext><code>&lt;{{selector}}&gt;</code> {{stateType}}#{{stateId}}</gd></g-row>
-            <g-row><gh v-glabel>Description:</gh><gd v-gtext><slot>Displays identity of "{{service}}" RestBundle service</slot></gd></g-row>
+        <g-text v-show="!showDetail"><code>/{{service}}</code> </g-text>
+        <g-column v-show="showDetail">
+            <g-row><g-label>Service:</g-label><g-text><code>/{{service}}</code></g-text></g-row>
+            <g-row><g-label>Component:</g-label>
+                <g-text><code>&lt;{{selector}}&gt;</code> {{stateType}}#{{stateId}}</g-text></g-row>
+            <g-row><g-label>Description:</g-label>
+                <g-text><slot>Displays identity of "{{service}}" RestBundle service</slot></g-text></g-row>
             <g-row>
-                <gh v-glabel>REST:</gh>
-                <gd v-gtext><a :href="origin+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
-                    <span class="text-danger">{{error}}</span></gd>
+                <g-label>REST:</g-label>
+                <g-text><a :href="origin+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
+                    <span class="text-danger">{{error}}</span></g-text>
             </g-row>
             <g-row>
-                <gh v-glabel >View:</gh>
-                <gd v-gtext > <a :href="origin+'/'+service+'/ui'" target="_blank">/{{service}}/ui</a></gd>
+                <g-label>View:</g-label>
+                <g-text><a :href="origin+'/'+service+'/ui'" target="_blank">/{{service}}/ui</a></g-text>
             </g-row>
-            <g-row><gh v-glabel>Package:</gh><gd v-gtext>{{package}}@{{version}}</gd></g-row>
+            <g-row><g-label>Package:</g-label><g-text>{{package}}@{{version}}</g-text></g-row>
         </g-column>
     </g-row>
 
-</template><script>
+</template>
+<script>
 
     import grid from './grid/grid.vue';
     export default {
