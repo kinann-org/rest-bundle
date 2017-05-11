@@ -1,55 +1,40 @@
 <template>
+
   <div class="rb-service" id="service">
-    <h1> <img src="./assets/logo.png" height="25px"> {{msg}}</h1>
-    This is the Vue component for the "{{service}}" RestBundle service.
-    <template v-for='service of ["test", "greeting", "aloha"]'>
-        <rb-identity :service="service"></rb-identity>
-    </template>
+    <h3>Service.vue component</h3>
+    This is the <slot>Vue component</slot> for the "{{serviceName}}" RestBundle service.
+    <rb-identity :service="serviceName"></rb-identity>
   </div>
 
-</template> <!-- ====================================== --> <script>
+</template><script>
 
 import RbIdentity from './RbIdentity.vue';
 
 export default {
-    name: 'service',
-    data () {
-        return {
-            msg: 'Service.vue component'
-        }
-    },
+    name: "service",
     computed: {
+        serviceName() {
+            return this.$store.state.serviceName || "test";
+        },
         restBundles() {
             return this.$store.getters.restBundles;
         },
+    },
+    mounted() {
+        console.log("service mounted");
     },
     components: {
         RbIdentity
     },
 }
 
-</script><!-- ====================================== --> <style>
+</script><style>
 
 .rb-service {
     border: 1pt solid #eee;
     border-radius: 5px;
     background-color: #eee;
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    margin-top: 60px;
     padding: 5px;
 }
 
-h1, h2 {
-  font-weight: normal;
-}
-
-a {
-  color: #42b983;
-}
-body {
-    max-width: 45em;
-}
 </style>

@@ -20,7 +20,7 @@
             </g-row>
             <g-row>
                 <g-label>View:</g-label>
-                <g-text><a :href="origin+'/'+service+'/ui'" target="_blank">/{{service}}/ui</a></g-text>
+                <g-text><a :href='"/"+service+"/ui"' target="_blank">/{{service}}/ui</a></g-text>
             </g-row>
             <g-row><g-label>Package:</g-label><g-text>{{package}}@{{version}}</g-text></g-row>
         </g-column>

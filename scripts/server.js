@@ -8,7 +8,7 @@ const RestBundle = require("../src/rest-bundle");
 console.log("");// skip junk
 var services = ["test"];
 process.argv[1].match(__filename) && process.argv.forEach((val, index) => {
-    (index > 1 && val[0] !== '-' && val[0] !== "test") && services.push(val);
+    (index > 1 && val[0] !== '-' && val !== "test") && services.push(val);
 });
 
 app.all('*', function(req, res, next) {
