@@ -31,10 +31,12 @@ export default {
 </script><style>
 
 .rb-service {
-    border: 1pt solid #eee;
+    border: 1pt solid #fff;
     border-radius: 5px;
-    background-color: #eee;
     padding: 5px;
+}
+.rb-service:hover {
+    border: 1pt solid #ccc;
 }
 
 </style>
