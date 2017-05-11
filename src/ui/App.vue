@@ -44,17 +44,7 @@ export default {
     border: 1pt solid black;
     border-radius: 5px;
     background-color: #eee;
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
     padding: 5px;
 }
 
-a {
-  color: #42b983;
-}
-body {
-    max-width: 45em;
-}
 </style>

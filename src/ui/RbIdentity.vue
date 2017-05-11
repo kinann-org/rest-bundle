@@ -1,41 +1,39 @@
 <template>
 
-<div class="rb-component rb-identity" v-bind:class="{danger: error}">
-    <gr>
-        <gc v-if="error" ><gd1><span class="glyphicon glyphicon-remove"></span></gd1></gc>
-        <gc v-else><gd1><span class="glyphicon glyphicon-ok icon-ok"></span></gd1></gc>
+    <gr class="rb-component rb-identity">
         <gc>
-            <gr><gh3>Component:</gh3><gd8>&lt;{{selector}}&gt; {{stateType}}#{{stateId}}</gd8></gr>
-            <gr><gh3>Description:</gh3><gd8><slot>Displays identity of "{{service}}" RestBundle service</slot></gd8></gr>
+            <gr><gh3>Service:</gh3><gd9><code>/{{service}}</code></gd9></gr>
+            <gr><gh3>Component:</gh3><gd9><code>&lt;{{selector}}&gt;</code> {{stateType}}#{{stateId}}</gd9></gr>
+            <gr><gh3>Description:</gh3><gd9><slot>Displays identity of "{{service}}" RestBundle service</slot></gd9></gr>
             <gr>
                 <gh3>REST:</gh3>
-                <gd8>
-                    GET <a :href="origin+'/'+service+'/identity'" target="_blank">{{origin}}/{{service}}/identity</a> 
-                    {{error}}
-                </gd8>
+                <gd9><a :href="origin+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
+                    <span class="text-danger">{{error}}</span></gd9>
             </gr>
-            <gr><gh3>Package:</gh3><gd8>{{package}}@{{version}}</gd8></gr>
+            <gr>
+                <gh3>View:</gh3>
+                <gd9> <a :href="origin+'/'+service+'/ui'" target="_blank">/{{service}}/ui</a> </gd9>
+            </gr>
+            <gr><gh3>Package:</gh3><gd9>{{package}}@{{version}}</gd9></gr>
         </gc>
+        <gc> <gd1 class="text-right">
+            <span :class='"glyphicon "+(error? "glyphicon-remove text-danger" : "glyphicon-ok text-success")'></span>
+        </gd1> </gc>
     </gr>
-</div>
 
-</template><!- ==================== --> <script>
+</template><script>
 
-import grid from './grid/grid.vue';
+    import grid from './grid/grid.vue';
+    export default {
+        mixins: [ require("./mixins/rb-service.js") ],
+        components: Object.assign({}, grid),
+    }
 
-var RbService = require("./mixins/rb-service.js");
+</script><style>
 
-export default {
-    mixins: [RbService],
-    components: Object.assign({}, grid),
-}
-
-</script><!-- ================= --><style>
-
-.danger {
-    color: #800 !important;
-    background-color: #fee !important;
-}
+    .xdanger {
+        color: #800 !important;
+    }
 
 </style>
 
