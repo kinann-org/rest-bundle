@@ -1,67 +1,44 @@
 <template>
-  <div id="app">
-    <h1> <img src="./assets/logo.png" height="25px"> {{msg}}</h1>
-    This application currently has the following RestBundles:
-    <template v-for='service of ["greeting", "aloha", "bad-service"]'>
+
+<div id="dev">
+    <h1>App.vue</h1>
+    <p>
+    This example shows how to integrate a RestBundle into an application.
+    </p><p>
+    This single page application (SPA) itself 
+    demonstrates the integration of Vue components for three separate 
+    RestBundles (i.e., "/test",  "/greeting" and "/aloha"): 
+    </p>
+    <template v-for='service of ["test", "greeting", "aloha"]'>
         <rb-identity :service="service"></rb-identity>
     </template>
-    <rb-identity service="greeting">
-        Service components all share the same Vuex.Store data state. In this case, 
-        the "greeting" service has two components that share the same state.
-    </rb-identity>
-
-  </div>
+</div>
 
 </template> <!-- ====================================== --> <script>
 
-import RbIdentity from './RbIdentity.vue';
+import RbIdentity from 'rest-bundle/src/ui/RbIdentity.vue';
 
 export default {
     name: 'app',
-    data () {
-        return {
-            msg: 'App.vue component'
-        }
-    },
     computed: {
         restBundles() {
             return this.$store.getters.restBundles;
         },
     },
     components: {
-        RbIdentity
+        RbIdentity,
     },
 }
 
 </script><!-- ====================================== --> <style>
 
 #app {
-    border: 1pt solid black;
+    border: 1pt solid #fff;
     border-radius: 5px;
-    background-color: #eee;
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    margin-top: 60px;
     padding: 5px;
 }
-
-h1, h2 {
-  font-weight: normal;
+#app:hover {
+    border: 1pt solid #ccc;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
 </style>

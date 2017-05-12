@@ -1,41 +1,14 @@
-[override] .rb-component {
-    background-color: #fee;
+.rb-component {
+    xborder: 1pt solid #ccc;
+    border-radius: 5px;
+    background-color: #efefef;
     margin: 0.1em;
 }
-[override] .rb-identity {
-    color: #00a;
-    background-color: #eef;
-    border: 1pt dashed blue;
-}
-.demo-ui {
-    padding: 5pt;
-    border-radius: 5px;
-    border: 1pt solid #555;
-    background-color: #eee;
-    font-family: Arial, Helvetica, sans-serif;
-}
-dt {
-    font-weight: 700;
-}
 
-h1 {
-    color: #369;
-    font-size: 150%;
+code {
+    color: #000 !important;
 }
-h2 {
-    color: #369;
-    font-size: 130%;
-}
-
-th {
-    text-align: left;
-    vertical-align: top;
-}
-td {
-    text-align: left;
-    vertical-align: top;
-}
-
 body {
-    font-family: Verdana, Helvetica, sans-serif;
+    padding: 10px;
+    max-width: 45em;
 }

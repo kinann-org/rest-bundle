@@ -13,7 +13,7 @@
     "start": "scripts/demo-node.js"
   },
   "dependencies": {
-    "rest-bundle": "^0.9.23",
+    "rest-bundle": "^0.10.1",
     "rimraf": "^2.6.1",
     "vue": "^2.2.1",
     "vuex": "^2.3.1"
