@@ -1,7 +1,7 @@
 .rb-component {
-    border: 1pt solid #ccc;
+    xborder: 1pt solid #ccc;
     border-radius: 5px;
-    background-color: #ffffff;
+    background-color: #efefef;
     margin: 0.1em;
 }
 
