@@ -27,7 +27,7 @@ var bundles = services.map((name,index) => {
 if (module.parent) {
     app.restService = bundles[0]; 
 } else {
-    const onListen = (port, data) => winston.info( ' listening on port ' + port);
+    const onListen = (port, data) => winston.info('listening on port ' + port);
     var listener = app.listen(80, (data) => onListen(80, data));
     listener.on('error', function(error) {
         if (error.code !== "EACCES") {

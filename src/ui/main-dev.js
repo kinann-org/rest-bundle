@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import RestBundle from './plugin.js';
+import RestBundle from '../../vue.js';
 import Dev from './Dev.vue';
 import store from './store';
 require('./stylus/main.styl')

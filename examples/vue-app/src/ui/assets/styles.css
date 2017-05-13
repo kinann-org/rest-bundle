@@ -1,13 +1,3 @@
-.rb-component {
-    xborder: 1pt solid #ccc;
-    border-radius: 5px;
-    background-color: #efefef;
-    margin: 0.1em;
-}
-
-code {
-    color: #000 !important;
-}
 body {
     padding: 10px;
     max-width: 45em;

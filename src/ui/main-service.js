@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import RestBundle from '../../vue.js';
 import Service from './Service.vue';
 import store from './store';
 require('./stylus/main.styl')
 
 Vue.use(Vuetify);
+Vue.use(RestBundle);
 
 new Vue({
     el: '#service',

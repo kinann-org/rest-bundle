@@ -17,10 +17,10 @@ app.use("/dist", express.static(path.join(__dirname, "../dist")));
 
 // bind in DemoRest service
 const DemoRest = require("../src/demo-rest");
-var greetingRest = new DemoRest("greeting");
-greetingRest.bindExpress(app);
-var alohaRest = new DemoRest("aloha");
-alohaRest.bindExpress(app);
+var services = ["test", "greeting", "aloha" ].map((name) => {
+    var service = new DemoRest(name);
+    return service.bindExpress(app);
+});
 
 if (module.parent) {
     console.log("TEST\t: launched server for testing");

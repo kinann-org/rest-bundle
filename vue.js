@@ -1,4 +1,4 @@
-import RbIdentity from "./RbIdentity.vue";
+import RbIdentity from "./src/ui/RbIdentity.vue";
 
 var components = {
     RbIdentity,
