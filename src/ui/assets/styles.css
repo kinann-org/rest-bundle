@@ -1,9 +1,12 @@
-.rb-component {
-    xborder: 1pt solid #ccc;
-    border-radius: 5px;
-    background-color: #efefef;
-    margin: 0.1em;
+.expansion-panel, .expansion-panel>li {
+    border-top-left-radius: 0.4em !important;
+    border-top-right-radius: 0.4em !important;
 }
+.expansion-panel:last-child, .expansion-panel>li {
+    border-bottom-left-radius: 0.4em !important;
+    border-bottom-right-radius: 0.4em !important;
+}
+
 
 code {
     color: #000 !important;

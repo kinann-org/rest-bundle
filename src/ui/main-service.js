@@ -1,6 +1,10 @@
 import Vue from 'vue';
+import Vuetify from 'vuetify';
 import Service from './Service.vue';
 import store from './store';
+require('./stylus/main.styl')
+
+Vue.use(Vuetify);
 
 new Vue({
     el: '#service',

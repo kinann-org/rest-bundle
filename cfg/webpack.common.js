@@ -2,11 +2,9 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-    entry: './src/ui/main.js',
     output: {
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/',
-        filename: 'build.js'
     },
     module: {
         rules: [{
@@ -16,18 +14,23 @@ module.exports = {
                     loaders: {}
                     // other vue-loader options go here
                 }
-            },
-            {
+            },{
                 test: /.*\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/
-            },
-            {
+            },{
                 test: /\.(png|jpg|gif|svg)$/,
                 loader: 'file-loader',
                 options: {
                     name: '[name].[ext]?[hash]'
                 }
+            },{
+                test: /\.styl$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'stylus-loader'
+                ]
             }
         ]
     },

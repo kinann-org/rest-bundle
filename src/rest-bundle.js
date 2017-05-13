@@ -115,6 +115,7 @@ const bodyParser = require("body-parser");
         }
 
         bindEjs(app) {
+            var views = path.join(this.svcDir, "src/ui/ejs");
             app.set("views", path.join(this.svcDir, "src/ui/ejs"));
             app.set("view engine", "ejs");
             var ejsmap = {
@@ -122,8 +123,11 @@ const bodyParser = require("body-parser");
                 package: this.srcPkg.name,
                 version: this.srcPkg.version,
             }
-            app.get(this.uribase + "/ui/index-service", (req, res, next) => {
-                res.render("index-service.ejs", ejsmap);
+            var uripath = this.uribase + "/ui/index-service";
+            var template = "index-service.ejs";
+            console.log("HTTP\t: binding", uripath, "to", views+"/"+template);
+            app.get(uripath, (req, res, next) => {
+                res.render(template, ejsmap);
             });
         }
 
