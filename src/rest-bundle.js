@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
+const winston = require("winston");
 
 (function(exports) {
     class RestBundle {
@@ -51,7 +52,7 @@ const bodyParser = require("body-parser");
         static onFail(req, res, err, next) {
             res.status(500);
             res.type("application/json");
-            console.log("HTTP\t:", req.url, "=> HTTP500", err);
+            winston.log("info", req.method, req.url, "=> HTTP500", err);
             var data = {
                 error: err.message,
             }
@@ -125,7 +126,7 @@ const bodyParser = require("body-parser");
             }
             var uripath = this.uribase + "/ui/index-service";
             var template = "index-service.ejs";
-            console.log("HTTP\t: binding", uripath, "to", views+"/"+template);
+            winston.debug( " binding", uripath, "to", views+"/"+template);
             app.get(uripath, (req, res, next) => {
                 res.render(template, ejsmap);
             });

@@ -1,7 +1,9 @@
 const supertest = require("supertest");
 
 (typeof describe === 'function') && describe("RestBundle", function() {
-    var should = require("should");
+    const should = require("should");
+    const winston = require("winston");
+    winston.level = "warn";
 
     it("GET /identity generates HTTP200 response", function(done) {
         var app = require("../scripts/server.js");

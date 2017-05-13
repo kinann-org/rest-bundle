@@ -1,7 +1,7 @@
 <template>
 
 <div>
-    <h6  v-tooltip:bottom="{ html: 'RestBundle.vue' }" >What is a RestBundle?</h6>
+    <h6>What is a RestBundle?</h6>
     A RestBundle is a single Nodejs package that comprises both the web front-end
     as well as the back-end implementations of a REST service. RestBundles are
     robust vertical application slices that facilitate the development of lightweight
@@ -46,14 +46,12 @@
     </p>
 </div>
 
-</template> <!-- ====================================== --> <script>
+</template><script>
 
 export default {
-    name: 'rest-bundle',
-    components: {
-    },
+    name: 'introduction',
 }
 
-</script><!-- ====================================== --> <style>
+</script><style>
 
 </style>

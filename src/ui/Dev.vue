@@ -5,11 +5,11 @@
       <v-card class="primary white--text">
           <v-card-title>Dev.vue</v-card-title>
       </v-card>
-      <v-tab-item href="#app-tab-1" slot="activators"> RestBundle.vue </v-tab-item>
+      <v-tab-item href="#app-tab-1" slot="activators"> Introduction.vue </v-tab-item>
       <v-tab-item href="#app-tab-2" slot="activators"> AllServices.vue </v-tab-item>
       <v-tab-item href="#app-tab-3" slot="activators"> Service.vue </v-tab-item>
       <v-tab-content id="app-tab-1" slot="content" ><v-card> <v-card-text>
-        <rest-bundle ></rest-bundle>
+        <introduction ></introduction>
         </v-card-text> </v-card> </v-tab-content> </v-tabs-items>
       <v-tab-content id="app-tab-2" slot="content" ><v-card> <v-card-text>
         <all-services ></all-services>
@@ -22,21 +22,14 @@
 
 </template> <!-- ====================================== --> <script>
 
-import RestBundle from './RestBundle.vue';
+import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
 
 export default {
     name: 'dev',
-    data: function() {
-        return {
-            nav2: false,
-            e1: 1,
-            show: "rest-bundle",
-        }
-    },
     components: {
-        RestBundle,
+        Introduction,
         AllServices,
         Service,
     },
