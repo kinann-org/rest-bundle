@@ -42,11 +42,6 @@
             }
         },
         components: Object.assign({}, grid),
-        methods: {
-            blam: function(v) {
-                console.log("BLAM",v);
-            },
-        }
     }
 
 </script><style>
