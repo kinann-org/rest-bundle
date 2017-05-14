@@ -3,6 +3,7 @@ const supertest = require("supertest");
 (typeof describe === 'function') && describe("RestBundle", function() {
     const should = require("should");
     const winston = require("winston");
+    const pkg = require("../package.json");
     winston.level = "warn";
 
     it("GET /identity generates HTTP200 response", function(done) {
@@ -13,7 +14,7 @@ const supertest = require("supertest");
             res.headers["content-type"].should.match(/utf-8/);
             res.body.should.properties({
                 name: "test",
-                package: "rest-bundle",
+                package: pkg.name,
             });
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });
