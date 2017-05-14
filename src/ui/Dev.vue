@@ -3,7 +3,7 @@
 <v-app id="dev-app" >
     <v-tabs grow>
       <v-card class="primary white--text">
-          <v-card-title>Dev.vue</v-card-title>
+          <v-card-title>rest-bundle development application</v-card-title>
       </v-card>
       <v-tab-item href="#app-tab-1" slot="activators"> Introduction.vue </v-tab-item>
       <v-tab-item href="#app-tab-2" slot="activators"> AllServices.vue </v-tab-item>

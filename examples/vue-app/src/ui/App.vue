@@ -1,20 +1,22 @@
 <template>
 
-<v-app id="example-2" class="xl" left-fixed-sidebar>
+<v-app>
     <v-card>
-        <div id="dev">
-            <h2>App.vue</h2>
-            <p>
-            This example shows how to integrate a RestBundle into an application.
-            </p><p>
-            This single page application (SPA) itself 
-            demonstrates the integration of Vue components for three separate 
-            RestBundles (i.e., "/test",  "/greeting" and "/aloha"): 
+        <v-card-row class="teal darken-2">
+            <v-card-title class="white--text">
+                A Sample Application
+            </v-card-title>
+        </v-card-row>
+        <v-card-text>
+            <p> In this sample application, we integrate
+                three separate RestBundle <code>&lt;rb-identity&gt;</code> 
+                Vue components (i.e., "/test",  "/greeting" and "/aloha")
+                imported from the <code>rest-bundle</code> npm package: 
             </p>
             <template v-for='service of ["test", "greeting", "aloha"]'>
                 <rb-identity :service="service"></rb-identity>
             </template>
-        </div>
+        </v-card-text>
     </v-card>
 </v-app>
 
@@ -25,9 +27,5 @@ export default {
 }
 
 </script> <style>
-
-body {
-    padding: 10px;
-}
 
 </style>
