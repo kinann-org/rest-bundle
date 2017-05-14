@@ -1,13 +1,13 @@
 <template>
 
-<v-expansion-panel class="grey lighten-2 ">
+<v-expansion-panel class="grey lighten-2 " >
   <v-expansion-panel-content>
     <div slot="header" class="title grey--text text--darken-1" >
         <div style="position:absolute; top:0.35em;left:0.5em">
             <v-icon v-show="error" small class="red--text text--darken-1 " >error</v-icon>
             <v-icon v-show="!error" xsmall class="green--text text--darken-2 " >check</v-icon>
         </div>
-        <div style="position: absolute; top: 0.5em; left:2.5em">/{{service}}</div>
+        <div style="position: absolute; top: 0.5em; left:2.5em">/{{service}}/identity</div>
     </div>
     <v-card> <v-card-row class="grey lighten-4"> <v-card-text>
         <g-row><g-header>Service:</g-header><g-text><code>/{{service}}</code></g-text></g-row>
@@ -50,6 +50,17 @@
     }
 
 </script><style>
+
+.expansion-panel, .expansion-panel>li {
+    border-top-left-radius: 0.4em !important;
+    border-top-right-radius: 0.4em !important;
+}
+.expansion-panel:last-child, .expansion-panel>li {
+    border-bottom-left-radius: 0.4em !important;
+    border-bottom-right-radius: 0.4em !important;
+}
+
+
 
 </style>
 

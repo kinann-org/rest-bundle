@@ -89,7 +89,6 @@ const winston = require("winston");
             var mime = resource.mime || "application/json";
             var method = (resource.method || "get").toUpperCase();
             var path = resource.name.startsWith("/") ? resource.name : ("/" + resource.name);
-            var path = this.uribase + path;
             if (method === "GET") {
                 app.get(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
@@ -105,14 +104,15 @@ const winston = require("winston");
             } else if (method === "HEAD") {
                 app.head(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
+            } else {
+                throw new Error("Unsupported HTTP method:", method);
             }
         }
 
         bindUI(app) {
-            app.use(this.uribase + "/dist", express.static(path.join(this.appDir, "dist")));
-            app.use("/node_modules", express.static(this.node_modules));
-            app.get(this.uribase + "/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
-            app.use(this.uribase + "/ui", express.static(path.join(this.appDir, "src/ui")));
+            app.use("/dist", express.static(path.join(this.appDir, "dist")));
+            app.get("/ui", (req, res, next) => res.redirect(this.uribase + this.ui_index));
+            app.use("/ui", express.static(path.join(this.appDir, "src/ui")));
         }
 
         bindEjs(app) {
@@ -124,7 +124,7 @@ const winston = require("winston");
                 package: this.srcPkg.name,
                 version: this.srcPkg.version,
             }
-            var uripath = this.uribase + "/ui/index-service";
+            var uripath = "/ui/index-service";
             var template = "index-service.ejs";
             winston.debug( " binding", uripath, "to", views+"/"+template);
             app.get(uripath, (req, res, next) => {
@@ -132,11 +132,14 @@ const winston = require("winston");
             });
         }
 
-        bindExpress(app, restHandlers = this.handlers) {
+        bindExpress(rootApp, restHandlers = this.handlers) {
+            var app = express();
+            rootApp.use("/node_modules", express.static(this.node_modules));
             app.use(bodyParser.json());
             this.bindEjs(app);
             this.bindUI(app);
             restHandlers.forEach((resource) => this.bindResource(app, resource));
+            rootApp.use(this.uribase, app); // don't pollute client's app
             return this;
         }
     }

@@ -5,7 +5,6 @@ import App from './App.vue';
 import store from 'rest-bundle/src/ui/store';
 require('./stylus/main.styl')
 
-
 Vue.use(Vuetify);
 Vue.use(RestBundleVue);
 

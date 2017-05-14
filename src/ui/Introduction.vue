@@ -1,7 +1,7 @@
 <template>
 
 <div>
-    <h6>What is a RestBundle?</h6>
+    <h5>What is a RestBundle?</h5>
     A RestBundle is a single Nodejs package that comprises both the web front-end
     as well as the back-end implementations of a REST service. RestBundles are
     robust vertical application slices that facilitate the development of lightweight
@@ -12,7 +12,7 @@
     RestBundles (i.e., "/test",  "/greeting" and "/aloha"): 
     </p>
 
-    <h6>RestBundle REST Services </h6>
+    <h5>RestBundle REST Services </h5>
     <p>
     REST services are provided by subclasses of <code>RestBundle.js</code>. RestBundle itself
     provides the <code>/identity</code> HTTP GET service method that returns information
@@ -29,10 +29,10 @@
         >instantiated when launching Nodejs</a>
     </p>
 
-    <h6>RestBundle Vue Components</h6>
+    <h5>RestBundle Vue Components</h5>
     <p>
     Each RestBundle has multiple Vue components that can be combined into web client applications. 
-    Each Vue component has, by convention, a "service" attribute that specifies the 
+    Each Vue component has, by convention, a "service-name" attribute that specifies the 
     name of the associated RestBundle REST service.
     For example, the <code>rest-bundle</code> package alone includes the following Vue components: 
     </p><p>

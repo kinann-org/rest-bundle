@@ -1,7 +1,7 @@
 <template>
 
 <div>
-    <h6>Launching RestBundles</h6>
+    <h5>Launching RestBundles</h5>
     <p>
     RestBundles are
     <a href="https://github.com/firepick/rest-bundle/blob/master/scripts/server.js" target="_blank"
@@ -16,7 +16,7 @@
         Launch a browser and look at <a href="http://localhost:4000/">http://localhost:4000</a>.
     </p>
 
-    <h6>Vue Components</h6>
+    <h5>Vue Components</h5>
     <p>
     All RestBundles provide an <code>/identity</code> service that returns information about
     the RestBundle. The Vue component for the identity service is <code>&lt;rb-identity&gt;</code>.

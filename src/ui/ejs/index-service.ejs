@@ -4,12 +4,10 @@
     <meta charset="utf-8">
     <title><%= service %></title>
     <base href="/<%= service %>/ui/">
-    <link rel="stylesheet" href="assets/styles.css"><!-- override component styles -->
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css">
   </head>
   <body override>
-    <h6>/<%= service %>/ui</h6>
     <div id="service" service-name="<%= service %>" ></div>
     <script src="/dist/build-service.js"></script>
   </body>
