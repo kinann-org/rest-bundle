@@ -7,12 +7,12 @@
             <v-icon v-show="error" small class="red--text text--darken-1 " >error</v-icon>
             <v-icon v-show="!error" xsmall class="green--text text--darken-2 " >check</v-icon>
         </div>
-        <div style="position: absolute; top: 0.5em; left:2.5em">/{{service}}/identity</div>
+        <div class="rb-panel-header" >/{{service}}/identity</div>
     </div>
     <v-card> <v-card-row class="grey lighten-4"> <v-card-text>
         <g-row><g-header>Service:</g-header><g-text><code>/{{service}}</code></g-text></g-row>
         <g-row><g-header>Component:</g-header>
-            <g-text><code>&lt;{{selector}}&gt;</code> {{stateType}}#{{stateId}}</g-text></g-row>
+            <g-text><code>&lt;{{component}}&gt;</code> _uid:{{_uid}}</g-text></g-row>
         <g-row><g-header>Description:</g-header>
             <g-text><slot>Displays identity of "{{service}}" RestBundle service</slot></g-text></g-row>
         <g-row>
@@ -21,7 +21,7 @@
                 <span class="text-danger">{{error}}</span></g-text>
         </g-row>
         <g-row>
-            <g-header>View:</g-header>
+            <g-header>Home Page:</g-header>
             <g-text><a :href='"/"+service+"/ui"' target="_blank">/{{service}}/ui</a></g-text>
         </g-row>
         <g-row><g-header>Package:</g-header><g-text>{{package}}@{{version}}</g-text></g-row>
@@ -53,6 +53,11 @@
 .expansion-panel:last-child, .expansion-panel>li {
     border-bottom-left-radius: 0.4em !important;
     border-bottom-right-radius: 0.4em !important;
+}
+.rb-panel-header {
+    position:absolute; 
+    top:0.5em;
+    left:2.5em;
 }
 
 

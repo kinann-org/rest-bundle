@@ -9,12 +9,12 @@ module.exports = {
         }
     },
     data() {
-        let stateType = this.$options._componentTag + "_state";
-        let data = this.$store.getters.stateData(stateType, this.service);
+        let component = this.$options._componentTag;
+        let data = this.$store.getters.stateData(component, this.service);
         if (data == null) {
             data = {
-                stateName: this.service,
-                stateType: stateType,
+                serviceName: this.service,
+                component: component,
                 package: "tbd",
                 version: "tbd",
                 error: "",

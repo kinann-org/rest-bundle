@@ -69,7 +69,7 @@ export default {
     name: "service",
     computed: {
         serviceName() {
-            return this.$store.state.serviceName || "test";
+            return location.pathname.split("/")[1] || "test";
         },
         restBundles() {
             return this.$store.getters.restBundles;

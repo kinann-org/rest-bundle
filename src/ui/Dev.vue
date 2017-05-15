@@ -4,18 +4,18 @@
 <v-app id="dev-app" >
     <v-tabs grow>
         <v-card class="primary">
-            <v-card-title>
+            <v-card-title class="pt-2 pb-1">
             <span class="light-blue--text">{{package.name}} {{package.version}} </span>
             <v-spacer></v-spacer>
             <span class="light-blue--text">development application</span>
             </v-card-title>
         </v-card>
-            <v-tab-item href="#app-tab-1" slot="activators"> Introduction.vue </v-tab-item>
-            <v-tab-item href="#app-tab-2" slot="activators"> AllServices.vue </v-tab-item>
-            <v-tab-item href="#app-tab-3" slot="activators"> Service.vue </v-tab-item>
-            <v-tab-content id="app-tab-1" slot="content" ><v-card> <v-card-text>
-                <introduction ></introduction>
-                </v-card-text></v-card></v-tab-content> 
+        <v-tab-item class="pb-1" href="#app-tab-1" slot="activators"> Introduction.vue </v-tab-item>
+        <v-tab-item class="pb-1" href="#app-tab-2" slot="activators"> AllServices.vue </v-tab-item>
+        <v-tab-item class="pb-1" href="#app-tab-3" slot="activators"> Service.vue </v-tab-item>
+        <v-tab-content id="app-tab-1" slot="content" ><v-card> <v-card-text>
+            <introduction ></introduction>
+            </v-card-text></v-card></v-tab-content> 
         <v-tab-content id="app-tab-2" slot="content" ><v-card> <v-card-text>
             <all-services ></all-services>
             </v-card-text> </v-card> </v-tab-content> 

@@ -16,7 +16,7 @@ new Vue({
         if ( null == this.$el.attributes["service-name"]) {
             throw new Error("service name is required");
         }
-        this.$store.state.serviceName = this.$el.getAttribute("service-name");
-        console.log("main-service beforeMount", this.$store.state.serviceName);
+        this.$store.state.RestBundle.serviceName = this.$el.getAttribute("service-name");
+        console.log("main-service beforeMount", this.$store.state.RestBundle.serviceName);
     },
 })

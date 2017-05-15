@@ -10,8 +10,8 @@ export default new Vuex.Store({
     },  
     getters: {
         stateData: function(state) { 
-            return function(stateType,stateName) {
-                var typeData = state[stateType];
+            return function(component,stateName) {
+                var typeData = state[component];
                 return typeData == null || stateName == null 
                     ? typeData 
                     : typeData[stateName];
@@ -20,11 +20,15 @@ export default new Vuex.Store({
     },
     mutations: {
         registerData: function(state, data) {
-            var stateType = data.stateType || "UNKNOWN_stateType";
-            state[stateType] || Vue.set(state, stateType, {});
-            Vue.set(state[stateType], data.stateName, data);
-            debug && console.log("store.registerData", stateType, data.stateName);
-            data.stateId = Object.keys(state[stateType]).length;
+            var serviceName = data.serviceName || "UNKNOWN_serviceName";
+            var services = state.restBundles || Vue.set(state, "restBundles", {
+                [serviceName]: {}
+            });
+            var service = services[serviceName] || Vue.set(services, serviceName, {});
+            var service = services[serviceName];
+            var component = data.component || "UNKNOWN_component";
+            Vue.set(service, data.component, data);
+            debug && console.log("store.registerData", component, data.stateName);
         },
     },
 });
