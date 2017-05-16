@@ -35,9 +35,7 @@
                 <li><b>localhost:8080</b> hosts the RestBundle REST services and production web content</li>
                 <li><b>localhost:4000</b> hosts the RestBundle Vue components with hot updates</li>
             </ul>
-            <v-card class="yellow lighten-4 elevation-3"><v-card-text>
-                <p>
-                Note: For development only the "test"  Service.vue component is shown on port 4000. All others
+            <p> Note: For development only the "test"  Service.vue component is shown on port 4000. All others
                 services (e.g., "greeting" and "aloha")
                 can only be displayed on port 8080, not port 4000:
                 <ul>
@@ -45,10 +43,9 @@
                     <li><a target="_blank" href="http://localhost:8080/greeting/ui">http://localhost:8080/greeting/ui</a></li>
                     <li><a target="_blank" href="http://localhost:8080/aloha/ui">http://localhost:8080/aloha/ui</a></li>
                 </ul>
-                </p><p>
-                In production, only one port will be used.
-                </p>
-            </v-card-text></v-card>
+            </p><p>
+            In production, only one port will be used.
+            </p>
         </p>
 
         <h5>Production</h5>
@@ -71,12 +68,6 @@ export default {
         serviceName() {
             return location.pathname.split("/")[1] || "test";
         },
-        restBundles() {
-            return this.$store.getters.restBundles;
-        },
-    },
-    mounted() {
-        console.log("service mounted");
     },
     components: {
         RbIdentity

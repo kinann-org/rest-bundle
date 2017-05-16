@@ -10,9 +10,8 @@
         <div class="rb-panel-header" >/{{service}}/identity</div>
     </div>
     <v-card> <v-card-row class="grey lighten-4"> <v-card-text>
-        <g-row><g-header>Service:</g-header><g-text><code>/{{service}}</code></g-text></g-row>
         <g-row><g-header>Component:</g-header>
-            <g-text><code>&lt;{{component}}&gt;</code> _uid:{{_uid}}</g-text></g-row>
+            <g-text><code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}}</g-text></g-row>
         <g-row><g-header>Description:</g-header>
             <g-text><slot>Displays identity of "{{service}}" RestBundle service</slot></g-text></g-row>
         <g-row>
@@ -25,6 +24,7 @@
             <g-text><a :href='"/"+service+"/ui"' target="_blank">/{{service}}/ui</a></g-text>
         </g-row>
         <g-row><g-header>Package:</g-header><g-text>{{package}}@{{version}}</g-text></g-row>
+        <g-row><g-header>Model:</g-header><g-text>{{model}}</g-text></g-row>
     </v-card-text> </v-card-row> </v-card>
   </v-expansion-panel-content>
 </v-expansion-panel>
@@ -32,16 +32,61 @@
 </template>
 <script>
 
+    const debug = process.env.NODE_ENV !== 'production';
+    const axios = require("axios");
+
     var grid = require('vue-g-row-col');
 
     export default {
+        props: {
+            model: {
+                required: false,
+                type: String,
+                default: "identity",
+            }
+        },
         mixins: [ require("./mixins/rb-service.js") ],
-        data: function() {
+        computed: {
+            state() {
+                return this.serviceState && this.serviceState[this.model];
+            },
+            package() { 
+                return this.state && this.state.package || "package?";
+            },
+            version() { 
+                return this.state && this.state.version || "version?";
+            },
+        },
+        data() {
+            this.restBundleServices();
+            this.$store.commit("restBundleServices/updateRestBundle", {
+                service: this.service,
+                model: this.model,
+                name: this.service,
+                package: "tbd",
+                version: "tbd",
+            });
             return {
-                showDetail: false, 
+                showDetail: false,
+                error: "",
             }
         },
         components: Object.assign({}, grid),
+        beforeMount() {
+            this.origin = debug ? "http://localhost:8080" : location.origin;
+            axios.get(this.origin + "/" + this.service + "/identity")
+                .then((res) => {
+                    var data = Object.assign({}, res.data, {
+                        service: this.service,
+                        model: this.model,
+                    });
+                    this.$store.commit("restBundleServices/updateRestBundle", data);
+                })
+                .catch((err) => {
+                    var res = err.response;
+                    this.error = " \u2794 HTTP" + res.status;
+                });
+        }
     }
 
 </script><style>

@@ -1,3 +1,4 @@
+<!-- Adapted from https://github.com/arvidkahl/vue-json-tree-view/blob/master/src/TreeView.vue -->
 <template>
   <div class="tree-view-wrapper">
     <tree-view-item class="tree-view-item-root" :data="parsedData" :max-depth="allOptions.maxDepth" :current-depth="0"></tree-view-item>
@@ -70,8 +71,8 @@
     computed: {
       allOptions: function(){
         return _.extend({}, {
-          rootObjectKey:  "root",
-          maxDepth:       4,
+          rootObjectKey:  "restBundleServices",
+          maxDepth:       1,
         }, (this.options || {}) )
       },
         parsedData: function(){

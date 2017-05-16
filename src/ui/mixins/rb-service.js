@@ -1,5 +1,9 @@
-var axios = require("axios");
+const Vue = require("vue").default;
+const axios = require("axios");
 const debug = process.env.NODE_ENV !== 'production'
+
+const ALL_Services =  "common";
+const ALL_MODELS =  "common";
 
 module.exports = {
     props: {
@@ -8,40 +12,42 @@ module.exports = {
             required: true,
         }
     },
-    data() {
-        let component = this.$options._componentTag;
-        let data = this.$store.getters.stateData(component, this.service);
-        if (data == null) {
-            data = {
-                serviceName: this.service,
-                component: component,
-                package: "tbd",
-                version: "tbd",
-                error: "",
-                origin: "",
+    methods: {
+        restBundleServices() {
+            if (this.$store.state.restBundleServices == null) {
+                //console.log("registerModule(restBundleServices)");
+                this.$store.registerModule("restBundleServices", {
+                    namespaced: true,
+                    state: { },
+                    mutations: {
+                        updateRestBundle: function(state, data) {
+                            var serviceName = data.service || ALL_SERVICES;
+                            var model = data.model || ALL_MODELS;
+                            var service = state[serviceName] || Vue.set(state, serviceName, {});
+                            var modelData = service[model] || Vue.set(service, model, {});
+                            Object.keys(data).forEach(key => {
+                                if (key === "serviceName") {
+                                    // omit
+                                } else if (key === "model") {
+                                    // omit
+                                } else {
+                                    Vue.set(modelData, key, data[key]);
+                                }
+                            });
+                        },
+                    },
+                });
             }
-            this.$store.commit("registerData", data);
-        }
-        return data;
+        },
     },
     computed: {
-        selector() {
+        serviceState() {
+            var serviceName = this.service || ALL_SERVICES;
+            var services = this.$store.state.restBundleServices;
+            return services && services[serviceName];
+        },
+        componentTag() {
             return this.$options._componentTag;
         },
     },
-    beforeMount() {
-        this.origin = debug ? "http://localhost:8080" : location.origin;
-        axios.get(this.origin + "/" + this.service + "/identity")
-            .then((res) => {
-                var json = res.data;
-                this.package = json.package || this.package;
-                this.version = json.version || this.version;
-            })
-            .catch((err) => {
-                var res = err.response;
-                this.package = "(no package)";
-                this.version = "(no version)";
-                this.error = " \u2794 HTTP" + res.status;
-            });
-    }
 }

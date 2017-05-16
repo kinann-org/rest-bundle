@@ -6,7 +6,7 @@
         <div class="rb-panel-header">rb-state</div>
     </div>
     <v-card class="grey lighten-4"><v-card-text>
-    <tree-view class="mt-1 ml-1" :data="state"></tree-view>
+    <tree-view max-depth="1" class="mt-1 ml-1" :data="state.restBundleServices"></tree-view>
     </v-card-text> </v-card>
   </v-expansion-panel-content>
 </v-expansion-panel>

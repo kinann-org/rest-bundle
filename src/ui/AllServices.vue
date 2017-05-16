@@ -52,11 +52,6 @@ import RbState from './RbState.vue';
 
 export default {
     name: 'dev',
-    computed: {
-        restBundles() {
-            return this.$store.getters.restBundles;
-        },
-    },
     data() {
         return {
             state: this.$store.state,
