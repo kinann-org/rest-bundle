@@ -47,14 +47,11 @@
         },
         mixins: [ require("./mixins/rb-service.js") ],
         computed: {
-            state() {
-                return this.serviceState && this.serviceState[this.model];
-            },
             package() { 
-                return this.state && this.state.package || "package?";
+                return this.modelState && this.modelState.package || "package?";
             },
             version() { 
-                return this.state && this.state.version || "version?";
+                return this.modelState && this.modelState.version || "version?";
             },
         },
         data() {

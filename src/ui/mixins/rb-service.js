@@ -46,6 +46,9 @@ module.exports = {
             var services = this.$store.state.restBundleServices;
             return services && services[serviceName];
         },
+        modelState() {
+            return this.serviceState && this.serviceState[this.model];
+        },
         componentTag() {
             return this.$options._componentTag;
         },
