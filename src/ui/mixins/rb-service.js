@@ -26,7 +26,7 @@ module.exports = {
                             var service = state[serviceName] || Vue.set(state, serviceName, {});
                             var modelData = service[model] || Vue.set(service, model, {});
                             Object.keys(data).forEach(key => {
-                                if (key === "serviceName") {
+                                if (key === "service") {
                                     // omit
                                 } else if (key === "model") {
                                     // omit
