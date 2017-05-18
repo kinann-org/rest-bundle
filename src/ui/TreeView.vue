@@ -13,7 +13,17 @@
       TreeViewItem
     },
     name: "tree-view",
-    props: ["data", "options"],
+    props: {
+        data: {
+            default: {},
+        },
+        rootKey: {
+            default: "root",
+        },
+        initialDepth: {
+            default: 2,
+        },
+    },
     methods: {
         // Transformer for the non-Collection types,
       // like String, Integer of Float
@@ -69,22 +79,22 @@
       }
     },
     computed: {
-      allOptions: function(){
-        return _.extend({}, {
-          rootObjectKey:  "restBundleServices",
-          maxDepth:       2,
-        }, (this.options || {}) )
+      allOptions() {
+          return {
+              rootObjectKey: this.rootKey,
+              maxDepth: this.initialDepth,
+          };
       },
-        parsedData: function(){
-        // Take the JSON data and transform
-        // it into the Tree View DSL
-        // Strings or Integers should not be attempted to be split, so we generate
-        // a new object with the string/number as the value
-        if (this.isValue(this.data)) {
-          return this.transformValue(this.data, this.allOptions.rootObjectKey);
-        }
-        // If it's an object or an array, transform as an object
-        return this.transformObject(this.data, this.allOptions.rootObjectKey, true);
+      parsedData(){
+          // Take the JSON data and transform
+          // it into the Tree View DSL
+          // Strings or Integers should not be attempted to be split, so we generate
+          // a new object with the string/number as the value
+          if (this.isValue(this.data)) {
+              return this.transformValue(this.data, this.allOptions.rootObjectKey);
+          }
+          // If it's an object or an array, transform as an object
+          return this.transformObject(this.data, this.allOptions.rootObjectKey, true);
       }
     }
   };
