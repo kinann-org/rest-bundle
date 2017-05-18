@@ -13,6 +13,13 @@ module.exports = {
         }
     },
     methods: {
+        commit(data, model = this.model, service = this.service) { 
+            var stateData = Object.assign({}, data, {
+                service: service,
+                model: model,
+            });
+            this.$store.commit("restBundleServices/updateRestBundle", stateData);
+        },
         restBundleServices() {
             if (this.$store.state.restBundleServices == null) {
                 //console.log("registerModule(restBundleServices)");
@@ -38,6 +45,7 @@ module.exports = {
                     },
                 });
             }
+            return this.$store.state.restBundleServices;
         },
     },
     computed: {

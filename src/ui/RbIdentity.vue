@@ -55,13 +55,11 @@
             },
         },
         data() {
-            this.restBundleServices();
-            this.$store.commit("restBundleServices/updateRestBundle", {
-                service: this.service,
-                model: this.model,
+            var services = this.restBundleServices();
+            this.commit({
                 name: this.service,
-                package: "tbd",
-                version: "tbd",
+                package: null,
+                version: null,
             });
             return {
                 showDetail: false,
@@ -73,11 +71,7 @@
             this.origin = debug ? "http://localhost:8080" : location.origin;
             axios.get(this.origin + "/" + this.service + "/identity")
                 .then((res) => {
-                    var data = Object.assign({}, res.data, {
-                        service: this.service,
-                        model: this.model,
-                    });
-                    this.$store.commit("restBundleServices/updateRestBundle", data);
+                    this.commit(res.data);
                 })
                 .catch((err) => {
                     var res = err.response;

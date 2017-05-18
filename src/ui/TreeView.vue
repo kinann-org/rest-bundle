@@ -72,7 +72,7 @@
       allOptions: function(){
         return _.extend({}, {
           rootObjectKey:  "restBundleServices",
-          maxDepth:       1,
+          maxDepth:       2,
         }, (this.options || {}) )
       },
         parsedData: function(){
