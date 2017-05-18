@@ -55,7 +55,6 @@
             },
         },
         data() {
-            var services = this.restBundleServices();
             this.commit({
                 name: this.service,
                 package: null,
@@ -68,7 +67,6 @@
         },
         components: Object.assign({}, grid),
         beforeMount() {
-            this.origin = debug ? "http://localhost:8080" : location.origin;
             axios.get(this.origin + "/" + this.service + "/identity")
                 .then((res) => {
                     this.commit(res.data);

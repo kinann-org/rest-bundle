@@ -14,6 +14,7 @@ module.exports = {
     },
     methods: {
         commit(data, model = this.model, service = this.service) { 
+            var services = this.restBundleServices();
             var stateData = Object.assign({}, data, {
                 service: service,
                 model: model,
@@ -49,6 +50,9 @@ module.exports = {
         },
     },
     computed: {
+        origin() {
+            return debug ? "http://localhost:8080" : location.origin;
+        },
         serviceState() {
             var serviceName = this.service || ALL_SERVICES;
             var services = this.$store.state.restBundleServices;
