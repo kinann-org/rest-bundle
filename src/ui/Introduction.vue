@@ -46,12 +46,12 @@
     </p>
 </div>
 
-</template><script>
+</template>
+<script>
 
 export default {
     name: 'introduction',
 }
 
-</script><style>
-
-</style>
+</script>
+<style> </style>

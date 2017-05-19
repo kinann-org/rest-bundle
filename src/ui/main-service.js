@@ -20,11 +20,4 @@ new Vue({
     el: '#service',
     store: store,
     render: h => h(Service),
-    //beforeMount() {
-        //if ( null == this.$el.attributes["service"]) {
-            //throw new Error("service name is required");
-        //}
-        //this.$store.state.RestBundle.serviceName = this.$el.getAttribute("service");
-        //console.log("main-service beforeMount", this.$store.state.RestBundle.service);
-    //},
 })

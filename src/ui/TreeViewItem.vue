@@ -138,5 +138,3 @@
   color: #ccc
 }
 </style>
-Contact GitHub API Training Shop Blog About
-Â© 2017 GitHub, Inc. Terms Privacy Security Status Help

@@ -20,12 +20,15 @@
             <all-services ></all-services>
             </v-card-text> </v-card> </v-tab-content> 
         <v-tab-content id="app-tab-3" slot="content" ><v-card> <v-card-text>
+            <v-card-row><v-spacer/>
+                <a target="_blank" :href="productionUrl('/test/ui')">{{productionUrl('/test/ui')}}</a></v-card-row>
             <service ></service>
             </v-card-text> </v-card> </v-tab-content> 
     </v-tabs>
 </v-app>
 
-</template> <!-- ====================================== --> <script>
+</template>  
+<script>
 
 import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
@@ -38,6 +41,14 @@ export default {
             package: require("../../package.json"),
         }
     },
+    methods: {
+        productionUrl(path) {
+            var host = location.port === "4000"
+                ? location.hostname + ":8080"
+                : location.host;
+            return "http://" + host + path;
+        },
+    },
     components: {
         Introduction,
         AllServices,
@@ -45,6 +56,5 @@ export default {
     },
 }
 
-</script><!-- ====================================== --> <style>
-
-</style>
+</script> 
+<style> </style>

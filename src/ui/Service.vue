@@ -1,14 +1,14 @@
 <template>
 
 <v-card >
-    <v-card-row class="green darken-4" >
+    <v-card-row class="secondary" >
         <v-card-title>
-            <span class="white--text">Service Home Page</span>
+            <span >Service Home Page</span>
             <v-spacer></v-spacer>
-            <span class="lime--text">/{{serviceName}}</span>
+            <span >/{{serviceName}}</span>
         </v-card-title>
     </v-card-row>
-    <v-card-text class="grey lighten-3">
+    <v-card-text >
         <p> Each named RestBundle instance has its very own home page.
             This is the service home page for RestBundle "{{serviceName}}".
             This page is located at:
@@ -74,14 +74,5 @@ export default {
     },
 }
 
-</script><style>
-
-.card__title a {
-    color: #bbf;
-    text-decoration: none;
-}
-.card__title a:hover {
-    text-decoration: underline;
-}
-
-</style>
+</script>
+<style> </style>

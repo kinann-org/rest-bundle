@@ -2,8 +2,11 @@
 
 <v-expansion-panel class="grey lighten-2 " >
   <v-expansion-panel-content>
-    <div slot="header" class="title grey--text text--darken-1" >
-        <div class="rb-panel-header">rb-state</div>
+    <div slot="header" class="title " >
+        <div class="rb-panel-icon" >
+            <v-icon xsmall class="" >visibilityk</v-icon>
+        </div>
+        <div class="rb-panel-header">RestBundle Client State</div>
     </div>
     <v-card class="grey lighten-4"><v-card-text>
     <tree-view root-key="restBundleServices" initial-depth="1" class="mt-1 ml-1" :data="restBundleServices"></tree-view>
@@ -34,7 +37,6 @@ export default {
     },
 }
 
-</script><style>
-
-</style>
+</script>
+<style> </style>
 

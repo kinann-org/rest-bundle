@@ -1,31 +1,49 @@
 <template>
 
-<v-expansion-panel class="grey lighten-2 " >
+<v-expansion-panel >
   <v-expansion-panel-content>
-    <div slot="header" class="title grey--text text--darken-1" >
-        <div style="position:absolute; top:0.35em;left:0.5em">
-            <v-icon v-show="error" small class="red--text text--darken-1 " >error</v-icon>
-            <v-icon v-show="!error" xsmall class="green--text text--darken-2 " >check</v-icon>
+    <div slot="header" class="title " >
+        <div class="rb-panel-icon" >
+            <v-icon v-show="error" small class="error--text " >error</v-icon>
+            <v-icon v-show="!error" xsmall class="success--text " >check</v-icon>
         </div>
-        <div class="rb-panel-header" >/{{service}}/identity</div>
+        <div class="rb-panel-header" >Service Identity: /{{service}}</div>
     </div>
-    <v-card> <v-card-row class="grey lighten-4"> <v-card-text>
-        <g-row><g-header>Component:</g-header>
-            <g-text><code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}}</g-text></g-row>
-        <g-row><g-header>Description:</g-header>
-            <g-text><slot>Displays identity of "{{service}}" RestBundle service</slot></g-text></g-row>
-        <g-row>
-            <g-header>REST:</g-header>
-            <g-text><a :href="origin+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
-                <span class="text-danger">{{error}}</span></g-text>
-        </g-row>
-        <g-row>
-            <g-header>Home Page:</g-header>
-            <g-text><a :href='"/"+service+"/ui"' target="_blank">/{{service}}/ui</a></g-text>
-        </g-row>
-        <g-row><g-header>Package:</g-header><g-text>{{package}}@{{version}}</g-text></g-row>
-        <g-row><g-header>Model:</g-header><g-text>{{model}}</g-text></g-row>
-    </v-card-text> </v-card-row> </v-card>
+    <v-card> 
+        <v-card-text>
+            <v-container fluid>
+                <v-row >
+                    <v-col xs3><b>Component:</b></v-col>
+                    <v-col xs9> <code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}} </v-col>
+                </v-row>
+                <v-row >
+                    <v-col xs3><b>Description:</b></v-col>
+                    <v-col xs9> 
+                        <slot>Identification for RestBundle service "{{service}}" </slot>
+                    </v-col>
+                </v-row>
+                <v-row >
+                    <v-col xs3><b>Status:</b></v-col>
+                    <v-col xs9> 
+                        <a :href="origin+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
+                            <span class="text-danger">{{error || "(OK)"}}</span>
+                    </v-col>
+                </v-row>
+                <v-row >
+                    <v-col xs3><b>Package:</b></v-col>
+                    <v-col xs9> {{package}}@{{version}} </v-col>
+                </v-row>
+                <v-row >
+                    <v-col xs3><b>Model:</b></v-col>
+                    <v-col xs9> {{model}} </v-col>
+                </v-row>
+                <v-row >
+                    <v-col xs3><b>Home Page:</b></v-col>
+                    <v-col xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-col>
+                </v-row>
+            </v-container>
+        </v-card-text>
+    </v-card>
   </v-expansion-panel-content>
 </v-expansion-panel>
 
@@ -34,8 +52,6 @@
 
     const debug = process.env.NODE_ENV !== 'production';
     const axios = require("axios");
-
-    var grid = require('vue-g-row-col');
 
     export default {
         props: {
@@ -65,7 +81,14 @@
                 error: "",
             }
         },
-        components: Object.assign({}, grid),
+        methods: {
+            serviceLink(path) {
+                var host = location.port === "4000" 
+                    ? location.hostname + ":8080"
+                    : location.host;
+                return "http://" + host + "/" + this.service + path;
+            }
+        },
         beforeMount() {
             axios.get(this.origin + "/" + this.service + "/identity")
                 .then((res) => {
@@ -78,23 +101,6 @@
         }
     }
 
-</script><style>
-
-.expansion-panel, .expansion-panel>li {
-    border-top-left-radius: 0.4em !important;
-    border-top-right-radius: 0.4em !important;
-}
-.expansion-panel:last-child, .expansion-panel>li {
-    border-bottom-left-radius: 0.4em !important;
-    border-bottom-right-radius: 0.4em !important;
-}
-.rb-panel-header {
-    position:absolute; 
-    top:0.5em;
-    left:2.5em;
-}
-
-
-
-</style>
+</script>
+<style> </style>
 

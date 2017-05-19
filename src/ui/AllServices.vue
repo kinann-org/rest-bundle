@@ -45,7 +45,8 @@
 
 </div>
 
-</template> <!-- ====================================== --> <script>
+</template>
+<script>
 
 import RbIdentity from './RbIdentity.vue';
 import RbState from './RbState.vue';
@@ -63,6 +64,5 @@ export default {
     },
 }
 
-</script><!-- ====================================== --> <style>
-
-</style>
+</script>
+<style></style>
