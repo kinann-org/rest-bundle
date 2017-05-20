@@ -1,13 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Vuetify from 'vuetify';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 import RestBundle from '../../vue.js';
 import TreeView from "./TreeView.vue";
-import Service from './Service.vue';
+import Dev from './Dev.vue';
 require('./stylus/main.styl')
 
-Vue.use(TreeView)
-Vue.use(Vuex);
+Vue.use(VueAxios, axios);
+Vue.use(TreeView);
+Vue.use(Vuex);;
 Vue.use(Vuetify);
 Vue.use(RestBundle);
 Vue.use(TreeView);

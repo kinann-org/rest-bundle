@@ -16,32 +16,35 @@
         Launch a browser and look at <a href="http://localhost:4000/">http://localhost:4000</a>.
     </p>
 
-    <h5>Vue Component <code>&lt;rb-identity&gt;</code></h5>
-    <p>
-    All RestBundles provide an <code>/identity</code> service that returns information about
-    the RestBundle. The Vue component for the identity service is <code>&lt;rb-identity&gt;</code>.
-    The display will change according to how the services are launched. Here are 
-    the three Vue components for our three services:
+    <h6>Service Identity</h6>
+    <p> All RestBundles provide an <code>/identity</code> service that returns information about
+        the RestBundle. The Vue component for the identity service is <code>&lt;rb-identity&gt;</code>.
+        The display will change according to how the services are launched. Here are 
+        the three Vue components for our three services:
     </p>
 
-    <div style="margin-bottom: 1em">
+    <v-card hover v-tooltip:bottom='{html:"<rb-identify>"}'>
         <template v-for='service of ["test","greeting","aloha"]' >
             <rb-identity :service="service"></rb-identity>
         </template>
-    </div>
+    </v-card>
 
     <p>
     Notice that we never started the "greeting" RestBundle, and we therefore
     see a red <v-icon small class="red--text text--darken-1" >error</v-icon>
     </p>
 
-    <h5>Vue Component <code>&lt;rb-state&gt;</code></h5>
+    <h6>RestBundle Client State</h6>
     <p> All RestBundle services maintain client state in the shared Vuex Store globally
         referenced as <code>$store.state.restBundle</code> on the root Vue instance.
         The <code>&lt;rb-state&gt;</code> Vue component provides a development snapshot
         of the shared RestBundle state.
     </p>
-    <rb-state></rb-state>
+    <v-card hover v-tooltip:bottom='{html:"<rb-state>"}'>
+        <rb-state></rb-state>
+    </v-card>
+
+    <v-card height="60px"><!--spacer for tooltip--></v-card>
 
 </div>
 

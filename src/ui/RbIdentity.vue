@@ -14,7 +14,7 @@
             <v-container fluid>
                 <v-row >
                     <v-col xs3><b>Component:</b></v-col>
-                    <v-col xs9> <code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}} </v-col>
+                    <v-col xs9><code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}} </v-col>
                 </v-row>
                 <v-row >
                     <v-col xs3><b>Description:</b></v-col>
@@ -25,7 +25,7 @@
                 <v-row >
                     <v-col xs3><b>Status:</b></v-col>
                     <v-col xs9> 
-                        <a :href="origin+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
+                        <a :href="origin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
                             <span class="text-danger">{{error || "(OK)"}}</span>
                     </v-col>
                 </v-row>
@@ -50,8 +50,8 @@
 </template>
 <script>
 
+    import Vue from 'vue';
     const debug = process.env.NODE_ENV !== 'production';
-    const axios = require("axios");
 
     export default {
         props: {
@@ -63,11 +63,14 @@
         },
         mixins: [ require("./mixins/rb-service.js") ],
         computed: {
+            rbModule() {
+                return this.restBundleModel();
+            },
             package() { 
-                return this.modelState && this.modelState.package || "package?";
+                return this.rbModule.package;
             },
             version() { 
-                return this.modelState && this.modelState.version || "version?";
+                return this.rbModule.version;
             },
         },
         data() {
@@ -76,12 +79,37 @@
                 package: null,
                 version: null,
             });
+            this.restBundleModel({
+                name: this.service,
+                package: null,
+                version: null,
+            });
             return {
                 showDetail: false,
-                error: "",
             }
         },
         methods: {
+            restBundleModel(state) {
+                var rbService = this.restBundleService(this.service);
+                if (rbService[this.model] == null) {
+                    var that = this;
+                    this.$store.registerModule(["restBundle", this.service, this.model], {
+                        namespaced: true,
+                        state: state || {},
+                        mutations: {
+                            update(state) {
+                                var url = that.origin() + "/" + that.service + "/" + that.model;
+                                that.$http.get(url).then((res) => {
+                                    var data = res.data;
+                                    data && Object.keys(data).forEach(key => Vue.set(state, key, data[key]));
+                                }).catch(that.restCatcher);
+                            },
+                        },
+                    });
+                    this.$store.commit(["restBundle",that.service, that.model, "update"].join("/"));
+                }
+                return rbService[this.model];
+            },
             serviceLink(path) {
                 var host = location.port === "4000" 
                     ? location.hostname + ":8080"
@@ -89,7 +117,7 @@
                 return "http://" + host + "/" + this.service + path;
             },
             update() {
-                return axios.get(this.origin + "/" + this.service + "/identity")
+                return this.$http.get(this.origin() + "/" + this.service + "/identity")
                     .then((res) => {
                         this.commit(res.data);
                     })

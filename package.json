@@ -20,6 +20,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue": "^2.3.2",
+    "vue-axios": "^2.0.2",
     "vue-g-row-col": "^0.3.0",
     "vuetify": "^0.11.1",
     "vuex": "^2.3.1",

@@ -12,7 +12,23 @@ module.exports = {
             required: true,
         }
     },
+    data() {
+        return {
+            error: "",
+        }
+    },
     methods: {
+        origin() {
+            return debug ? "http://localhost:8080" : location.origin;
+        },
+        restCatcher(err) {
+            if (err.response) {
+                var res = err.response;
+                this.error = " \u2794 HTTP" + res.status;
+            } else {
+                this.error = " \u2794 " + err;
+            }
+        },
         commit(data, model = this.model, service = this.service) { 
             var services = this.restBundleServices();
             var stateData = Object.assign({}, data, {
@@ -20,6 +36,25 @@ module.exports = {
                 model: model,
             });
             this.$store.commit("restBundleServices/updateRestBundle", stateData);
+        },
+        restBundleService(service, model) {
+            var restBundle = this.$store.state.restBundle;
+            if (restBundle == null) {
+                this.$store.registerModule(["restBundle"], {
+                    namespaced: true,
+                    state: {},
+                });
+                restBundle = this.$store.state.restBundle;
+            }
+            if (restBundle[service] == null) {
+                this.$store.registerModule(["restBundle",service], {
+                    namespaced: true,
+                    state: { },
+                    mutations: {
+                    },
+                });
+            }
+            return restBundle[service];
         },
         restBundleServices() {
             if (this.$store.state.restBundleServices == null) {
@@ -50,9 +85,6 @@ module.exports = {
         },
     },
     computed: {
-        origin() {
-            return debug ? "http://localhost:8080" : location.origin;
-        },
         serviceState() {
             var serviceName = this.service || ALL_SERVICES;
             var services = this.$store.state.restBundleServices;

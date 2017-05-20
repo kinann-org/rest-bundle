@@ -9,7 +9,7 @@
         <div class="rb-panel-header">RestBundle Client State</div>
     </div>
     <v-card class="grey lighten-4"><v-card-text>
-    <tree-view root-key="restBundleServices" initial-depth="1" class="mt-1 ml-1" :data="restBundleServices"></tree-view>
+    <tree-view root-key="root" initial-depth="1" class="mt-1 ml-1" :data="$store.state"></tree-view>
     </v-card-text> </v-card>
   </v-expansion-panel-content>
 </v-expansion-panel>
