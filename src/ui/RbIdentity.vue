@@ -88,19 +88,20 @@
                 var rbService = this.restBundleService();
                 if (rbService[this.model] == null) {
                     var that = this;
+                    function getUpdate(state) {
+                        var url = that.origin() + "/" + that.service + "/" + that.model;
+                        that.$http.get(url).then((res) => {
+                            var data = res.data;
+                            data && Object.keys(data).forEach(key => Vue.set(state, key, data[key]));
+                        }).catch( err => {
+                            that.setError(err);
+                        });
+                    };
                     this.$store.registerModule(["restBundle", this.service, this.model], {
                         namespaced: true,
                         state: state || {},
                         mutations: {
-                            getUpdate(state) {
-                                var url = that.origin() + "/" + that.service + "/" + that.model;
-                                that.$http.get(url).then((res) => {
-                                    var data = res.data;
-                                    data && Object.keys(data).forEach(key => Vue.set(state, key, data[key]));
-                                }).catch( err => {
-                                    this.setError(err);
-                                });
-                            },
+                            getUpdate,
                         },
                     });
                     this.restBundleCommit("getUpdate");
