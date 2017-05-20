@@ -87,17 +87,20 @@
                     ? location.hostname + ":8080"
                     : location.host;
                 return "http://" + host + "/" + this.service + path;
-            }
+            },
+            update() {
+                return axios.get(this.origin + "/" + this.service + "/identity")
+                    .then((res) => {
+                        this.commit(res.data);
+                    })
+                    .catch((err) => {
+                        var res = err.response;
+                        this.error = " \u2794 HTTP" + res.status;
+                    });
+            },
         },
         beforeMount() {
-            axios.get(this.origin + "/" + this.service + "/identity")
-                .then((res) => {
-                    this.commit(res.data);
-                })
-                .catch((err) => {
-                    var res = err.response;
-                    this.error = " \u2794 HTTP" + res.status;
-                });
+            this.update();
         }
     }
 
