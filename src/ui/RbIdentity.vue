@@ -63,22 +63,17 @@
         },
         mixins: [ require("./mixins/rb-service.js") ],
         computed: {
-            rbModule() {
+            rbModel() {
                 return this.restBundleModel();
             },
             package() { 
-                return this.rbModule.package;
+                return this.rbModel.package;
             },
             version() { 
-                return this.rbModule.version;
+                return this.rbModel.version;
             },
         },
         data() {
-            this.commit({
-                name: this.service,
-                package: null,
-                version: null,
-            });
             this.restBundleModel({
                 name: this.service,
                 package: null,
@@ -90,23 +85,25 @@
         },
         methods: {
             restBundleModel(state) {
-                var rbService = this.restBundleService(this.service);
+                var rbService = this.restBundleService();
                 if (rbService[this.model] == null) {
                     var that = this;
                     this.$store.registerModule(["restBundle", this.service, this.model], {
                         namespaced: true,
                         state: state || {},
                         mutations: {
-                            update(state) {
+                            getUpdate(state) {
                                 var url = that.origin() + "/" + that.service + "/" + that.model;
                                 that.$http.get(url).then((res) => {
                                     var data = res.data;
                                     data && Object.keys(data).forEach(key => Vue.set(state, key, data[key]));
-                                }).catch(that.restCatcher);
+                                }).catch( err => {
+                                    this.setError(err);
+                                });
                             },
                         },
                     });
-                    this.$store.commit(["restBundle",that.service, that.model, "update"].join("/"));
+                    this.restBundleCommit("getUpdate");
                 }
                 return rbService[this.model];
             },
@@ -116,19 +113,8 @@
                     : location.host;
                 return "http://" + host + "/" + this.service + path;
             },
-            update() {
-                return this.$http.get(this.origin() + "/" + this.service + "/identity")
-                    .then((res) => {
-                        this.commit(res.data);
-                    })
-                    .catch((err) => {
-                        var res = err.response;
-                        this.error = " \u2794 HTTP" + res.status;
-                    });
-            },
         },
         beforeMount() {
-            this.update();
         }
     }
 
