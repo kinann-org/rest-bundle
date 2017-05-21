@@ -22,7 +22,7 @@
         <v-tab-content id="app-tab-3" slot="content" ><v-card> <v-card-text>
             <v-card-row><v-spacer/>
                 <a target="_blank" :href="productionUrl('/test/ui')">{{productionUrl('/test/ui')}}</a></v-card-row>
-            <service ></service>
+            <service service="test"></service>
             </v-card-text> </v-card> </v-tab-content> 
     </v-tabs>
 </v-app>

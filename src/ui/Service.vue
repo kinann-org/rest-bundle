@@ -5,22 +5,22 @@
         <v-card-title>
             <span >Service Home Page</span>
             <v-spacer></v-spacer>
-            <span >/{{serviceName}}</span>
+            <span >/{{serviceFromUrl}}</span>
         </v-card-title>
     </v-card-row>
     <v-card-text >
         <p> Each named RestBundle instance has its very own home page.
-            This is the service home page for RestBundle "{{serviceName}}".
+            This is the service home page for RestBundle "{{serviceFromUrl}}".
             This page is located at:
             <ul>
-                <li><b>Production:</b><a target="_blank" :href='"/"+serviceName+"/ui/index-service"'>
-                    /{{serviceName}}/ui/index-service</a></li>
+                <li><b>Production:</b><a target="_blank" :href='"/"+serviceFromUrl+"/ui/index-service"'>
+                    /{{serviceFromUrl}}/ui/index-service</a></li>
                 <li><b>Development:</b>Service.vue tab (i.e., this page)</li>
             </ul>
         </p>
 
         <h5>Server status</h5>
-        <rb-identity class="mb-3" :service="serviceName"></rb-identity>
+        <rb-identity class="mb-3" :service="serviceFromUrl"></rb-identity>
 
         <h5>Back-end development</h5>
         <p> Type <kbd>npm start</kbd> to launch the Node.js server:
@@ -65,8 +65,9 @@ import RbIdentity from './RbIdentity.vue';
 export default {
     name: "service",
     computed: {
-        serviceName() {
-            return location.pathname.split("/")[1] || "test";
+        serviceFromUrl() {
+            var subpaths = location.href.split("/");
+            return subpaths[3] || "test";
         },
     },
     components: {

@@ -5,7 +5,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import RestBundle from '../../vue.js';
 import TreeView from "./TreeView.vue";
-import Dev from './Dev.vue';
+import Service from './Service.vue';
 require('./stylus/main.styl')
 
 Vue.use(VueAxios, axios);
