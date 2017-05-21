@@ -21,36 +21,54 @@ module.exports = {
         origin() {
             return debug ? "http://localhost:8080" : location.origin;
         },
-        getUpdate(state) {
-            var url = this.origin() + "/" + this.service + "/" + this.model;
-            this.$http.get(url).then((res) => {
-                var data = res.data;
-                data && Object.keys(data).forEach(key => Vue.set(state, key, data[key]));
-            }).catch( err => {
-                this.setError(err);
-            });
+        actions(a) { // default Component-scoped Vueex Module actions
+            return a;
+        },
+        mutations(m) { // default Component-scoped Vueex Module actions
+            return m;
         },
         restBundleModel(state) {
             var rbService = this.restBundleService();
             if (rbService[this.model] == null) {
                 var that = this;
-                var mutations = this.mutations();
-                Object.keys(mutations).forEach(key => {
+                var mutations = this.mutations({
+                    update(state, payload={}) {
+                        Object.keys(payload).forEach(key => Vue.set(state, key, payload[key]));
+                    },
+                });
+                var actions = this.actions({
+                    getUpdate(context, payload) {
+                        var url = this.origin() + "/" + this.service + "/" + this.model;
+                        return this.$http.get(url).then((res) => {
+                            context.commit('update', res.data);
+                        }).catch( err => {
+                            this.setError(err);
+                        });
+                    },
+                });
+                Object.keys(mutations).forEach(key => { // bind to vue component
                     var f = mutations[key];
-                    mutations[key] = function(state) {
-                        return f.call(that, state);
+                    mutations[key] = function(state, payload) {
+                        return f.call(that, state, payload);
+                    };
+                });
+                Object.keys(actions).forEach(key => { // bind to vue component
+                    var f = actions[key];
+                    actions[key] = function(context, payload) {
+                        return f.call(that, context, payload);
                     };
                 });
                 this.$store.registerModule(["restBundle", this.service, this.model], {
                     namespaced: true,
                     state: state || {},
+                    actions,
                     mutations,
                 });
             }
             return rbService[this.model];
         },
-        restBundleCommit(mutation, payload, model=this.model, service=this.service) {
-            this.$store.commit(["restBundle", service, model, mutation].join("/"), payload);
+        restBundleDispatch(mutation, payload, model=this.model, service=this.service) {
+            this.$store.dispatch(["restBundle", this.service, this.model, "getUpdate"].join("/"), payload);
         },
         setError(err) {
             if (err.response) {

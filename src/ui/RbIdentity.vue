@@ -81,14 +81,9 @@
             }
         },
         created() {
-            this.restBundleCommit("getUpdate");
+            this.restBundleDispatch("getUpdate");
         },
         methods: {
-            mutations() {
-                return {
-                    getUpdate: this.getUpdate, 
-                }
-            },
             serviceLink(path) {
                 var host = location.port === "4000" 
                     ? location.hostname + ":8080"
