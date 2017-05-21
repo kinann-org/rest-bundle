@@ -63,9 +63,6 @@
         },
         mixins: [ require("./mixins/rb-service.js") ],
         computed: {
-            rbModel() {
-                return this.restBundleModel();
-            },
             package() { 
                 return this.rbModel.package;
             },
@@ -83,30 +80,14 @@
                 showDetail: false,
             }
         },
+        created() {
+            this.restBundleCommit("getUpdate");
+        },
         methods: {
-            restBundleModel(state) {
-                var rbService = this.restBundleService();
-                if (rbService[this.model] == null) {
-                    var that = this;
-                    function getUpdate(state) {
-                        var url = that.origin() + "/" + that.service + "/" + that.model;
-                        that.$http.get(url).then((res) => {
-                            var data = res.data;
-                            data && Object.keys(data).forEach(key => Vue.set(state, key, data[key]));
-                        }).catch( err => {
-                            that.setError(err);
-                        });
-                    };
-                    this.$store.registerModule(["restBundle", this.service, this.model], {
-                        namespaced: true,
-                        state: state || {},
-                        mutations: {
-                            getUpdate,
-                        },
-                    });
-                    this.restBundleCommit("getUpdate");
+            mutations() {
+                return {
+                    getUpdate: this.getUpdate, 
                 }
-                return rbService[this.model];
             },
             serviceLink(path) {
                 var host = location.port === "4000" 
