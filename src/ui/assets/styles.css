@@ -21,4 +21,14 @@
     left:0.5em;
 }
 
+p > ul {
+    margin-top: 0.5em;
+    margin-left: 0.5em;
+}
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
 

@@ -30,19 +30,17 @@
     </p>
 
     <h5>RestBundle Vue Components</h5>
-    <p>
-    Each RestBundle has multiple Vue components that can be combined into web client applications. 
-    Each Vue component has, by convention, a "service-name" attribute that specifies the 
-    name of the associated RestBundle REST service.
-    For example, the <code>rest-bundle</code> package alone includes the following Vue components: 
-    </p><p>
-    <ul class="pl-4">
-        <li><strong>Dev.vue</strong> is the Vue root component for the rest-bundle development application.</li>
-        <li><strong>AllServices.vue</strong> provides information about multiple RestBundle instances</li>
-        <li><strong>Service.vue</strong> is the end-user "home page" for an individual service</li>
-        <li><strong>RbIdentity.vue</strong> is the Vue component for the <code>/identity</code> REST method 
-            that describes an individual service</li>
-    </ul>
+    <p> Each RestBundle has multiple Vue components that can be combined into web client applications. 
+        Each Vue component has, by convention, a "service-name" attribute that specifies the 
+        name of the associated RestBundle REST service.
+        For example, the <code>rest-bundle</code> package alone includes the following Vue components: 
+        <ul class="pl-4">
+            <li><strong>Dev.vue</strong> is the Vue root component for the rest-bundle development application.</li>
+            <li><strong>AllServices.vue</strong> provides information about multiple RestBundle instances</li>
+            <li><strong>Service.vue</strong> is the end-user "home page" for an individual service</li>
+            <li><strong>RbIdentity.vue</strong> is the Vue component for the <code>/identity</code> REST method 
+                that describes an individual service</li>
+        </ul>
     </p>
 </div>
 

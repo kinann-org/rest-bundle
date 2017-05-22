@@ -39,11 +39,12 @@ module.exports = {
                 var actions = this.actions({
                     getUpdate(context, payload) {
                         var url = this.origin() + "/" + this.service + "/" + this.model;
-                        return this.$http.get(url).then((res) => {
+                        var result = this.$http.get(url).then((res) => {
                             context.commit('update', res.data);
                         }).catch( err => {
                             this.setError(err);
                         });
+                        return result;
                     },
                 });
                 Object.keys(mutations).forEach(key => { // bind to vue component
@@ -55,7 +56,8 @@ module.exports = {
                 Object.keys(actions).forEach(key => { // bind to vue component
                     var f = actions[key];
                     actions[key] = function(context, payload) {
-                        return f.call(that, context, payload);
+                        var result = f.call(that, context, payload);
+                        return result;
                     };
                 });
                 this.$store.registerModule(["restBundle", this.service, this.model], {

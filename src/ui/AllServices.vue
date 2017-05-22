@@ -1,7 +1,7 @@
 <template>
 
 <div>
-    <h5>Launching RestBundles</h5>
+    <h6>Launching RestBundles</h6>
     <p>
     RestBundles are
     <a href="https://github.com/firepick/rest-bundle/blob/master/scripts/server.js" target="_blank"
@@ -16,14 +16,18 @@
         Launch a browser and look at <a href="http://localhost:4000/">http://localhost:4000</a>.
     </p>
 
-    <h6>Service Identity</h6>
+    <h6>Service Identity
+        <v-btn dark flat class="btn--dark-flat-focused" :loading="loading!==0"
+             @click.native="update()"
+             :disabled="loading!==0" ><v-icon>refresh</v-icon></v-btn>
+    </h6>
     <p> All RestBundles provide an <code>/identity</code> service that returns information about
         the RestBundle. The Vue component for the identity service is <code>&lt;rb-identity&gt;</code>.
         The display will change according to how the services are launched. Here are 
         the three Vue components for our three services:
     </p>
 
-    <v-card hover v-tooltip:bottom='{html:"<rb-identify>"}'>
+    <v-card flat hover v-tooltip:bottom='{html:"<rb-identify>"}' class="mb-2">
         <template v-for='service of ["test","greeting","aloha"]' >
             <rb-identity :service="service"></rb-identity>
         </template>
@@ -40,12 +44,10 @@
         The <code>&lt;rb-state&gt;</code> Vue component provides a development snapshot
         of the shared RestBundle state.
     </p>
-    <v-card hover v-tooltip:bottom='{html:"<rb-state>"}'>
+    <v-card flat hover v-tooltip:bottom='{html:"<rb-state>"}' class="mb-20">
         <rb-state></rb-state>
     </v-card>
-
-    <v-card height="60px"><!--spacer for tooltip--></v-card>
-
+    <v-alert error :value="error">{{error}}</v-alert>
 </div>
 
 </template>
@@ -59,11 +61,42 @@ export default {
     data() {
         return {
             state: this.$store.state,
+            loading: 0,
+            error: "",
         }
     },
     components: {
         RbIdentity,
         RbState,
+    },
+    methods: {
+        urlService() {
+            var subpath = location.href.split("/");
+            return subpath[3] || "test";
+        },
+        update() {
+            this.error = "";
+            var results = ["test","greeting","aloha"].map(service =>  {
+                this.loading++;
+                return this.$store.dispatch(
+                    ["restBundle", service, "identity", "getUpdate"].join("/"))
+            });
+            setTimeout(() => {
+                results.forEach(result => {
+                    if (result && typeof result.then == 'function') {
+                        result.then(() => {
+                            this.loading--;
+                        }).catch(err => {
+                            this.loading--;
+                            this.error = err;
+                        });
+                    } else {
+                        this.loading--;
+                        this.error = "Could not update";
+                    }
+                });
+            }, 500);
+        },
     },
 }
 

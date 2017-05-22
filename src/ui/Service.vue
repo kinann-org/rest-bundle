@@ -1,8 +1,8 @@
 <template>
 
-<v-card >
-    <v-card-row class="secondary" >
-        <v-card-title>
+<v-card flat>
+    <v-card-row class="primary" >
+        <v-card-title class="white--text">
             <span >Service Home Page</span>
             <v-spacer></v-spacer>
             <span >/{{serviceFromUrl}}</span>
@@ -15,7 +15,7 @@
             <ul>
                 <li><b>Production:</b><a target="_blank" :href='"/"+serviceFromUrl+"/ui/index-service"'>
                     /{{serviceFromUrl}}/ui/index-service</a></li>
-                <li><b>Development:</b>Service.vue tab (i.e., this page)</li>
+                <li><b>Development:</b> Service.vue tab (i.e., this page)</li>
             </ul>
         </p>
 
@@ -76,4 +76,5 @@ export default {
 }
 
 </script>
-<style> </style>
+<style> 
+</style>

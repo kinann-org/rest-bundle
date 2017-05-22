@@ -9,39 +9,37 @@
         </div>
         <div class="rb-panel-header" >Service Identity: /{{service}}</div>
     </div>
-    <v-card> 
-        <v-card-text>
-            <v-container fluid>
-                <v-row >
-                    <v-col xs3><b>Component:</b></v-col>
-                    <v-col xs9><code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}} </v-col>
-                </v-row>
-                <v-row >
-                    <v-col xs3><b>Description:</b></v-col>
-                    <v-col xs9> 
+    <v-card flat hover >
+        <v-card-text class="pl-5 ml-1">
+                <v-layout row>
+                    <v-flex xs2><b>Component:</b></v-flex>
+                    <v-flex xs9><code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}} </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Description:</b></v-flex>
+                    <v-flex xs9> 
                         <slot>Identification for RestBundle service "{{service}}" </slot>
-                    </v-col>
-                </v-row>
-                <v-row >
-                    <v-col xs3><b>Status:</b></v-col>
-                    <v-col xs9> 
+                    </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Status:</b></v-flex>
+                    <v-flex xs9> 
                         <a :href="origin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
                             <span class="text-danger">{{error || "(OK)"}}</span>
-                    </v-col>
-                </v-row>
-                <v-row >
-                    <v-col xs3><b>Package:</b></v-col>
-                    <v-col xs9> {{package}}@{{version}} </v-col>
-                </v-row>
-                <v-row >
-                    <v-col xs3><b>Model:</b></v-col>
-                    <v-col xs9> {{model}} </v-col>
-                </v-row>
-                <v-row >
-                    <v-col xs3><b>Home Page:</b></v-col>
-                    <v-col xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-col>
-                </v-row>
-            </v-container>
+                    </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Package:</b></v-flex>
+                    <v-flex xs9> {{package}}@{{version}} </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Model:</b></v-flex>
+                    <v-flex xs9> {{model}} </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Home Page:</b></v-flex>
+                    <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
+                </v-layout>
         </v-card-text>
     </v-card>
   </v-expansion-panel-content>
