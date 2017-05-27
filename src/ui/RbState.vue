@@ -3,7 +3,7 @@
 <div>
     <template v-if="about">
         <h6>RbState</h6>
-        <p> The <code>&lt;rb-state/&gt;</code> Vue component provides a debugging display of the client <b>rest-bundle</b> Vueex Store in a TreeView.
+        <p> The <code>&lt;rb-state/&gt;</code> Vue component provides a debugging display of the client <b>rest-bundle</b> Vuex Store in a TreeView.
             RestBundle Vue components that use the RbService mixin will automatically create service state object:
             <blockquote><code>mixins: [ require("rest-bundle").vue/RbService) ]</code></blockquote>
         </p>

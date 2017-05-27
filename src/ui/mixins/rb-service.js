@@ -21,10 +21,10 @@ module.exports = {
         origin() {
             return debug ? "http://localhost:8080" : location.origin;
         },
-        actions(a) { // default Component-scoped Vueex Module actions
+        actions(a) { // default Component-scoped Vuex Module actions
             return a;
         },
-        mutations(m) { // default Component-scoped Vueex Module actions
+        mutations(m) { // default Component-scoped Vuex Module actions
             return m;
         },
         restBundleModel(state) {
