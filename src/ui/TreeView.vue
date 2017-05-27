@@ -86,7 +86,10 @@
           };
       },
       parsedData(){
-        var root = this.data && this.data() || {error: "no data to display"};
+          var root = this.data || {error: "no data to display"};
+          if (typeof root === "function) {
+              root = root() || {error: "no data to display"};
+          }
           // Take the JSON data and transform
           // it into the Tree View DSL
           // Strings or Integers should not be attempted to be split, so we generate
