@@ -1,54 +1,36 @@
 <template>
 
-<div>
-    <h6>Launching RestBundles</h6>
-    <p>
-    RestBundles are
-    <a href="https://github.com/firepick/rest-bundle/blob/master/scripts/server.js" target="_blank"
-        >instantiated when launching Nodejs.</a>
-    The AllServices.vue page expects three RestBundle instances ("test", "greeting" and "aloha").
-    Let's use the a bash script to launch two RestBundle instances
-    and see what happens:
+<v-card flat>
+    <v-card-text>
+        <h4>All Services</h4>
+        <p> RestBundle applications typically have a dashboard summary of the status of all services.
+            For example, this application provides the  "AllServices" dashboard to track
+            the status of three RestBundle services: "/test", "/greeting", and "/aloha".
+        </p>
 
-       <kbd>scripts/rest-bundle test aloha</code></kbd>
-    </p>
-    <p>
-        Launch a browser and look at <a href="http://localhost:4000/">http://localhost:4000</a>.
-    </p>
+        <h6>Service Status
+            <v-btn icon dark small flat class="btn--dark-flat-focused" :loading="loading!==0"
+                 @click.native="update()"
+                 :disabled="loading!==0" ><v-icon>refresh</v-icon></v-btn>
+        </h6>
+        <p>
+        <v-card flat hover v-tooltip:bottom='{html:"<rb-identify>"}' class="mb-4">
+            <template v-for='service of ["test","greeting","aloha"]' >
+                <rb-identity :service="service"></rb-identity>
+            </template>
+        </v-card>
+        </p>
 
-    <h6>Service Identity
-        <v-btn dark flat class="btn--dark-flat-focused" :loading="loading!==0"
-             @click.native="update()"
-             :disabled="loading!==0" ><v-icon>refresh</v-icon></v-btn>
-    </h6>
-    <p> All RestBundles provide an <code>/identity</code> service that returns information about
-        the RestBundle. The Vue component for the identity service is <code>&lt;rb-identity&gt;</code>.
-        The display will change according to how the services are launched. Here are 
-        the three Vue components for our three services:
-    </p>
+        <h6>Client State</h6>
+        <p> RestBundles share client state using the Vuex Store singleton.
+        </p>
+        <v-card flat hover v-tooltip:bottom='{html:"<rb-state>"}' class="mb-4">
+            <rb-state></rb-state>
+        </v-card>
 
-    <v-card flat hover v-tooltip:bottom='{html:"<rb-identify>"}' class="mb-2">
-        <template v-for='service of ["test","greeting","aloha"]' >
-            <rb-identity :service="service"></rb-identity>
-        </template>
-    </v-card>
-
-    <p>
-    Notice that we never started the "greeting" RestBundle, and we therefore
-    see a red <v-icon small class="red--text text--darken-1" >error</v-icon>
-    </p>
-
-    <h6>RestBundle Client State</h6>
-    <p> All RestBundle services maintain client state in the shared Vuex Store globally
-        referenced as <code>$store.state.restBundle</code> on the root Vue instance.
-        The <code>&lt;rb-state&gt;</code> Vue component provides a development snapshot
-        of the shared RestBundle state.
-    </p>
-    <v-card flat hover v-tooltip:bottom='{html:"<rb-state>"}' class="mb-20">
-        <rb-state></rb-state>
-    </v-card>
-    <v-alert error :value="error">{{error}}</v-alert>
-</div>
+        <v-alert error :value="error">{{error}}</v-alert>
+    </v-card-text>
+</v-card>
 
 </template>
 <script>
@@ -78,24 +60,10 @@ export default {
             this.error = "";
             var results = ["test","greeting","aloha"].map(service =>  {
                 this.loading++;
-                return this.$store.dispatch(
-                    ["restBundle", service, "identity", "getUpdate"].join("/"))
+                return this.$store.dispatch(["restBundle", service, "identity", "getUpdate"].join("/"))
+                .then(res => setTimeout(() => this.loading--, 500))
+                .catch(err => setTimeout(() => this.loading--, 500));
             });
-            setTimeout(() => {
-                results.forEach(result => {
-                    if (result && typeof result.then == 'function') {
-                        result.then(() => {
-                            this.loading--;
-                        }).catch(err => {
-                            this.loading--;
-                            this.error = err;
-                        });
-                    } else {
-                        this.loading--;
-                        this.error = "Could not update";
-                    }
-                });
-            }, 500);
         },
     },
 }

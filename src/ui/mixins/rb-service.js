@@ -28,57 +28,47 @@ module.exports = {
             return m;
         },
         restBundleModel(state) {
-            var rbService = this.restBundleService();
-            if (rbService[this.model] == null) {
-                var that = this;
-                var mutations = this.mutations({
+            var that = this;
+            var rbService = that.restBundleService();
+            if (rbService[that.model] == null) {
+                var mutations = that.mutations({
                     update(state, payload={}) {
                         Object.keys(payload).forEach(key => Vue.set(state, key, payload[key]));
                     },
                 });
-                var actions = this.actions({
+                var actions = that.actions({
                     getUpdate(context, payload) {
-                        var url = this.origin() + "/" + this.service + "/" + this.model;
-                        var result = this.$http.get(url).then((res) => {
-                            context.commit('update', res.data);
-                        }).catch( err => {
-                            this.setError(err);
+                        var url = that.origin() + "/" + that.service + "/" + that.model;
+                        Vue.set(that, "error", "");
+                        return new Promise((resolve, reject) => {
+                            that.$http.get(url).then((res) => {
+                                context.commit('update', res.data);
+                                resolve(res.data);
+                            }).catch( err => {
+                                var msg = url + " ";
+                                if (err.response) {
+                                    var res = err.response;
+                                    msg +=  " \u2794 HTTP" + res.status;
+                                } else {
+                                    msg +=  " \u2794 " + err;
+                                }
+                                setTimeout(() => Vue.set(that, "error", msg), 500);
+                                reject(new Error(msg, err));
+                            });
                         });
-                        return result;
                     },
                 });
-                Object.keys(mutations).forEach(key => { // bind to vue component
-                    var f = mutations[key];
-                    mutations[key] = function(state, payload) {
-                        return f.call(that, state, payload);
-                    };
-                });
-                Object.keys(actions).forEach(key => { // bind to vue component
-                    var f = actions[key];
-                    actions[key] = function(context, payload) {
-                        var result = f.call(that, context, payload);
-                        return result;
-                    };
-                });
-                this.$store.registerModule(["restBundle", this.service, this.model], {
+                that.$store.registerModule(["restBundle", that.service, that.model], {
                     namespaced: true,
                     state: state || {},
                     actions,
                     mutations,
                 });
             }
-            return rbService[this.model];
-        },
+            return rbService[that.model];
+        }, // restBundleModel
         restBundleDispatch(mutation, payload, model=this.model, service=this.service) {
             this.$store.dispatch(["restBundle", this.service, this.model, "getUpdate"].join("/"), payload);
-        },
-        setError(err) {
-            if (err.response) {
-                var res = err.response;
-                this.error = " \u2794 HTTP" + res.status;
-            } else {
-                this.error = " \u2794 " + err;
-            }
         },
         restBundleService(service=this.service) {
             var restBundle = this.$store.state.restBundle;

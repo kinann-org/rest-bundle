@@ -1,19 +1,39 @@
 <template>
 
-<v-expansion-panel class="grey lighten-2 " >
-  <v-expansion-panel-content>
-    <div slot="header" class="title " >
-        <div class="rb-panel-icon" >
-            <v-icon xsmall class="" >visibilityk</v-icon>
+<div>
+    <template v-if="about">
+        <h6>RbState</h6>
+        <p> The <code>&lt;rb-state/&gt;</code> Vue component provides a debugging display of the client <b>rest-bundle</b> Vueex Store in a TreeView.
+            RestBundle Vue components that use the RbService mixin will automatically create service state object:
+            <blockquote><code>mixins: [ require("rest-bundle").vue/RbService) ]</code></blockquote>
+        </p>
+        <v-container fluid>
+            <v-layout>
+                <v-flex xs3><b>Property</b></v-flex>
+                <v-flex xs2><b>Default</b></v-flex>
+                <v-flex xs8><b>Description</b></v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs3><code>about</code></v-flex>
+                <v-flex xs2>false</v-flex>
+                <v-flex xs8>Show this descriptive text</v-flex>
+            </v-layout>
+        </v-container>
+    </template>
+    <v-expansion-panel class="grey lighten-2 " >
+      <v-expansion-panel-content>
+        <div slot="header" class="title " >
+            <div class="rb-panel-icon" >
+                <v-icon xsmall class="" >visibilityk</v-icon>
+            </div>
+            <div class="rb-panel-header">RestBundle Client State</div>
         </div>
-        <div class="rb-panel-header">RestBundle Client State</div>
-    </div>
-    <v-card class="grey lighten-4"><v-card-text>
-    <tree-view root-key="restBundle" initial-depth="1" class="mt-1 ml-1" :data="$store.state.restBundle"></tree-view>
-    </v-card-text> </v-card>
-  </v-expansion-panel-content>
-</v-expansion-panel>
-
+        <v-card class="grey lighten-4"><v-card-text>
+        <tree-view root-key="this.$store.state.restBundle" initial-depth="1" class="mt-1 ml-1" :data="rootState"></tree-view>
+        </v-card-text> </v-card>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+</div>
 
 </template>
 <script>
@@ -21,6 +41,16 @@
 var TreeView = require('./TreeView.vue');
 
 export default {
+    props: {
+        about: {
+            default: false,
+        },
+    },
+    methods: {
+        rootState() {
+            return this.$store.state.restBundle;
+        },
+    },
     data() {
         return {
             nav3: false,

@@ -1,49 +1,80 @@
 <template>
 
-<v-expansion-panel >
-  <v-expansion-panel-content>
-    <div slot="header" class="title " >
-        <div class="rb-panel-icon" >
-            <v-icon v-show="error" small class="error--text " >error</v-icon>
-            <v-icon v-show="!error" xsmall class="success--text " >check</v-icon>
+<div>
+    <template v-if="about">
+        <h6>RbIdentity</h6>
+        <p> The <code>&lt;rb-identity/&gt;</code> Vue component displays RestBundle service information returned by <code>GET /identity</code> 
+        </p>
+        <v-container fluid>
+            <v-layout>
+                <v-flex xs3><b>Property</b></v-flex>
+                <v-flex xs2><b>Default</b></v-flex>
+                <v-flex xs8><b>Description</b></v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs3><code>about</code></v-flex>
+                <v-flex xs2>false</v-flex>
+                <v-flex xs8>Show this descriptive text</v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs3><code>model</code></v-flex>
+                <v-flex xs2>identity</v-flex>
+                <v-flex xs8>RestBundle state name</v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs3><code>service</code></v-flex>
+                <v-flex xs2><i>required</i></v-flex>
+                <v-flex xs8>RestBundle name</v-flex>
+            </v-layout>
+        </v-container>
+    </template>
+    <v-expansion-panel >
+      <v-expansion-panel-content>
+        <div slot="header" class="title " >
+            <div class="rb-panel-icon" >
+                <v-icon v-show="error" small class="error--text " >error</v-icon>
+                <v-icon v-show="!error" xsmall class="success--text " >check</v-icon>
+            </div>
+            <div class="rb-panel-header" >Service Identity: /{{service}}</div>
         </div>
-        <div class="rb-panel-header" >Service Identity: /{{service}}</div>
-    </div>
-    <v-card flat hover >
-        <v-card-text class="pl-5 ml-1">
-                <v-layout row>
-                    <v-flex xs2><b>Component:</b></v-flex>
-                    <v-flex xs9><code>&lt;{{componentTag}}&gt;</code> _uid:{{_uid}} </v-flex>
-                </v-layout>
-                <v-layout row >
-                    <v-flex xs2><b>Description:</b></v-flex>
-                    <v-flex xs9> 
-                        <slot>Identification for RestBundle service "{{service}}" </slot>
-                    </v-flex>
-                </v-layout>
-                <v-layout row >
-                    <v-flex xs2><b>Status:</b></v-flex>
-                    <v-flex xs9> 
-                        <a :href="origin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
-                            <span class="text-danger">{{error || "(OK)"}}</span>
-                    </v-flex>
-                </v-layout>
-                <v-layout row >
-                    <v-flex xs2><b>Package:</b></v-flex>
-                    <v-flex xs9> {{package}}@{{version}} </v-flex>
-                </v-layout>
-                <v-layout row >
-                    <v-flex xs2><b>Model:</b></v-flex>
-                    <v-flex xs9> {{model}} </v-flex>
-                </v-layout>
-                <v-layout row >
-                    <v-flex xs2><b>Home Page:</b></v-flex>
-                    <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
-                </v-layout>
-        </v-card-text>
-    </v-card>
-  </v-expansion-panel-content>
-</v-expansion-panel>
+        <v-card flat >
+            <v-card-text class="pl-5 ml-1">
+                    <v-layout row>
+                        <v-flex xs2><b>Vue:</b></v-flex>
+                        <v-flex xs9><code>&lt;rb-identity&gt;</code> _uid:{{_uid}} </v-flex>
+                    </v-layout>
+                    <v-layout row >
+                        <v-flex xs2><b>Description:</b></v-flex>
+                        <v-flex xs9> 
+                            <slot>Identification for RestBundle service "{{service}}" </slot>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row >
+                        <v-flex xs2><b>REST:</b></v-flex>
+                        <v-flex xs9> 
+                            <a :href="origin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
+                                <span class="text-danger"></span>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row >
+                        <v-flex xs2><b>Package:</b></v-flex>
+                        <v-flex xs9 v-if="package"> {{package}}@{{version}} </v-flex>
+                        <v-flex xs9 v-else class="warning "> (unknown) </v-flex>
+                    </v-layout>
+                    <v-layout row >
+                        <v-flex xs2><b>$state:</b></v-flex>
+                        <v-flex xs9> restBundle.{{service}}.{{model}} </v-flex>
+                    </v-layout>
+                    <v-layout row >
+                        <v-flex xs2><b>Home&nbsp;Page:</b></v-flex>
+                        <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
+                    </v-layout>
+                <v-alert error :value="error">{{error}}</v-alert>
+            </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+</div>
 
 </template>
 <script>
@@ -52,7 +83,11 @@
     const debug = process.env.NODE_ENV !== 'production';
 
     export default {
+        name: "rb-identity",
         props: {
+            about: {
+                default: false,
+            },
             model: {
                 required: false,
                 type: String,
@@ -90,6 +125,7 @@
             },
         },
         beforeMount() {
+            console.log("beforeMount");
         }
     }
 

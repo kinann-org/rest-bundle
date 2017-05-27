@@ -86,15 +86,16 @@
           };
       },
       parsedData(){
+        var root = this.data && this.data() || {error: "no data to display"};
           // Take the JSON data and transform
           // it into the Tree View DSL
           // Strings or Integers should not be attempted to be split, so we generate
           // a new object with the string/number as the value
-          if (this.isValue(this.data)) {
-              return this.transformValue(this.data, this.allOptions.rootObjectKey);
+          if (this.isValue(root)) {
+              return this.transformValue(root, this.allOptions.rootObjectKey);
           }
           // If it's an object or an array, transform as an object
-          return this.transformObject(this.data, this.allOptions.rootObjectKey, true);
+          return this.transformObject(root, this.allOptions.rootObjectKey, true);
       }
     }
   };

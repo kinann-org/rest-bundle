@@ -2,47 +2,44 @@
 
 
 <v-app id="dev-app">
+   <v-navigation-drawer persistent light v-model="drawer" light>
+      <v-list dense>
+        <v-list-item v-for="item in sidebarMain" :key="item">
+          <v-list-tile exact router :href="item.href">
+            <v-list-tile-action>
+                <v-icon >{{item.icon}}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+                <v-icon v-show='$route.path === item.href'>keyboard_arrow_right</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list-item>
+        <v-subheader>Vue Components</v-subheader>
+        <v-list-item v-for="item in sidebarComponents" :key="item">
+          <v-list-tile exact router :href="item.href">
+            <v-list-tile-action>
+            </v-list-tile-action>
+            <v-list-tile-content>
+                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+                <v-icon v-show='$route.path === item.href'>keyboard_arrow_right</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <v-toolbar fixed class="black" >
-      <v-toolbar-title class="accent--text text--darken-1">{{package.name}} {{package.version}} devapp</v-toolbar-title>
+        <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-title class="grey--text text--lighten-1">{{package.name}} {{package.version}}</v-toolbar-title>
+        <v-toolbar-title class="purple--text hidden-xs-only"
+            style="position:absolute; right:0; ">dev app</v-toolbar-title>
     </v-toolbar>
     <main>
-        <v-tabs id="mobile-tabs-1" grow light v-model="active">
-            <v-tabs-bar slot="activators" class="black">
-                <v-tabs-item class="" ripple href="#app-tab-1" >Introduction.vue</v-tabs-item>
-                <v-tabs-item class="" ripple href="#app-tab-2" >AllServices.vue</v-tabs-item>
-                <v-tabs-item class="" ripple href="#app-tab-3" >Service.vue</v-tabs-item>
-                <v-tabs-slider></v-tabs-slider>
-            </v-tabs-bar>
-            <v-tabs-content id="app-tab-1" ><v-card flat> <v-card-text>
-                <introduction ></introduction>
-                </v-card-text></v-card></v-tabs-content> 
-            <v-tabs-content id="app-tab-2" ><v-card flat> <v-card-text>
-                <all-services ></all-services>
-                </v-card-text> </v-card> </v-tabs-content> 
-            <v-tabs-content id="app-tab-3" ><v-card flat> <v-card-text>
-                <v-card-row><v-spacer/>
-                    <a target="_blank" :href="productionUrl('/test/ui')">{{productionUrl('/test/ui')}}</a></v-card-row>
-                <service service="test"></service>
-                </v-card-text> </v-card> </v-tabs-content> 
-        </v-tabs>
-        <!--
-    <v-tabs grow>
-        <v-tab-item class="pb-1" href="#app-tab-1" slot="activators"> Introduction.vue </v-tab-item>
-        <v-tab-item class="pb-1" href="#app-tab-2" slot="activators"> AllServices.vue </v-tab-item>
-        <v-tab-item class="pb-1" href="#app-tab-3" slot="activators"> Service.vue </v-tab-item>
-        <v-tab-content id="app-tab-1" slot="content" ><v-card> <v-card-text>
-            <introduction ></introduction>
-            </v-card-text></v-card></v-tab-content> 
-        <v-tab-content id="app-tab-2" slot="content" ><v-card> <v-card-text>
-            <all-services ></all-services>
-            </v-card-text> </v-card> </v-tab-content> 
-        <v-tab-content id="app-tab-3" slot="content" ><v-card> <v-card-text>
-            <v-card-row><v-spacer/>
-                <a target="_blank" :href="productionUrl('/test/ui')">{{productionUrl('/test/ui')}}</a></v-card-row>
-            <service service="test"></service>
-            </v-card-text> </v-card> </v-tab-content> 
-    </v-tabs>
-      -->
+        <v-container fluid> <router-view/> </v-container>
     </main>
 </v-app>
 
@@ -58,15 +55,29 @@ export default {
     data() {
         return {
             package: require("../../package.json"),
-            mini: "",
             text: "Lorem ipsum",
             drawer: false,
             active: "app-tab-1",
-            items: [
-                "red",
-                "yellow",
-                "green",
-            ],
+            sidebarMain: [{
+                icon: "info",
+                title: "Introduction",
+                href: "/introduction",
+            },{
+                icon: "web",
+                title: "All Services",
+                href: "/all-services",
+            },{
+                icon: "web_asset",
+                title: "Service Home Page",
+                href: "/service",
+            }],
+            sidebarComponents: [{
+                title: "RbIdentity",
+                href: "/rb-identity",
+            },{
+                title: "RbState",
+                href: "/rb-state",
+            }],
         }
     },
     methods: {
