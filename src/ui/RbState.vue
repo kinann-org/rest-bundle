@@ -2,7 +2,7 @@
 
 <div>
     <template v-if="about">
-        <h6>RbState</h6>
+        <h4>RbState<<code>&lt;rb-state&gt;</code></h4>
         <p> The <code>&lt;rb-state/&gt;</code> Vue component provides a debugging display of the client <b>rest-bundle</b> Vuex Store in a TreeView.
             RestBundle Vue components that use the RbService mixin will automatically create service state object:
             <blockquote><code>mixins: [ require("rest-bundle").vue/RbService) ]</code></blockquote>
@@ -19,6 +19,8 @@
                 <v-flex xs8>Show this descriptive text</v-flex>
             </v-layout>
         </v-container>
+        <v-subheader>Example</v-subheader>
+        <v-divider/>
     </template>
     <v-expansion-panel class="grey lighten-2 " >
       <v-expansion-panel-content>

@@ -2,7 +2,7 @@
 
 <div>
     <template v-if="about">
-        <h6>RbIdentity</h6>
+        <h4>RbIdentity <code>&lt;rb-identity&gt;</code></h4>
         <p> The <code>&lt;rb-identity/&gt;</code> Vue component displays RestBundle service information returned by <code>GET /identity</code> 
         </p>
         <v-container fluid>
@@ -27,6 +27,8 @@
                 <v-flex xs8>RestBundle name</v-flex>
             </v-layout>
         </v-container>
+        <v-subheader>Example</v-subheader>
+        <v-divider/>
     </template>
     <v-expansion-panel >
       <v-expansion-panel-content>

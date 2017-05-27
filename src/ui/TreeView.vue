@@ -30,8 +30,8 @@
       transformValue: function(valueToTransform, keyForValue){
         return {
             key: keyForValue,
-          type: "value",
-          value: valueToTransform
+            type: "value",
+            value: valueToTransform
         }
       },
         // Since we use lodash, the _.map method will work on
@@ -87,7 +87,7 @@
       },
       parsedData(){
           var root = this.data || {error: "no data to display"};
-          if (typeof root === "function) {
+          if (typeof root === "function") {
               root = root() || {error: "no data to display"};
           }
           // Take the JSON data and transform
