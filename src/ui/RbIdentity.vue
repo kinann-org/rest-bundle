@@ -34,8 +34,9 @@
       <v-expansion-panel-content>
         <div slot="header" class="title " >
             <div class="rb-panel-icon" >
-                <v-icon v-show="error" small class="error--text " >error</v-icon>
-                <v-icon v-show="!error" xsmall class="success--text " >check</v-icon>
+                <v-icon v-if='httpStatus==="http"' small class="warning--text " >http</v-icon>
+                <v-icon v-if='httpStatus && httpStatus !== "http"' small class="error--text " >error</v-icon>
+                <v-icon v-if='httpStatus===""' xsmall class="success--text " >check</v-icon>
             </div>
             <div class="rb-panel-header" >Service Identity: /{{service}}</div>
         </div>
@@ -68,10 +69,14 @@
                         <v-flex xs9> restBundle.{{service}}.{{model}} </v-flex>
                     </v-layout>
                     <v-layout row >
+                        <v-flex xs2><b>httpStatus:</b></v-flex>
+                        <v-flex xs9> {{httpStatus || "OK"}} </v-flex>
+                    </v-layout>
+                    <v-layout row >
                         <v-flex xs2><b>Home&nbsp;Page:</b></v-flex>
                         <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
                     </v-layout>
-                <v-alert error :value="error">{{error}}</v-alert>
+                <v-alert error :value='httpStatus && httpStatus !== "http"'>{{httpStatus}}</v-alert>
             </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -115,7 +120,7 @@
                 showDetail: false,
             }
         },
-        created() {
+        beforeMount() {
             this.restBundleDispatch("getUpdate");
         },
         methods: {
@@ -126,9 +131,6 @@
                 return "http://" + host + "/" + this.service + path;
             },
         },
-        beforeMount() {
-            console.log("beforeMount");
-        }
     }
 
 </script>

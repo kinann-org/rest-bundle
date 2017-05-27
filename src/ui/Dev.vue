@@ -72,6 +72,9 @@ export default {
                 title: "RbIdentity",
                 href: "/rb-identity",
             },{
+                title: "RbServices",
+                href: "/rb-services",
+            },{
                 title: "RbState",
                 href: "/rb-state",
             }],

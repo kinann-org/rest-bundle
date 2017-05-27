@@ -14,7 +14,6 @@ module.exports = {
     },
     data() {
         return {
-            error: "",
         }
     },
     methods: {
@@ -32,17 +31,22 @@ module.exports = {
             var rbService = that.restBundleService();
             if (rbService[that.model] == null) {
                 var mutations = that.mutations({
-                    update(state, payload={}) {
+                    update: function(state, payload={}) {
                         Object.keys(payload).forEach(key => Vue.set(state, key, payload[key]));
                     },
                 });
                 var actions = that.actions({
                     getUpdate(context, payload) {
                         var url = that.origin() + "/" + that.service + "/" + that.model;
-                        Vue.set(that, "error", "");
+                        context.commit('update', {
+                            httpStatus: "http",
+                        });
                         return new Promise((resolve, reject) => {
                             that.$http.get(url).then((res) => {
                                 context.commit('update', res.data);
+                                setTimeout(() => context.commit('update', {
+                                    httpStatus: "",
+                                }), 500);
                                 resolve(res.data);
                             }).catch( err => {
                                 var msg = url + " ";
@@ -52,7 +56,9 @@ module.exports = {
                                 } else {
                                     msg +=  " \u2794 " + err;
                                 }
-                                setTimeout(() => Vue.set(that, "error", msg), 500);
+                                setTimeout(() => context.commit('update', {
+                                    httpStatus: msg,
+                                }), 500);
                                 reject(new Error(msg, err));
                             });
                         });
@@ -68,9 +74,9 @@ module.exports = {
             return rbService[that.model];
         }, // restBundleModel
         restBundleDispatch(mutation, payload, model=this.model, service=this.service) {
-            this.$store.dispatch(["restBundle", this.service, this.model, "getUpdate"].join("/"), payload);
+            this.$store.dispatch(["restBundle", service, model, "getUpdate"].join("/"), payload);
         },
-        restBundleService(service=this.service) {
+        restBundleService(service=this && this.service) {
             var restBundle = this.$store.state.restBundle;
             if (restBundle == null) {
                 this.$store.registerModule(["restBundle"], {
@@ -89,6 +95,9 @@ module.exports = {
         },
     },
     computed: {
+        httpStatus() {
+            return this.rbModel.httpStatus;
+        },
         rbModel() {
             return this.restBundleModel();
         },

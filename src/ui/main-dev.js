@@ -13,6 +13,7 @@ import AllServices from './AllServices.vue';
 import Service from './Service.vue';
 import RbState from './RbState.vue';
 import RbIdentity from './RbIdentity.vue';
+import RbServices from './RbServices.vue';
 require('./stylus/main.styl')
 
 Vue.use(VueAxios, axios);
@@ -28,6 +29,7 @@ const routes = [
     { path: '/introduction', component: Introduction },
     { path: '/all-services', component: AllServices },
     { path: '/service', component: Service },
+    { path: '/rb-services', component: RbServices, props: {about: true, service: "test"} },
     { path: '/rb-state', component: RbState, props: {about: true, service: "test"} },
     { path: '/rb-identity', component: RbIdentity, props: {about: true, service: "test"} },
 ];
