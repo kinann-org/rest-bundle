@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+
 import RestBundle from '../../vue.js';
 import TreeView from "./TreeView.vue";
 import Dev from './Dev.vue';

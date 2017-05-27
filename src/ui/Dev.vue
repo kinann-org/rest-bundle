@@ -1,6 +1,5 @@
 <template>
 
-
 <v-app id="dev-app">
    <v-navigation-drawer persistent light v-model="drawer" light>
       <v-list dense>
@@ -55,9 +54,7 @@ export default {
     data() {
         return {
             package: require("../../package.json"),
-            text: "Lorem ipsum",
             drawer: false,
-            active: "app-tab-1",
             sidebarMain: [{
                 icon: "info",
                 title: "Introduction",

@@ -15,7 +15,7 @@
     name: "tree-view",
     props: {
         data: {
-            default: {},
+            default: () => {},
         },
         rootKey: {
             default: "root",
