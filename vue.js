@@ -18,7 +18,9 @@ var mixins = {
 }
 
 function plugin(Vue, options) {
-    Object.keys(components).forEach( key => Vue.component(key, components[key]));
+    var keys = Object.keys(components);
+    console.log("install", keys);
+    keys.forEach( key => Vue.component(key, components[key]));
 }
 
 export default Object.assign({
