@@ -42,41 +42,41 @@
         </div>
         <v-card flat >
             <v-card-text class="pl-5 ml-1">
-                    <v-layout row>
-                        <v-flex xs2><b>Vue:</b></v-flex>
-                        <v-flex xs9><code>&lt;rb-identity&gt;</code> _uid:{{_uid}} </v-flex>
-                    </v-layout>
-                    <v-layout row >
-                        <v-flex xs2><b>Description:</b></v-flex>
-                        <v-flex xs9> 
-                            <slot>Identification for RestBundle service "{{service}}" </slot>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row >
-                        <v-flex xs2><b>REST:</b></v-flex>
-                        <v-flex xs9> 
-                            <a :href="origin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
-                                <span class="text-danger"></span>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row >
-                        <v-flex xs2><b>Package:</b></v-flex>
-                        <v-flex xs9 v-if="package"> {{package}}@{{version}} </v-flex>
-                        <v-flex xs9 v-else class="warning "> (unknown) </v-flex>
-                    </v-layout>
-                    <v-layout row >
-                        <v-flex xs2><b>$state:</b></v-flex>
-                        <v-flex xs9> restBundle.{{service}}.{{model}} </v-flex>
-                    </v-layout>
-                    <v-layout row >
-                        <v-flex xs2><b>httpStatus:</b></v-flex>
-                        <v-flex xs9> {{httpStatus || "OK"}} </v-flex>
-                    </v-layout>
-                    <v-layout row >
-                        <v-flex xs2><b>Home&nbsp;Page:</b></v-flex>
-                        <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
-                    </v-layout>
-                <v-alert error :value='httpStatus && httpStatus !== "http"'>{{httpStatus}}</v-alert>
+                <v-layout row >
+                    <v-flex xs2><b>Description:</b></v-flex>
+                    <v-flex xs9> 
+                        <slot>Identification for RestBundle service "{{service}}" </slot>
+                    </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>REST&nbsp;URL:</b></v-flex>
+                    <v-flex xs9> 
+                        <a :href="origin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
+                            <span class="text-danger"></span>
+                    </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>REST&nbsp;status:</b></v-flex>
+                    <v-flex xs9 v-if='httpStatus === "" || httpStatus ==="http"'>{{httpStatus || "OK"}}</v-flex>
+                    <v-flex xs9 v-else class="error white--text" > {{httpStatus || "OK"}} </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Package:</b></v-flex>
+                    <v-flex xs9 v-if="package"> {{package}}@{{version}} </v-flex>
+                    <v-flex xs9 v-else class="error white--text "> (unknown) </v-flex>
+                </v-layout>
+                <v-layout row>
+                    <v-flex xs2><b>Vue:</b></v-flex>
+                    <v-flex xs9><code>&lt;rb-identity&gt;</code> _uid:{{_uid}} </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Vuex:</b></v-flex>
+                    <v-flex xs9> $store.state.restBundle.{{service}}.{{model}} </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Service&nbsp;Home:</b></v-flex>
+                    <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
+                </v-layout>
             </v-card-text>
         </v-card>
       </v-expansion-panel-content>

@@ -40,11 +40,7 @@
         <h6>Client State</h6>
         <p> RestBundles share client state using the Vuex Store singleton.
         </p>
-        <v-card flat hover v-tooltip:bottom='{html:"<rb-state>"}' class="mb-4">
-            <rb-state></rb-state>
-        </v-card>
-
-        <v-alert error :value="error">{{error}}</v-alert>
+        <rb-state></rb-state>
     </div>
 </div>
 
@@ -67,7 +63,6 @@ export default {
         return {
             state: this.$store.state,
             loading: 0,
-            error: "",
         }
     },
     components: {
@@ -76,7 +71,6 @@ export default {
     },
     methods: {
         update() {
-            this.error = "";
             var results = this.services.map(service =>  {
                 this.loading++;
                 return this.$store.dispatch(["restBundle", service, "identity", "getUpdate"].join("/"))
