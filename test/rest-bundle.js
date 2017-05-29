@@ -61,4 +61,11 @@ const supertest = require("supertest");
             res.text.should.match(/<title>test<\/title>/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
+    it("toKebabCase(id) does that", function() {
+        var kebab = (id) => id.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/,'');
+        kebab("XFooBar").should.equal("x-foo-bar");
+        kebab("xFooBar").should.equal("x-foo-bar");
+        kebab("abc").should.equal("abc");
+        kebab("aBC").should.equal("a-b-c");
+    });
 })

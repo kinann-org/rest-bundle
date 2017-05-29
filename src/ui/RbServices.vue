@@ -1,30 +1,12 @@
 <template>
 
 <div>
-    <template v-if="about">
-        <h4>RbServices <code>&lt;rb-services&gt;</code></h4>
+    <rb-about v-if="about" :name="componentName">
         <p> Display status for a collection of services
         </p>
-        <v-container fluid>
-            <v-layout>
-                <v-flex xs3><b>Property</b></v-flex>
-                <v-flex xs3><b>Default</b></v-flex>
-                <v-flex xs8><b>Description</b></v-flex>
-            </v-layout>
-            <v-layout>
-                <v-flex xs3><code>about</code></v-flex>
-                <v-flex xs3>false</v-flex>
-                <v-flex xs8>Show this descriptive text</v-flex>
-            </v-layout>
-            <v-layout>
-                <v-flex xs3><code>services</code></v-flex>
-                <v-flex xs3>["test","badService"]</v-flex>
-                <v-flex xs8>Array of service names</v-flex>
-            </v-layout>
-        </v-container>
-        <v-subheader>Example</v-subheader>
-        <v-divider/>
-    </template>
+        <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
+        <rb-about-item name="services" value='["test","badService"]' slot="prop">Array of service names</rb-about-item>
+    </rb-about>
     <div>
         <h6>Service Status
             <v-btn icon dark small flat class="btn--dark-flat-focused" :loading="loading!==0"
@@ -51,6 +33,9 @@ import RbIdentity from './RbIdentity.vue';
 import RbState from './RbState.vue';
 
 export default {
+    mixins: [ 
+        require("./mixins/rb-about.js"),
+    ],
     props: {
         about: {
             default: false,

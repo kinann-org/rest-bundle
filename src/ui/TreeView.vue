@@ -1,8 +1,39 @@
 <!-- Adapted from https://github.com/arvidkahl/vue-json-tree-view/blob/master/src/TreeView.vue -->
 <template>
-  <div class="tree-view-wrapper">
-    <tree-view-item class="tree-view-item-root" :data="parsedData" :max-depth="allOptions.maxDepth" :current-depth="0"></tree-view-item>
-  </div>
+<div>
+    <template v-if="about">
+        <h4>{{name}} TreeView <code>&lt;tree-view&gt;</code></h4>
+        <p> The <code>&lt;rb-identity/&gt;</code> Vue component displays RestBundle service information returned by <code>GET /identity</code> 
+        </p>
+        <v-container fluid>
+            <v-layout>
+                <v-flex xs3><b>Property</b></v-flex>
+                <v-flex xs2><b>Default</b></v-flex>
+                <v-flex xs8><b>Description</b></v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs3><code>about</code></v-flex>
+                <v-flex xs2>false</v-flex>
+                <v-flex xs8>Show this descriptive text</v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs3><code>model</code></v-flex>
+                <v-flex xs2>identity</v-flex>
+                <v-flex xs8>RestBundle state name</v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs3><code>service</code></v-flex>
+                <v-flex xs2><i>required</i></v-flex>
+                <v-flex xs8>RestBundle name</v-flex>
+            </v-layout>
+        </v-container>
+        <v-subheader>Example</v-subheader>
+        <v-divider/>
+    </template>
+      <div class="tree-view-wrapper">
+        <tree-view-item class="tree-view-item-root" :data="parsedData" :max-depth="allOptions.maxDepth" :current-depth="0"></tree-view-item>
+      </div>
+</div>
 </template>
 
 <script>
@@ -12,6 +43,9 @@
     components:{
       TreeViewItem
     },
+    mixins: [
+        require("./mixins/rb-about.js"),
+    ],
     name: "tree-view",
     props: {
         data: {

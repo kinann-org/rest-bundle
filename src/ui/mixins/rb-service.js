@@ -101,8 +101,5 @@ module.exports = {
         rbModel() {
             return this.restBundleModel();
         },
-        componentTag() {
-            return this.$options._componentTag;
-        },
     },
 }

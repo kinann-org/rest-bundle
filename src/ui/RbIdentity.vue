@@ -1,35 +1,13 @@
 <template>
 
 <div>
-    <template v-if="about">
-        <h4>RbIdentity <code>&lt;rb-identity&gt;</code></h4>
-        <p> The <code>&lt;rb-identity/&gt;</code> Vue component displays RestBundle service information returned by <code>GET /identity</code> 
+    <rb-about v-if="about" :name="componentName">
+        <p> Displays RestBundle service information returned by <code>GET /identity</code> 
         </p>
-        <v-container fluid>
-            <v-layout>
-                <v-flex xs3><b>Property</b></v-flex>
-                <v-flex xs2><b>Default</b></v-flex>
-                <v-flex xs8><b>Description</b></v-flex>
-            </v-layout>
-            <v-layout>
-                <v-flex xs3><code>about</code></v-flex>
-                <v-flex xs2>false</v-flex>
-                <v-flex xs8>Show this descriptive text</v-flex>
-            </v-layout>
-            <v-layout>
-                <v-flex xs3><code>model</code></v-flex>
-                <v-flex xs2>identity</v-flex>
-                <v-flex xs8>RestBundle state name</v-flex>
-            </v-layout>
-            <v-layout>
-                <v-flex xs3><code>service</code></v-flex>
-                <v-flex xs2><i>required</i></v-flex>
-                <v-flex xs8>RestBundle name</v-flex>
-            </v-layout>
-        </v-container>
-        <v-subheader>Example</v-subheader>
-        <v-divider/>
-    </template>
+        <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
+        <rb-about-item name="model" value="identity" slot="prop">RestBundle state name</rb-about-item>
+        <rb-about-item name="service" slot="prop">RestBundle name</rb-about-item>
+    </rb-about>
     <v-expansion-panel >
       <v-expansion-panel-content>
         <div slot="header" class="title " >
@@ -86,22 +64,19 @@
 </template>
 <script>
 
-    import Vue from 'vue';
-    const debug = process.env.NODE_ENV !== 'production';
-
     export default {
-        name: "rb-identity",
+        name: "RbIdentity",
         props: {
-            about: {
-                default: false,
-            },
             model: {
                 required: false,
                 type: String,
                 default: "identity",
             }
         },
-        mixins: [ require("./mixins/rb-service.js") ],
+        mixins: [ 
+            require("./mixins/rb-about.js"),
+            require("./mixins/rb-service.js"),
+        ],
         computed: {
             package() { 
                 return this.rbModel.package;
@@ -122,6 +97,9 @@
         },
         beforeMount() {
             this.restBundleDispatch("getUpdate");
+        },
+        mounted() {
+            console.log("mounted");
         },
         methods: {
             serviceLink(path) {

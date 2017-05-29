@@ -49,6 +49,18 @@ import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
 
+function toKebabCase(id) {
+    return id.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/,'');
+}
+
+var rbexports = require("../../vue.js").default;
+function exportedComponents() {
+    return Object.keys(rbexports.components).map( key => ({
+        title: key,
+        href: "/" + toKebabCase(key),
+    }));
+}
+
 export default {
     name: 'dev',
     data() {
@@ -68,16 +80,7 @@ export default {
                 title: "Service Home Page",
                 href: "/service",
             }],
-            sidebarComponents: [{
-                title: "RbIdentity",
-                href: "/rb-identity",
-            },{
-                title: "RbServices",
-                href: "/rb-services",
-            },{
-                title: "RbState",
-                href: "/rb-state",
-            }],
+            sidebarComponents: exportedComponents(),
         }
     },
     methods: {

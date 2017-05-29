@@ -1,10 +1,14 @@
 import RbIdentity from "./src/ui/RbIdentity.vue";
 import RbState from "./src/ui/RbState.vue";
 import RbServices from "./src/ui/RbServices.vue";
+import RbAbout from "./src/ui/RbAbout.vue";
+import RbAboutItem from "./src/ui/RbAboutItem.vue";
 import TreeView from "./src/ui/TreeView.vue";
 import TreeViewItem from "./src/ui/TreeViewItem.vue";
 
 var components = {
+    RbAbout,
+    RbAboutItem,
     RbIdentity,
     RbServices,
     RbState,
@@ -25,4 +29,5 @@ function plugin(Vue, options) {
 
 export default Object.assign({
     install: plugin,
+    components,
 }, mixins);

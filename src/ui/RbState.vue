@@ -1,27 +1,15 @@
 <template>
 
 <div>
-    <template v-if="about">
-        <h4>RbState<<code>&lt;rb-state&gt;</code></h4>
-        <p> The <code>&lt;rb-state/&gt;</code> Vue component provides a debugging display of the client <b>rest-bundle</b> Vuex Store in a TreeView.
+    <rb-about v-if="about" :name="componentName">
+        <p> Displays contents of the client <b>rest-bundle</b> Vuex Store in a TreeView. Normally used in a developer app.
             RestBundle Vue components that use the RbService mixin will automatically create service state object:
-            <blockquote><code>mixins: [ require("rest-bundle").vue/RbService) ]</code></blockquote>
+            <br>
         </p>
-        <v-container fluid>
-            <v-layout>
-                <v-flex xs3><b>Property</b></v-flex>
-                <v-flex xs2><b>Default</b></v-flex>
-                <v-flex xs8><b>Description</b></v-flex>
-            </v-layout>
-            <v-layout>
-                <v-flex xs3><code>about</code></v-flex>
-                <v-flex xs2>false</v-flex>
-                <v-flex xs8>Show this descriptive text</v-flex>
-            </v-layout>
-        </v-container>
-        <v-subheader>Example</v-subheader>
-        <v-divider/>
-    </template>
+        <p> <code>mixins: [ require("rest-bundle").vue/RbService) ]</code>
+        </p>
+        <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
+    </rb-about>
     <v-expansion-panel class="grey lighten-2 " >
       <v-expansion-panel-content>
         <div slot="header" class="title " >
@@ -43,11 +31,9 @@
 var TreeView = require('./TreeView.vue');
 
 export default {
-    props: {
-        about: {
-            default: false,
-        },
-    },
+    mixins: [ 
+        require("./mixins/rb-about.js"),
+    ],
     methods: {
         rootState() {
             return this.$store.state.restBundle;
