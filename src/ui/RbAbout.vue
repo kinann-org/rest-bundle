@@ -26,7 +26,7 @@
                     <v-flex xs3><b>Default</b></v-flex>
                     <v-flex xs8><b>Description</b></v-flex>
                 </v-layout>
-                <slot name="prop">Content from "prop" slot goes here</slot>
+                <slot name="prop">Content provided by <a href="/#rb-about-item">RbAboutItem</a> goes here</slot>
             </v-card-text>
           </v-card>
         </v-tabs-content>

@@ -2,18 +2,11 @@ const Vue = require("vue").default;
 const axios = require("axios");
 const debug = process.env.NODE_ENV !== 'production'
 
-const ALL_Services =  "common";
-const ALL_MODELS =  "common";
-
 module.exports = {
     props: {
         service: {
             type: String,
-            required: true,
-        }
-    },
-    data() {
-        return {
+            default: "test",
         }
     },
     methods: {

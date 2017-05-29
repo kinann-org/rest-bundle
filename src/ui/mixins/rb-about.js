@@ -12,6 +12,15 @@ module.exports = {
         toKebabCase,
     },
     computed: {
+        aboutRoute() {
+            return { 
+                path: '/' + this.componentTag,
+                component: this.componentName,
+                props: {
+                    about: true,
+                },
+            }
+        },
         componentName() {
             var name = this.$vnode.tag || "NO_NAME";
             return name.split("-").pop();

@@ -24,22 +24,14 @@ Vue.use(Vuex);;
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(RestBundle);
-Vue.use(TreeView);
 
-const routes = [
+var routes = [
     { path: '/', redirect: "/introduction" },
     { path: '/introduction', component: Introduction },
     { path: '/all-services', component: AllServices },
     { path: '/service', component: Service },
-    { path: '/rb-about', component: RbAbout, props: {about: true, service: "test"} },
-    { path: '/rb-about-item', component: RbAboutItem, props: {about: true, service: "test"} },
-    { path: '/rb-services', component: RbServices, props: {about: true, service: "test"} },
-    { path: '/rb-state', component: RbState, props: {about: true, service: "test"} },
-    { path: '/rb-identity', component: RbIdentity, props: {about: true, service: "test"} },
 ];
-Object.keys(RestBundle.components).forEach(key => {
-    console.log("key", key);
-});
+routes = routes.concat(RestBundle.methods.aboutRoutes());
 
 const router = new VueRouter({
     routes 

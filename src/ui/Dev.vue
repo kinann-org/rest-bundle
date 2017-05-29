@@ -16,25 +16,35 @@
             </v-list-tile-action>
           </v-list-tile>
         </v-list-item>
-        <v-subheader>Vue Components</v-subheader>
-        <v-list-item v-for="item in sidebarComponents" :key="item">
-          <v-list-tile exact router :href="item.href">
-            <v-list-tile-action>
-            </v-list-tile-action>
-            <v-list-tile-content>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-                <v-icon v-show='$route.path === item.href'>keyboard_arrow_right</v-icon>
-            </v-list-tile-action>
-          </v-list-tile>
+        <v-list-group value="sidebarRestBundle">
+            <v-list-tile slot="item">
+              <v-list-tile-action>
+                <v-icon dark>info</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>RestBundle Components</v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-icon dark>keyboard_arrow_down</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-list-item v-for="item in sidebarComponents" :key="item">
+              <v-list-tile exact router :href="item.href">
+                <v-list-tile-content>
+                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                    <v-icon v-show='$route.path === item.href'>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
         </v-list-item>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed class="black" >
         <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-toolbar-title class="grey--text text--lighten-1">{{package.name}} {{package.version}}</v-toolbar-title>
-        <v-toolbar-title class="purple--text hidden-xs-only"
+        <v-toolbar-title class="secondary--text hidden-xs-only"
             style="position:absolute; right:0; ">dev app</v-toolbar-title>
     </v-toolbar>
     <main>
@@ -48,18 +58,7 @@
 import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
-
-function toKebabCase(id) {
-    return id.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/,'');
-}
-
-var rbexports = require("../../vue.js").default;
-function exportedComponents() {
-    return Object.keys(rbexports.components).map( key => ({
-        title: key,
-        href: "/" + toKebabCase(key),
-    }));
-}
+import RestBundle from "../../vue";
 
 export default {
     name: 'dev',
@@ -67,6 +66,7 @@ export default {
         return {
             package: require("../../package.json"),
             drawer: false,
+            sidebarRestBundle:false,
             sidebarMain: [{
                 icon: "info",
                 title: "Introduction",
@@ -80,7 +80,7 @@ export default {
                 title: "Service Home Page",
                 href: "/service",
             }],
-            sidebarComponents: exportedComponents(),
+            sidebarComponents: RestBundle.methods.aboutSidebar(RestBundle.components),
         }
     },
     methods: {
