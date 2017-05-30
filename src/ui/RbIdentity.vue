@@ -74,8 +74,8 @@
             }
         },
         mixins: [ 
-            require("./mixins/rb-about.js"),
-            require("./mixins/rb-service.js"),
+            require("./mixins/rb-about-mixin.js"),
+            require("./mixins/rb-service-mixin.js"),
         ],
         computed: {
             package() { 

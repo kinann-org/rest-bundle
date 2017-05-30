@@ -34,7 +34,7 @@ import RbState from './RbState.vue';
 
 export default {
     mixins: [ 
-        require("./mixins/rb-about.js"),
+        require("./mixins/rb-about-mixin.js"),
     ],
     props: {
         about: {

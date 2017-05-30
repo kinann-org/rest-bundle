@@ -54,7 +54,7 @@
     export default {
         name: "RbAbout",
         mixins: [ 
-            require("./mixins/rb-about.js"),
+            require("./mixins/rb-about-mixin.js"),
         ],
         props: {
             name: {

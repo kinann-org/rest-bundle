@@ -19,7 +19,7 @@
             <div class="rb-panel-header">RestBundle Client State</div>
         </div>
         <v-card class="grey lighten-4"><v-card-text>
-        <tree-view root-key="this.$store.state.restBundle" initial-depth="1" class="mt-1 ml-1" :data="rootState"></tree-view>
+        <rb-tree-view root-key="this.$store.state.restBundle" initial-depth="1" class="mt-1 ml-1" :data="rootState"></rb-tree-view>
         </v-card-text> </v-card>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -28,11 +28,11 @@
 </template>
 <script>
 
-var TreeView = require('./TreeView.vue');
+var RbTreeView = require('./RbTreeView.vue');
 
 export default {
     mixins: [ 
-        require("./mixins/rb-about.js"),
+        require("./mixins/rb-about-mixin.js"),
     ],
     methods: {
         rootState() {
@@ -51,7 +51,7 @@ export default {
         },
     },
     components: {
-        TreeView,
+        RbTreeView,
     },
 }
 

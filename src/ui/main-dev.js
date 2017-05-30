@@ -6,20 +6,13 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 
 import RestBundle from '../../vue';
-import TreeView from "./TreeView.vue";
 import Dev from './Dev.vue';
 import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
-import RbState from './RbState.vue';
-import RbIdentity from './RbIdentity.vue';
-import RbServices from './RbServices.vue';
-import RbAbout from "./RbAbout.vue";
-import RbAboutItem from "./RbAboutItem.vue";
 require('./stylus/main.styl')
 
 Vue.use(VueAxios, axios);
-Vue.use(TreeView);
 Vue.use(Vuex);;
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -31,7 +24,7 @@ var routes = [
     { path: '/all-services', component: AllServices },
     { path: '/service', component: Service },
 ];
-routes = routes.concat(RestBundle.methods.aboutRoutes());
+routes = routes.concat(RestBundle.methods.aboutRoutes(RestBundle.components));
 
 const router = new VueRouter({
     routes 

@@ -9,7 +9,7 @@
         <rb-about-item name="rootKey" value="root" slot="prop">Label for root node</rb-about-item>
         <rb-about-item name="initialDepth" value="2" slot="prop">Depth of initally opened nodes</rb-about-item>
     </rb-about>
-    <div class="tree-view-wrapper">
+    <div class="rb-tree-view-wrapper">
         <tree-view-item class="tree-view-item-root" :data="parsedData" :max-depth="allOptions.maxDepth" :current-depth="0"></tree-view-item>
     </div>
 </div>
@@ -19,12 +19,12 @@
   import _ from 'lodash';
   import TreeViewItem from './TreeViewItem.vue';
   export default {
-    name: "TreeView",
+    name: "RbTreeView",
     components:{
       TreeViewItem
     },
     mixins: [
-        require("./mixins/rb-about.js"),
+        require("./mixins/rb-about-mixin.js"),
     ],
     props: {
         data: {

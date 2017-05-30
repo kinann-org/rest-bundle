@@ -24,7 +24,7 @@
 
     export default {
         name: "RbAboutItem",
-        mixins: [ require("./mixins/rb-about") ],
+        mixins: [ require("./mixins/rb-about-mixin.js") ],
         props: {
             name: {
                 type: String,

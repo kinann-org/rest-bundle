@@ -3,7 +3,7 @@ import RbState from "./src/ui/RbState.vue";
 import RbServices from "./src/ui/RbServices.vue";
 import RbAbout from "./src/ui/RbAbout.vue";
 import RbAboutItem from "./src/ui/RbAboutItem.vue";
-import TreeView from "./src/ui/TreeView.vue";
+import RbTreeView from "./src/ui/RbTreeView.vue";
 
 var components = {
     RbAbout,
@@ -11,12 +11,14 @@ var components = {
     RbIdentity,
     RbServices,
     RbState,
-    TreeView,
+    RbTreeView,
 }
 
-const RbService = require( "./src/ui/mixins/rb-service.js" );
+const RbServiceMixin = require( "./src/ui/mixins/rb-service-mixin.js" );
+const RbAboutMixin = require( "./src/ui/mixins/rb-about-mixin.js" );
 var mixins = {
-    RbService,
+    RbAboutMixin,
+    RbServiceMixin,
 }
 
 function toKebabCase(id) {
