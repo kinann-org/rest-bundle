@@ -58,7 +58,7 @@
 import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
-import RestBundle from "../../vue";
+import rbvue from "../../vue";
 
 export default {
     name: 'dev',
@@ -80,7 +80,7 @@ export default {
                 title: "Service Home Page",
                 href: "/service",
             }],
-            sidebarComponents: RestBundle.methods.aboutSidebar(RestBundle.components),
+            sidebarComponents: rbvue.methods.aboutSidebar(rbvue.components),
         }
     },
     methods: {

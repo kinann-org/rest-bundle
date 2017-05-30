@@ -27,8 +27,6 @@
 
 </template><script>
 
-import RbIdentity from './RbIdentity.vue';
-
 export default {
     name: "service",
     computed: {
@@ -43,9 +41,6 @@ export default {
             console.log("subpaths", subpaths);
             return subpaths[3] || "test";
         },
-    },
-    components: {
-        RbIdentity
     },
 }
 

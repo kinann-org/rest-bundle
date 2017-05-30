@@ -14,12 +14,7 @@
 </template>
 <script>
 
-import RbServices from './RbServices.vue';
-
 export default {
-    components: {
-        RbServices,
-    },
 }
 
 </script>

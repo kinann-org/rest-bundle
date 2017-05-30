@@ -51,7 +51,6 @@ var methods = {
 
 function plugin(Vue, options) {
     var keys = Object.keys(components);
-    console.log("install", keys);
     keys.forEach( key => Vue.component(key, components[key]));
 }
 

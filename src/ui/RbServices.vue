@@ -29,17 +29,11 @@
 </template>
 <script>
 
-import RbIdentity from './RbIdentity.vue';
-import RbState from './RbState.vue';
-
 export default {
     mixins: [ 
         require("./mixins/rb-about-mixin.js"),
     ],
     props: {
-        about: {
-            default: false,
-        },
         services: {
             default: () => ["test", "badService"],
         },
@@ -49,10 +43,6 @@ export default {
             state: this.$store.state,
             loading: 0,
         }
-    },
-    components: {
-        RbIdentity,
-        RbState,
     },
     methods: {
         update() {
