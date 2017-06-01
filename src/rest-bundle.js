@@ -37,6 +37,7 @@ const winston = require("winston");
         get handlers() {
             return [
                 this.resourceMethod("get", "/identity", this.getIdentity),
+                this.resourceMethod("get", "/state", this.getState),
                 this.resourceMethod("post", "/identity", this.postIdentity),
                 this.resourceMethod("post", "/echo", this.postEcho),
             ];
@@ -58,6 +59,12 @@ const winston = require("winston");
             }
             res.send(data);
             next && next('route');
+        }
+
+        getState(req, res, next) {
+            return {
+                now: Date.now(),
+            }
         }
 
         getIdentity(req, res, next) {

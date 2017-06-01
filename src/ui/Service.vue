@@ -19,7 +19,7 @@
             </ul>
         </p>
 
-        <h5>Service status</h5>
+        <h5>Service Identity</h5>
         <rb-identity class="mb-3" :service="serviceFromUrl"></rb-identity>
 
     </v-card-text>

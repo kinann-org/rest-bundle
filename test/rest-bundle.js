@@ -6,6 +6,16 @@ const supertest = require("supertest");
     const pkg = require("../package.json");
     winston.level = "warn";
 
+    it("GET /state generates HTTP200 response", function(done) {
+        var app = require("../scripts/server.js");
+        supertest(app).get("/test/state").expect((res) => {
+            res.statusCode.should.equal(200);
+            res.headers["content-type"].should.match(/json/);
+            res.headers["content-type"].should.match(/utf-8/);
+            var now = Date.now();
+            Math.abs(now - res.body.now).should.below(100);
+        }).end((err,res) => {if (err) throw err; else done(); });
+    })
     it("GET /identity generates HTTP200 response", function(done) {
         var app = require("../scripts/server.js");
         supertest(app).get("/test/identity").expect((res) => {

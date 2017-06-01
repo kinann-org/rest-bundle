@@ -2,6 +2,10 @@ const Vue = require("vue").default;
 const axios = require("axios");
 const debug = process.env.NODE_ENV !== 'production'
 
+function update(state, payload={}) {
+    Object.keys(payload).forEach(key => Vue.set(state, key, payload[key]));
+}
+
 module.exports = {
     props: {
         service: {
@@ -19,42 +23,42 @@ module.exports = {
         mutations(m) { // default Component-scoped Vuex Module actions
             return m;
         },
+        httpGet(context, url) {
+            var that = this;
+            context.commit('update', {
+                httpStatus: "http",
+            });
+            return new Promise((resolve, reject) => {
+                that.$http.get(url).then((res) => {
+                    context.commit('update', res.data);
+                    setTimeout(() => context.commit('update', {
+                        httpStatus: "",
+                    }), 500);
+                    resolve(res.data);
+                }).catch( err => {
+                    var msg = url + " ";
+                    if (err.response) {
+                        var res = err.response;
+                        msg +=  " \u2794 HTTP" + res.status;
+                    } else {
+                        msg +=  " \u2794 " + err;
+                    }
+                    setTimeout(() => context.commit('update', {
+                        httpStatus: msg,
+                    }), 500);
+                    reject(new Error(msg, err));
+                });
+            });
+        },
         restBundleModel(state) {
             var that = this;
             var rbService = that.restBundleService();
             if (rbService[that.model] == null) {
-                var mutations = that.mutations({
-                    update: function(state, payload={}) {
-                        Object.keys(payload).forEach(key => Vue.set(state, key, payload[key]));
-                    },
-                });
+                var mutations = that.mutations({ update });
                 var actions = that.actions({
                     getUpdate(context, payload) {
                         var url = that.origin() + "/" + that.service + "/" + that.model;
-                        context.commit('update', {
-                            httpStatus: "http",
-                        });
-                        return new Promise((resolve, reject) => {
-                            that.$http.get(url).then((res) => {
-                                context.commit('update', res.data);
-                                setTimeout(() => context.commit('update', {
-                                    httpStatus: "",
-                                }), 500);
-                                resolve(res.data);
-                            }).catch( err => {
-                                var msg = url + " ";
-                                if (err.response) {
-                                    var res = err.response;
-                                    msg +=  " \u2794 HTTP" + res.status;
-                                } else {
-                                    msg +=  " \u2794 " + err;
-                                }
-                                setTimeout(() => context.commit('update', {
-                                    httpStatus: msg,
-                                }), 500);
-                                reject(new Error(msg, err));
-                            });
-                        });
+                        return that.httpGet(context, url);
                     },
                 });
                 that.$store.registerModule(["restBundle", that.service, that.model], {
@@ -70,6 +74,7 @@ module.exports = {
             this.$store.dispatch(["restBundle", service, model, "getUpdate"].join("/"), payload);
         },
         restBundleService(service=this && this.service) {
+            var that = this;
             var restBundle = this.$store.state.restBundle;
             if (restBundle == null) {
                 this.$store.registerModule(["restBundle"], {
@@ -79,9 +84,17 @@ module.exports = {
                 restBundle = this.$store.state.restBundle;
             }
             if (restBundle[service] == null) {
-                this.$store.registerModule(["restBundle",service], {
+                var servicePath = ["restBundle", service];
+                this.$store.registerModule(servicePath, {
                     namespaced: true,
                     state: {},
+                    mutations: { update },
+                    actions: {
+                        getState(context, payload) {
+                            var url = that.origin() + "/" + that.service + "/state";
+                            return that.httpGet(context, url);
+                        },
+                    }
                 });
             }
             return restBundle[service];
