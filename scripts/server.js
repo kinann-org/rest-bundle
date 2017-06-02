@@ -3,7 +3,7 @@
 const path = require("path");
 const express = require('express');
 const app = module.exports = express();
-const RestBundle = require("../src/rest-bundle");
+const rb = require("../index.js");
 const winston = require("winston");
 
 app.all('*', function(req, res, next) {
@@ -19,7 +19,7 @@ process.argv[1].match(__filename) && process.argv.forEach((val, index) => {
     (index > 1 && val[0] !== '-' && val !== "test") && services.push(val);
 });
 winston.info("creating RestBundles:", services.join(", "));
-var restBundles = services.map((name) => new RestBundle(name).bindExpress(app))
+var restBundles = services.map((name) => new rb.RestBundle(name).bindExpress(app))
 
 if (module.parent) {
     app.restService = restBundles[0];  // supertest
@@ -31,10 +31,6 @@ if (module.parent) {
             if (error.code !== "EACCES") { throw error; }
         })
     }, {});
-    if (!listener.listening) {
-        throw new Error("could not launch http.Server on any port:" + ports);
-    }
-    var port = listener.address().port;
-    winston.info('Node.js http.Server listening on port:', port);
-    var rbws = new RestBundle.RbWebSocket(restBundles, listener);
+    winston.info('Node.js http.Server listening on port:', listener.address().port);
+    var rbws = new rb.RestBundle.RbWebSocket(restBundles, listener);
 }
