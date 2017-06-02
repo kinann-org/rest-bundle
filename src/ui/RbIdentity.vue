@@ -2,7 +2,9 @@
 
 <div>
     <rb-about v-if="about" :name="componentName">
-        <p> Displays RestBundle service information returned by <code>GET /identity</code> 
+        <p> Displays RestBundle service information returned by <code>GET /identity</code>. In addition,
+            if the server provides periodic <code>RbWebSocket.pushState()</code> heartbeats, the
+            the checkmark icon will pulse for connected services.
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="model" value="identity" slot="prop">RestBundle state name</rb-about-item>
@@ -14,7 +16,9 @@
             <div class="rb-panel-icon" >
                 <v-icon v-if='httpStatus==="http"' small class="warning--text " >http</v-icon>
                 <v-icon v-if='httpStatus && httpStatus !== "http"' small class="error--text " >error</v-icon>
-                <v-icon v-if='httpStatus===""' xsmall class="success--text " >check</v-icon>
+                <v-icon v-show='httpStatus==="" && (heartbeat % 2) == 0' xsmall class="success--text " >check</v-icon>
+                <v-icon v-show='httpStatus==="" && (heartbeat % 2) != 0' xsmall class="green--text text--darken-2" >check</v-icon>
+                <v-icon v-if='httpStatus===""' xsmall class="success--text " >{{heartbeat % 4 === 1 ? "none" : "check"}}</v-icon>
             </div>
             <div class="rb-panel-header" >Service Identity: /{{service}}</div>
         </div>
@@ -55,6 +59,10 @@
                     <v-flex xs2><b>Service&nbsp;Home:</b></v-flex>
                     <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
                 </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Heartbeat:</b></v-flex>
+                    <v-flex xs9> {{heartbeat}} </v-flex>
+                </v-layout>
             </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -78,6 +86,9 @@
             require("./mixins/rb-service-mixin.js"),
         ],
         computed: {
+            heartbeat() { 
+                return this.restBundleService().heartbeat;
+            },
             package() { 
                 return this.rbModel.package;
             },

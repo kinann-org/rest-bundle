@@ -23,6 +23,19 @@ module.exports = {
         mutations(m) { // default Component-scoped Vuex Module actions
             return m;
         },
+        wsOnMessage(event) {
+            var ed = JSON.parse(event.data);
+            if (ed.type === 'state') {
+                var state = ed.data;
+                Object.keys(state).forEach((service) => {
+                    var serviceModule = this.$store._modules.get(["restBundle", service]);
+                    var context = serviceModule && serviceModule.context;
+                    context && context.commit("update", state[service]);
+                });
+            } else {
+                console.warn("Ignoring web socket message:", ed);
+            }
+        },
         httpGet(context, url) {
             var that = this;
             context.commit('update', {
@@ -82,6 +95,14 @@ module.exports = {
                     state: {},
                 });
                 restBundle = this.$store.state.restBundle;
+                try {
+                    var wsurl = "ws://localhost:8080";
+                    console.log("creating WebSocket", wsurl);
+                    var ws = new WebSocket(wsurl);
+                    ws.onmessage = that.wsOnMessage;
+                } catch (err) {
+                    console.log("Could not open web socket", err);
+                }
             }
             if (restBundle[service] == null) {
                 var servicePath = ["restBundle", service];

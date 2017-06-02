@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "body-parser": "^1.14.1",
+    "bufferutil": "3.0.1",
     "ejs": "^2.5.6",
     "express": "^4.13.3",
     "file-loader": "^0.11.1",
@@ -19,12 +20,14 @@
     "style-loader": "^0.17.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
+    "utf-8-validate": "3.0.2",
     "vue": "^2.3.2",
     "vue-axios": "^2.0.2",
     "vue-router": "^2.5.3",
     "vuetify": "^0.12.2",
     "vuex": "^2.3.1",
-    "winston": "^2.3.1"
+    "winston": "^2.3.1",
+    "ws": "3.0.0"
   },
   "devDependencies": {
     "concurrently": "^3.2.0",

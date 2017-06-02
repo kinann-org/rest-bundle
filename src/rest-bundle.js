@@ -4,6 +4,7 @@ const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const winston = require("winston");
+const ws = require("ws");
 
 (function(exports) {
     class RestBundle {
@@ -63,7 +64,7 @@ const winston = require("winston");
 
         getState(req, res, next) {
             return {
-                now: Date.now(),
+                heartbeat: Math.round(Date.now() / 1000),
             }
         }
 
@@ -147,6 +148,14 @@ const winston = require("winston");
             this.bindUI(app);
             restHandlers.forEach((resource) => this.bindResource(app, resource));
             rootApp.use(this.uribase, app); // don't pollute client's app
+            if (false) {
+                console.log("creating web socket ", this.uribase);
+                this.wss = new ws.Server({ server: app });
+                this.wss.on('connection', (ws) => {
+                    console.log(this.name + ' WebSocket client connected');
+                    ws.on('close', () => console.log(this.name + ' WebSocket client disconnected'));
+                });
+            }
             return this;
         }
     }
