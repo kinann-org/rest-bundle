@@ -4,8 +4,46 @@ const supertest = require("supertest");
     const should = require("should");
     const winston = require("winston");
     const pkg = require("../package.json");
+    const rb = require("../index.js");
+    const express = require("express");
     winston.level = "warn";
 
+    it("RestBundle can be extended", function(done) {
+        class TestBundle extends rb.RestBundle {
+            constructor(name, options={}) {
+                super(name, options);
+                Object.defineProperty(this, "handlers", {
+                    value: super.handlers.concat([
+                        this.resourceMethod("get", "color", this.getColor),
+                    ]),
+                });
+            }
+            getColor(req, res, next) { return { color: "blue", }; }
+        }
+        var app = express();
+        var tb = new TestBundle("extended").bindExpress(app);
+        supertest(app).get("/extended/color").expect((res) => {
+            res.statusCode.should.equal(200);
+            should.deepEqual(res.body, {
+                color: "blue",
+            });
+        }).end((err,res) => {if (err) throw err; else done(); });
+    })
+    it("RestBundle resources should be unique", function() {
+        class TestBundle extends rb.RestBundle {
+            constructor(name, options={}) {
+                super(name, options);
+                Object.defineProperty(this, "handlers", {
+                    value: super.handlers.concat([
+                        this.resourceMethod("get", "state", this.getState), // duplicate
+                    ]),
+                });
+            }
+        }
+        var tb = new TestBundle("test");
+        var app = express();
+        should.throws(() => tb.bindExpress(app));
+    })
     it("GET /state generates HTTP200 response", function(done) {
         var app = require("../scripts/server.js");
         supertest(app).get("/test/state").expect((res) => {

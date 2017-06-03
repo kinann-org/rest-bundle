@@ -83,10 +83,10 @@
 
         get handlers() {
             return [
-                this.resourceMethod("get", "/identity", this.getIdentity),
-                this.resourceMethod("get", "/state", this.getState),
-                this.resourceMethod("post", "/identity", this.postIdentity),
-                this.resourceMethod("post", "/echo", this.postEcho),
+                this.resourceMethod("get", "identity", this.getIdentity),
+                this.resourceMethod("get", "state", this.getState),
+                this.resourceMethod("post", "identity", this.postIdentity),
+                this.resourceMethod("post", "echo", this.postEcho),
             ];
         }
 
@@ -197,21 +197,18 @@
                 if (cmp === 0) {
                     cmp = a.name.localeCompare(b.name);
                     if (cmp === 0) {
-                        throw new Error("REST resources must have unique handlers: " + a.method + " " + a.name);
+                        var msg = "REST resources must have unique handlers: " + a.method + " " + a.name;
+                        winston.warn(msg);
+                        throw new Error(msg);
                     }
                 }
                 return cmp;
             });
-            restHandlers.forEach((resource) => this.bindResource(app, resource));
+            restHandlers.forEach((resource) => {
+                winston.info("binding REST resource", resource.method, "/"+this.name+"/"+resource.name +" => "+ resource.mime);
+                this.bindResource(app, resource);
+            });
             rootApp.use(this.uribase, app); // don't pollute client's app
-            if (false) {
-                console.log("creating web socket ", this.uribase);
-                this.wss = new ws.Server({ server: app });
-                this.wss.on('connection', (ws) => {
-                    console.log(this.name + ' WebSocket client connected');
-                    ws.on('close', () => console.log(this.name + ' WebSocket client disconnected'));
-                });
-            }
             return this;
         }
     }
