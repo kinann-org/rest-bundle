@@ -192,6 +192,16 @@
             app.use(bodyParser.json());
             this.bindEjs(app);
             this.bindUI(app);
+            restHandlers.sort((a,b) => {
+                var cmp = a.method.localeCompare(b.method);
+                if (cmp === 0) {
+                    cmp = a.name.localeCompare(b.name);
+                    if (cmp === 0) {
+                        throw new Error("REST resources must have unique handlers: " + a.method + " " + a.name);
+                    }
+                }
+                return cmp;
+            });
             restHandlers.forEach((resource) => this.bindResource(app, resource));
             rootApp.use(this.uribase, app); // don't pollute client's app
             if (false) {

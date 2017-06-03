@@ -12,8 +12,7 @@ const supertest = require("supertest");
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
             res.headers["content-type"].should.match(/utf-8/);
-            var now = Date.now();
-            Math.abs(now - res.body.now).should.below(100);
+            res.body.should.properties(["heartbeat"]);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("GET /identity generates HTTP200 response", function(done) {
