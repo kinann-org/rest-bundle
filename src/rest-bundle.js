@@ -142,7 +142,7 @@
         bindResource(app, resource) {
             var mime = resource.mime || "application/json";
             var method = (resource.method || "get").toUpperCase();
-            var path = resource.name.startsWith("/") ? resource.name : ("/" + resource.name);
+            var path = "/" + resource.name;
             if (method === "GET") {
                 app.get(path, (req, res, next) =>
                     this.process(req, res, next, resource.handler, mime));
@@ -198,7 +198,6 @@
                     cmp = a.name.localeCompare(b.name);
                     if (cmp === 0) {
                         var msg = "REST resources must have unique handlers: " + a.method + " " + a.name;
-                        winston.warn(msg);
                         throw new Error(msg);
                     }
                 }
