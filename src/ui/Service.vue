@@ -13,7 +13,7 @@
             If a RestBundle service provides a dedicated home page, it should be located at <code>/SERVICE/ui</code>.
             For example, this is the service home page for RestBundle "{{serviceFromUrl}}":
             <ul>
-                <li><b>Production:</b><a target="_blank" :href='origin+"/"+serviceFromUrl+"/ui"'>
+                <li><b>Production:</b><a target="_blank" :href='restOrigin+"/"+serviceFromUrl+"/ui"'>
                     /{{serviceFromUrl}}/ui</a></li>
                 <li><b>Development:</b> <a href="/#/service">/#/service</a></li>
             </ul>
@@ -27,8 +27,11 @@
 
 </template><script>
 
+import rbvue from "../../vue.js";
+
 export default {
     name: "service",
+    mixins: [ rbvue.mixins.RbServiceMixin ],
     computed: {
         origin() {
             return location.port === "4000" 

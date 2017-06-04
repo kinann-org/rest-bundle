@@ -33,7 +33,7 @@
                 <v-layout row >
                     <v-flex xs2><b>REST&nbsp;URL:</b></v-flex>
                     <v-flex xs9> 
-                        <a :href="origin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
+                        <a :href="restOrigin()+'/'+service+'/identity'" target="_blank">/{{service}}/identity</a> 
                             <span class="text-danger"></span>
                     </v-flex>
                 </v-layout>
