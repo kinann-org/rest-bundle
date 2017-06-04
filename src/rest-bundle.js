@@ -204,7 +204,7 @@
                 return cmp;
             });
             restHandlers.forEach((resource) => {
-                winston.info("binding REST resource", resource.method, "/"+this.name+"/"+resource.name +" => "+ resource.mime);
+                winston.debug("RestBundle.bindExpress:", resource.method, "/"+this.name+"/"+resource.name +" => "+ resource.mime);
                 this.bindResource(app, resource);
             });
             rootApp.use(this.uribase, app); // don't pollute client's app
