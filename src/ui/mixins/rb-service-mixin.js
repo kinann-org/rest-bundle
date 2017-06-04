@@ -122,6 +122,12 @@ module.exports = {
         restOrigin() {
             return debug ? "http://localhost:8080" : location.origin;
         },
+        serviceFromUrl() {
+            var path = location.href.split("#")[0];
+            var subpaths = path.split("/");
+            console.log("subpaths", subpaths);
+            return subpaths[3] || "test";
+        },
         httpStatus() {
             return this.rbModel.httpStatus;
         },

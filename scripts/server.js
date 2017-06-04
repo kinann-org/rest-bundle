@@ -32,6 +32,8 @@ if (module.parent) {
             if (error.code !== "EACCES") { throw error; }
         })
     }, {});
-    winston.info('Node.js http.Server listening on port:', listener.address().port);
-    var rbws = new rb.RestBundle.RbWebSocket(restBundles, listener);
+    if (listener.listening) {
+        winston.info('Node.js http.Server listening on port:', listener.address().port);
+        var rbws = new rb.RestBundle.RbWebSocket(restBundles, listener);
+    }
 }
