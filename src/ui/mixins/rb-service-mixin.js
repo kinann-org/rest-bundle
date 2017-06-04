@@ -14,9 +14,6 @@ module.exports = {
         }
     },
     methods: {
-        restOrigin() {
-            return debug ? "http://localhost:8080" : location.origin;
-        },
         actions(a) { // default Component-scoped Vuex Module actions
             return a;
         },
@@ -70,7 +67,7 @@ module.exports = {
                 var mutations = that.mutations({ update });
                 var actions = that.actions({
                     getUpdate(context, payload) {
-                        var url = that.restOrigin() + "/" + that.service + "/" + that.model;
+                        var url = that.restOrigin + "/" + that.service + "/" + that.model;
                         return that.httpGet(context, url);
                     },
                 });
@@ -112,7 +109,7 @@ module.exports = {
                     mutations: { update },
                     actions: {
                         getState(context, payload) {
-                            var url = that.restOrigin() + "/" + that.service + "/state";
+                            var url = that.restOrigin + "/" + that.service + "/state";
                             return that.httpGet(context, url);
                         },
                     }
@@ -122,6 +119,9 @@ module.exports = {
         },
     },
     computed: {
+        restOrigin() {
+            return debug ? "http://localhost:8080" : location.origin;
+        },
         httpStatus() {
             return this.rbModel.httpStatus;
         },
