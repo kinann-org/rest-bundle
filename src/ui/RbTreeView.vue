@@ -68,7 +68,11 @@
             if (this.isValue(value)) {
               return this.transformValue(value, keyOrIndex);
             }
-          }) ;
+          }).sort((a,b) => {
+            return typeof a.key === "number" 
+                ? a.key - b.key
+                : a.key.localeCompare(b.key);
+          });
       },
         // Transformer for the Array type
       transformArray: function(arrayToTransform, keyForArray){
