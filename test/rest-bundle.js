@@ -68,6 +68,10 @@ const supertest = require("supertest");
     })
     it("POST /echo generates HTTP200 response with a Promise", function(done) {
         var app = require("../scripts/server.js");
+        var service = app.restService;
+        service.tasks.length.should.equal(0);
+        service.taskBegin("testTask");
+        service.tasks.length.should.equal(1);
         supertest(app).post("/test/echo").send({greeting:"smile"}).expect((res) => {
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
@@ -75,6 +79,8 @@ const supertest = require("supertest");
             should.deepEqual(res.body, {
                  greeting: "smile",
             });
+            service.tasks.length.should.equal(1);
+            service.tasks[0].should.equal("testTask");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST generates HTTP500 response for thrown exception", function(done) {

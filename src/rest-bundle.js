@@ -74,6 +74,7 @@
             this.ui_index = options.ui_index || "/ui/index-service";
             this.$onRequestSuccess = options.onRequestSuccess || RestBundle.onRequestSuccess;
             this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
+            this.tasks = [];
         }
 
         resourceMethod(method, name, handler, mime) {
@@ -122,9 +123,19 @@
             winston.warn("You must create an RbWebSocket to pushState()");
         }
 
+        taskBegin(name) {
+            this.tasks.push(name);
+        }
+        taskEnd(name) {
+            var tos = this.tasks.pop();
+            if (tos !== name) {
+                throw new Error("taskEnd expected:" + name + " actual:" +tos);
+            }
+        }
         getState(req, res, next) {
             return {
                 heartbeat: Math.round(Date.now() / 1000),
+                tasks: this.tasks,
             }
         }
 
@@ -141,9 +152,18 @@
         }
 
         postEcho(req, res, next) {
-            return new Promise((resolve, reject) => 
-                setTimeout(() => resolve(req.body), 100)
-            );
+            return new Promise((resolve, reject) => {
+                this.taskBegin("postEcho");
+                setTimeout(() => {
+                    try {
+                        this.taskEnd("postEcho");
+                        resolve(req.body)
+                    } catch (err) {
+                        this.taskEnd("postEcho");
+                        reject(err);
+                    }
+                }, 100);
+            });
         }
 
         process(req, res, next, handler, mime) {
