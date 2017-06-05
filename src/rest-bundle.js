@@ -120,14 +120,16 @@
         }
 
         pushState() {
-            winston.warn("You must create an RbWebSocket to pushState()");
+            // default is to do nothing unless you create an RbWebSocket to pushState()");
         }
 
         taskBegin(name) {
             this.tasks.push(name);
+            this.pushState();
         }
         taskEnd(name) {
             var tos = this.tasks.pop();
+            this.pushState();
             if (tos !== name) {
                 throw new Error("taskEnd expected:" + name + " actual:" +tos);
             }
