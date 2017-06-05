@@ -66,7 +66,7 @@ const supertest = require("supertest");
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
-    it("POST /echo generatesHTTP200 response", function(done) {
+    it("POST /echo generates HTTP200 response with a Promise", function(done) {
         var app = require("../scripts/server.js");
         supertest(app).post("/test/echo").send({greeting:"smile"}).expect((res) => {
             res.statusCode.should.equal(200);

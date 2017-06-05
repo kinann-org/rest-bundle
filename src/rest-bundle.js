@@ -72,8 +72,8 @@
             this.srcPkg = options.srcPkg || require("../package.json");
             this.node_modules = path.join(this.appDir, "node_modules");
             this.ui_index = options.ui_index || "/ui/index-service";
-            this.$onSuccess = options.onSuccess || RestBundle.onSuccess;
-            this.$onFail = options.onFail || RestBundle.onFail;
+            this.$onRequestSuccess = options.onRequestSuccess || RestBundle.onRequestSuccess;
+            this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
         }
 
         resourceMethod(method, name, handler, mime) {
@@ -100,14 +100,14 @@
             ];
         }
 
-        static onSuccess(req, res, data, next, mime) {
+        static onRequestSuccess(req, res, data, next, mime) {
             res.status(200);
             res.type(mime);
             res.send(data);
             next && next('route');
         }
 
-        static onFail(req, res, err, next) {
+        static onRequestFail(req, res, err, next) {
             res.status(500);
             res.type("application/json");
             winston.log("info", req.method, req.url, "=> HTTP500", err);
@@ -141,14 +141,23 @@
         }
 
         postEcho(req, res, next) {
-            return req.body;
+            return new Promise((resolve, reject) => 
+                setTimeout(() => resolve(req.body), 100)
+            );
         }
 
         process(req, res, next, handler, mime) {
-            var promise = new Promise((resolve, reject) => resolve(handler(req, res)));
+            var promise = new Promise((resolve, reject) => {
+                var result = handler(req, res);
+                if (result instanceof Promise) {
+                    result.then(data => resolve(data)).catch(err => reject(err));
+                } else {
+                    resolve(result);
+                }
+            });
             promise.then(
-                (data) => this.$onSuccess(req, res, data, next, mime),
-                (err) => this.$onFail(req, res, err, next)
+                (data) => this.$onRequestSuccess(req, res, data, next, mime),
+                (err) => this.$onRequestFail(req, res, err, next)
             );
             return promise;
         }
