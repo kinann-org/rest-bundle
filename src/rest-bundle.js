@@ -14,7 +14,10 @@
             this.restBundles = restBundles;
             this.restBundles.forEach( rb => {
                 var that = this;
-                rb.pushState = () => that.pushState;
+                rb.pushState = function() {
+                    winston.debug("direct pushState");
+                    that.pushState();
+                }
             });
             this.listener = listener;
             this.wss = new WebSocket.Server({ server: listener });
@@ -31,7 +34,10 @@
                 });
             });
             var pushStateInterval = options.pushStateInterval == null ? 1000 : options.pushStateInterval;
-            pushStateInterval && setInterval(() => this.pushState(), pushStateInterval);
+            pushStateInterval && setInterval(() => {
+                winston.debug("interval pushState");
+                this.pushState();
+            }, pushStateInterval);
         }
         pushData(type, data) {
             data = typeof data === 'string' ? JSON.parse(data) : data;
