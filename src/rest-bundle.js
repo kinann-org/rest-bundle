@@ -12,6 +12,10 @@
                 throw new Error("RbWebSocket(restBundle,listener,options) listener is required");
             }
             this.restBundles = restBundles;
+            this.restBundles.forEach( rb => {
+                var that = this;
+                rb.pushState = () => that.pushState;
+            });
             this.listener = listener;
             this.wss = new WebSocket.Server({ server: listener });
             this.sockets = new Set();
@@ -106,6 +110,10 @@
             }
             res.send(data);
             next && next('route');
+        }
+
+        pushState() {
+            winston.warn("You must create an RbWebSocket to pushState()");
         }
 
         getState(req, res, next) {
