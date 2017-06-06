@@ -136,7 +136,7 @@ module.exports = {
         },
         rbBusy() {
             var tasks = this.rbTasks;
-            return tasks==null || tasks.length;
+            return tasks==null || tasks.length>0;
         },
         restOrigin() {
             return debug ? "http://localhost:8080" : location.origin;
