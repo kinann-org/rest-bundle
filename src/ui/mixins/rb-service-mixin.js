@@ -119,6 +119,25 @@ module.exports = {
         },
     },
     computed: {
+        rbIcon() {
+            var httpStatus = this.httpStatus;
+            if (httpStatus === "http") {
+                return "http";
+            } else if (httpStatus == "") {
+                return this.heartBeat % 4 == 1 
+                    ? "none"
+                    : (this.rbBusy ? "hourglass_empty" : "check");
+            } else {
+                return "error";
+            }
+        },
+        rbTasks() {
+            return this.restBundleService().tasks;
+        },
+        rbBusy() {
+            var tasks = this.rbTasks;
+            return tasks==null || tasks.length;
+        },
         restOrigin() {
             return debug ? "http://localhost:8080" : location.origin;
         },

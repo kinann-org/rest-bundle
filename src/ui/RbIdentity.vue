@@ -14,11 +14,10 @@
       <v-expansion-panel-content>
         <div slot="header" class="title " >
             <div class="rb-panel-icon" >
-                <v-icon v-if='httpStatus==="http"' small class="warning--text " >http</v-icon>
-                <v-icon v-if='httpStatus && httpStatus !== "http"' small class="error--text " >error</v-icon>
-                <v-icon v-show='httpStatus==="" && (heartbeat % 2) == 0' xsmall class="success--text " >check</v-icon>
-                <v-icon v-show='httpStatus==="" && (heartbeat % 2) != 0' xsmall class="green--text text--darken-2" >check</v-icon>
-                <v-icon v-if='httpStatus===""' xsmall class="success--text " >{{heartbeat % 4 === 1 ? "none" : "check"}}</v-icon>
+                <v-icon v-if='httpStatus==="http"' small class="warning--text " >{{rbIcon}}</v-icon>
+                <v-icon v-if='httpStatus && httpStatus !== "http"' small class="error--text " >{{rbIcon}}</v-icon>
+                <v-icon v-show='httpStatus==="" && (heartbeat % 2) == 0' xsmall class="success--text " >{{rbIcon}}</v-icon>
+                <v-icon v-show='httpStatus==="" && (heartbeat % 2) != 0' xsmall class="green--text text--darken-2" >{{rbIcon}}</v-icon>
             </div>
             <div class="rb-panel-header" >Service Identity: /{{service}}</div>
         </div>
@@ -62,6 +61,10 @@
                 <v-layout row >
                     <v-flex xs2><b>Heartbeat:</b></v-flex>
                     <v-flex xs9> {{heartbeat}} </v-flex>
+                </v-layout>
+                <v-layout row >
+                    <v-flex xs2><b>Tasks:</b></v-flex>
+                    <v-flex xs9> {{rbTasks && rbTasks.length && rbTasks.join(",") || rbTasks && "(idle)" || "(unavailable)"}} </v-flex>
                 </v-layout>
             </v-card-text>
         </v-card>
