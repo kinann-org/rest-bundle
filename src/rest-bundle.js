@@ -16,7 +16,7 @@
                 var that = this;
                 rb.pushState = function() {
                     winston.debug("direct pushState");
-                    that.pushState();
+                    return that.pushState();
                 }
             });
             this.listener = listener;
@@ -46,16 +46,18 @@
             this.sockets.forEach((ws) => ws.send(message));
         }
         pushState() {
-            var state = this.restBundles.reduce((acc, rb) => {
-                return Object.assign(acc, {
-                    [rb.name]: rb.getState(),
-                });
-            }, {});
-            var stateStr = JSON.stringify(state);
-            if (this.stateStr != stateStr) {
-                this.pushData("state", stateStr);
-                this.stateStr = stateStr;
-            }
+            return new Promise((resolve, reject) => {
+                var state = this.restBundles.reduce((acc, rb) => {
+                    return Object.assign(acc, {
+                        [rb.name]: rb.getState(),
+                    });
+                }, {});
+                var stateStr = JSON.stringify(state);
+                if (this.stateStr != stateStr) {
+                    this.pushData("state", stateStr);
+                    this.stateStr = stateStr;
+                }
+            });
         }
     }
 
@@ -123,6 +125,24 @@
             // default is to do nothing unless you create an RbWebSocket to pushState()");
         }
 
+        taskPromise(name, cbPromise) {
+            return new Promise((resolve, reject) => {
+                try {
+                    this.taskBegin(name);
+                    cbPromise((data) => {
+                        this.taskEnd(name);
+                        resolve(data);
+                    }, (err) => {
+                        this.taskEnd(name);
+                        reject(err);
+                    });
+                } catch(err) {
+                    this.taskEnd(name);
+                    reject(err);
+                }
+            });
+        }
+
         taskBegin(name) {
             this.tasks.push(name);
             this.pushState();
@@ -154,17 +174,8 @@
         }
 
         postEcho(req, res, next) {
-            return new Promise((resolve, reject) => {
-                this.taskBegin("postEcho");
-                setTimeout(() => {
-                    try {
-                        this.taskEnd("postEcho");
-                        resolve(req.body)
-                    } catch (err) {
-                        this.taskEnd("postEcho");
-                        reject(err);
-                    }
-                }, 100);
+            return this.taskPromise("postEcho", (resolve, reject) => {
+                setTimeout(() => resolve(req.body), 100);
             });
         }
 
