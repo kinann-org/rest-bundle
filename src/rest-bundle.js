@@ -148,6 +148,9 @@
             this.pushState();
         }
         taskEnd(name) {
+            if (this.tasks.length < 1) {
+                throw new Error("taskEnd expected:" + name + " actual:(no pending tasks)");
+            }
             var tos = this.tasks.pop();
             this.pushState();
             if (tos !== name) {
