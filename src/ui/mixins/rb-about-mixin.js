@@ -1,5 +1,5 @@
 function toKebabCase(id) {
-    return id.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/,'');
+    return id.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
 }
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
     },
     computed: {
         aboutRoute() {
-            return { 
+            return {
                 path: '/' + this.componentTag,
                 component: this.componentName,
                 props: {

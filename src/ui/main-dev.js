@@ -18,16 +18,27 @@ Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(rbvue);
 
-var routes = [
-    { path: '/', redirect: "/introduction" },
-    { path: '/introduction', component: Introduction },
-    { path: '/all-services', component: AllServices },
-    { path: '/service', component: Service },
+var routes = [{
+        path: '/',
+        redirect: "/introduction"
+    },
+    {
+        path: '/introduction',
+        component: Introduction
+    },
+    {
+        path: '/all-services',
+        component: AllServices
+    },
+    {
+        path: '/service',
+        component: Service
+    },
 ];
 routes = routes.concat(rbvue.methods.aboutRoutes(rbvue.components));
 
 const router = new VueRouter({
-    routes 
+    routes
 })
 
 const store = new Vuex.Store({

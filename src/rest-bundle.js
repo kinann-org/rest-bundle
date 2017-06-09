@@ -7,12 +7,12 @@
     const WebSocket = require("ws");
 
     class RbWebSocket {
-        constructor(restBundles, listener, options={}) {
+        constructor(restBundles, listener, options = {}) {
             if (!listener) {
                 throw new Error("RbWebSocket(restBundle,listener,options) listener is required");
             }
             this.restBundles = restBundles;
-            this.restBundles.forEach( rb => {
+            this.restBundles.forEach(rb => {
                 var that = this;
                 rb.pushState = function() {
                     winston.debug("direct pushState");
@@ -20,7 +20,9 @@
                 }
             });
             this.listener = listener;
-            this.wss = new WebSocket.Server({ server: listener });
+            this.wss = new WebSocket.Server({
+                server: listener
+            });
             this.sockets = new Set();
             var port = listener.address().port;
             winston.info("WebSocket listening on port:", port);
@@ -41,7 +43,10 @@
         }
         pushData(type, data) {
             data = typeof data === 'string' ? JSON.parse(data) : data;
-            var message = JSON.stringify({ type, data });
+            var message = JSON.stringify({
+                type,
+                data
+            });
             winston.debug("pushing ", message);
             this.sockets.forEach((ws) => ws.send(message));
         }
@@ -70,7 +75,7 @@
             this.uribase = options.uribase || "/" + this.name;
             this.appDir = options.appDir || require.resolve("vue").split("node_modules")[0];
             this.svcDir = options.svcDir || path.join(__dirname, "..");
-            this.appPkg = require(path.join(this.appDir,"package.json"));
+            this.appPkg = require(path.join(this.appDir, "package.json"));
             this.srcPkg = options.srcPkg || require("../package.json");
             this.node_modules = path.join(this.appDir, "node_modules");
             this.ui_index = options.ui_index || "/ui/index-service";
@@ -82,8 +87,9 @@
         resourceMethod(method, name, handler, mime) {
             var that = this; // Javascript nonsense
             if (handler == null) {
-                throw new Error("resourceMethod("+method+", "+name+", ?handler?, ...) handler is required");
+                throw new Error("resourceMethod(" + method + ", " + name + ", ?handler?, ...) handler is required");
             }
+
             function thatHandler(req, res, next) {
                 return handler.call(that, req, res, next);
             }
@@ -127,8 +133,8 @@
 
         taskPromise(name, cbPromise) {
             return new Promise((resolve, reject) => {
-                var onError = (err,n,level) => {
-                    winston[level]("taskPromise#" +n+ ":", err);
+                var onError = (err, n, level) => {
+                    winston[level]("taskPromise#" + n + ":", err);
                     this.taskEnd(name);
                     reject(err);
                 }
@@ -142,7 +148,7 @@
                             onError(err, 1, "warn"); // implementation error
                         }
                     }, (err) => onError(err, 2, "info")); // expected error
-                } catch(err) {
+                } catch (err) {
                     onError(err, 3, "warn"); // implementation error
                 }
             });
@@ -160,7 +166,7 @@
             if (iName < 0) {
                 throw new Error("taskEnd() could not locate pending task:" + name);
             }
-            this.taskBag.splice(iName,1);
+            this.taskBag.splice(iName, 1);
             this.pushState();
         }
         getState(req, res, next) {
@@ -245,7 +251,7 @@
             }
             var uripath = "/ui/index-service";
             var template = "index-service.ejs";
-            winston.debug( " binding", uripath, "to", views+"/"+template);
+            winston.debug(" binding", uripath, "to", views + "/" + template);
             app.get(uripath, (req, res, next) => {
                 res.render(template, ejsmap);
             });
@@ -257,7 +263,7 @@
             app.use(bodyParser.json());
             this.bindEjs(app);
             this.bindUI(app);
-            restHandlers.sort((a,b) => {
+            restHandlers.sort((a, b) => {
                 var cmp = a.method.localeCompare(b.method);
                 if (cmp === 0) {
                     cmp = a.name.localeCompare(b.name);
@@ -269,7 +275,7 @@
                 return cmp;
             });
             restHandlers.forEach((resource) => {
-                winston.debug("RestBundle.bindExpress:", resource.method, "/"+this.name+"/"+resource.name +" => "+ resource.mime);
+                winston.debug("RestBundle.bindExpress:", resource.method, "/" + this.name + "/" + resource.name + " => " + resource.mime);
                 this.bindResource(app, resource);
             });
             rootApp.use(this.uribase, app); // don't pollute client's app

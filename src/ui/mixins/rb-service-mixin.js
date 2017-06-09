@@ -2,7 +2,7 @@ const Vue = require("vue").default;
 const axios = require("axios");
 const debug = process.env.NODE_ENV !== 'production'
 
-function update(state, payload={}) {
+function update(state, payload = {}) {
     Object.keys(payload).forEach(key => Vue.set(state, key, payload[key]));
 }
 
@@ -45,13 +45,13 @@ module.exports = {
                         httpStatus: "",
                     }), 500);
                     resolve(res.data);
-                }).catch( err => {
+                }).catch(err => {
                     var msg = url + " ";
                     if (err.response) {
                         var res = err.response;
-                        msg +=  " \u2794 HTTP" + res.status;
+                        msg += " \u2794 HTTP" + res.status;
                     } else {
-                        msg +=  " \u2794 " + err;
+                        msg += " \u2794 " + err;
                     }
                     setTimeout(() => context.commit('update', {
                         httpStatus: msg,
@@ -64,7 +64,9 @@ module.exports = {
             var that = this;
             var rbService = that.restBundleService();
             if (rbService[that.model] == null) {
-                var mutations = that.mutations({ update });
+                var mutations = that.mutations({
+                    update
+                });
                 var actions = that.actions({
                     getUpdate(context, payload) {
                         var url = that.restOrigin + "/" + that.service + "/" + that.model;
@@ -80,10 +82,10 @@ module.exports = {
             }
             return rbService[that.model];
         }, // restBundleModel
-        restBundleDispatch(mutation, payload, model=this.model, service=this.service) {
+        restBundleDispatch(mutation, payload, model = this.model, service = this.service) {
             this.$store.dispatch(["restBundle", service, model, "getUpdate"].join("/"), payload);
         },
-        restBundleService(service=this && this.service) {
+        restBundleService(service = this && this.service) {
             var that = this;
             var restBundle = this.$store.state.restBundle;
             if (restBundle == null) {
@@ -106,7 +108,9 @@ module.exports = {
                 this.$store.registerModule(servicePath, {
                     namespaced: true,
                     state: {},
-                    mutations: { update },
+                    mutations: {
+                        update
+                    },
                     actions: {
                         getState(context, payload) {
                             var url = that.restOrigin + "/" + that.service + "/state";
@@ -124,9 +128,9 @@ module.exports = {
             if (httpStatus === "http") {
                 return "http";
             } else if (httpStatus == "") {
-                return this.heartBeat % 4 == 1 
-                    ? "none"
-                    : (this.rbBusy ? "hourglass_empty" : "check");
+                return this.heartBeat % 4 == 1 ?
+                    "none" :
+                    (this.rbBusy ? "hourglass_empty" : "check");
             } else {
                 return "error";
             }
@@ -136,7 +140,7 @@ module.exports = {
         },
         rbBusy() {
             var tasks = this.rbTasks;
-            return tasks==null || tasks.length>0;
+            return tasks == null || tasks.length > 0;
         },
         restOrigin() {
             return debug ? "http://localhost:8080" : location.origin;
