@@ -127,18 +127,19 @@
 
         taskPromise(name, cbPromise) {
             return new Promise((resolve, reject) => {
+                var onError = (err,n) => {
+                    console.log("taskPromise#" +n+ ":", err);
+                    this.taskEnd(name);
+                    reject(err);
+                }
                 try {
                     this.taskBegin(name);
                     cbPromise((data) => {
                         this.taskEnd(name);
                         resolve(data);
-                    }, (err) => {
-                        this.taskEnd(name);
-                        reject(err);
-                    });
+                    }, (err) => onError(err, 1));
                 } catch(err) {
-                    this.taskEnd(name);
-                    reject(err);
+                    onError(err, 2);
                 }
             });
         }
