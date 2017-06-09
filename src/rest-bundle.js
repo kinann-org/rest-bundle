@@ -76,7 +76,7 @@
             this.ui_index = options.ui_index || "/ui/index-service";
             this.$onRequestSuccess = options.onRequestSuccess || RestBundle.onRequestSuccess;
             this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
-            this.tasks = [];
+            this.taskBag = []; // unordered task collection with duplicates
         }
 
         resourceMethod(method, name, handler, mime) {
@@ -127,41 +127,46 @@
 
         taskPromise(name, cbPromise) {
             return new Promise((resolve, reject) => {
-                var onError = (err,n) => {
-                    console.log("taskPromise#" +n+ ":", err);
+                var onError = (err,n,level) => {
+                    winston[level]("taskPromise#" +n+ ":", err);
                     this.taskEnd(name);
                     reject(err);
                 }
                 try {
                     this.taskBegin(name);
                     cbPromise((data) => {
-                        this.taskEnd(name);
-                        resolve(data);
-                    }, (err) => onError(err, 1));
+                        try {
+                            this.taskEnd(name);
+                            resolve(data);
+                        } catch (err) {
+                            onError(err, 1, "warn"); // implementation error
+                        }
+                    }, (err) => onError(err, 2, "info")); // expected error
                 } catch(err) {
-                    onError(err, 2);
+                    onError(err, 3, "warn"); // implementation error
                 }
             });
         }
 
         taskBegin(name) {
-            this.tasks.push(name);
+            this.taskBag.push(name);
             this.pushState();
         }
         taskEnd(name) {
-            if (this.tasks.length < 1) {
-                throw new Error("taskEnd expected:" + name + " actual:(no pending tasks)");
+            if (this.taskBag.length < 1) {
+                throw new Error("taskEnd() expected:" + name + " actual:(no pending tasks)");
             }
-            var tos = this.tasks.pop();
+            var iName = this.taskBag.indexOf(name);
+            if (iName < 0) {
+                throw new Error("taskEnd() could not locate pending task:" + name);
+            }
+            this.taskBag.splice(iName,1);
             this.pushState();
-            if (tos !== name) {
-                throw new Error("taskEnd expected:" + name + " actual:" +tos);
-            }
         }
         getState(req, res, next) {
             return {
                 heartbeat: Math.round(Date.now() / 1000),
-                tasks: this.tasks,
+                tasks: this.taskBag,
             }
         }
 
