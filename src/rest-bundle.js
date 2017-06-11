@@ -194,7 +194,7 @@
 
         postEcho(req, res, next) {
             return this.taskPromise("postEcho", (resolve, reject) => {
-                setTimeout(() => resolve(req.body), 100);
+                setTimeout(() => resolve(req.body), 0);
             });
         }
 
