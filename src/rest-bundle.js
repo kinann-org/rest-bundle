@@ -140,16 +140,20 @@
                 }
                 try {
                     this.taskBegin(name);
-                    cbPromise((data) => {
-                        try {
-                            this.taskEnd(name);
-                            resolve(data);
-                        } catch (err) {
-                            onError(err, 1, "warn"); // implementation error
-                        }
-                    }, (err) => onError(err, 2, "info")); // expected error
+                    try {
+                        cbPromise((data) => {
+                            try {
+                                this.taskEnd(name);
+                                resolve(data);
+                            } catch (err) {
+                                onError(err, 1, "warn"); // implementation error
+                            }
+                        }, (err) => onError(err, 2, "info")); // cbpromise error
+                    } catch (err) {
+                        onError(err, 3, "info"); // cbpromise error
+                    }
                 } catch (err) {
-                    onError(err, 3, "warn"); // implementation error
+                    onError(err, 4, "warn"); // implementation error
                 }
             });
         }
