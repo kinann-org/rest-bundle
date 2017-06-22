@@ -1,3 +1,6 @@
+# #rest-bundle
+rb-config/
+
 # Angular
 src/**/*.map
 examples/**/*.map

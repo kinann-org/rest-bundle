@@ -4,12 +4,12 @@ const supertest = require("supertest");
     const should = require("should");
     const winston = require("winston");
     const pkg = require("../package.json");
-    const rb = require("../index.js");
+    const RestBundle = require("../index.js").RestBundle;
     const express = require("express");
     winston.level = "warn";
 
     it("RestBundle can be extended", function(done) {
-        class TestBundle extends rb.RestBundle {
+        class TestBundle extends RestBundle {
             constructor(name, options={}) {
                 super(name, options);
                 Object.defineProperty(this, "handlers", {
@@ -30,7 +30,7 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("RestBundle resources should be unique", function() {
-        class TestBundle extends rb.RestBundle {
+        class TestBundle extends RestBundle {
             constructor(name, options={}) {
                 super(name, options);
                 Object.defineProperty(this, "handlers", {
@@ -68,10 +68,10 @@ const supertest = require("supertest");
     })
     it("POST /echo generates HTTP200 response with a Promise", function(done) {
         var app = require("../scripts/server.js");
-        var service = app.restService;
-        service.tasks.length.should.equal(0);
+        var service = app.locals.restService;
+        service.taskBag.length.should.equal(0);
         service.taskBegin("testTask");
-        service.tasks.length.should.equal(1);
+        service.taskBag.length.should.equal(1);
         supertest(app).post("/test/echo").send({greeting:"smile"}).expect((res) => {
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
@@ -79,8 +79,8 @@ const supertest = require("supertest");
             should.deepEqual(res.body, {
                  greeting: "smile",
             });
-            service.tasks.length.should.equal(1);
-            service.tasks[0].should.equal("testTask");
+            service.taskBag.length.should.equal(1);
+            service.taskBag[0].should.equal("testTask");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST generates HTTP500 response for thrown exception", function(done) {
@@ -120,5 +120,35 @@ const supertest = require("supertest");
         kebab("xFooBar").should.equal("x-foo-bar");
         kebab("abc").should.equal("abc");
         kebab("aBC").should.equal("a-b-c");
+    });
+    it("configPath() returns RestBundle configuration path", function() {
+        var rb = new RestBundle('Binky');
+        var cp = rb.configPath();
+        should.strictEqual(cp.endsWith('/rb-config/Binky.json'), true);
+        var cp = rb.configPath("MyRestBundle");
+        should.strictEqual(cp.endsWith('/rb-config/MyRestBundle.json'), true);
+    });
+    it("loadConfig() returns RestBundle configuration Promise", function(done) {
+        let async = function*() {
+            var rb = new RestBundle('Binky');
+            var result = yield rb.loadConfig("NoConfig").then(r=>async.next(r)).catch(e=>async.throw(e));
+            should.deepEqual(result, {});
+            done();
+        }();
+        async.next();
+    });
+    it("saveConfig(config) saves RestBundle configuration", function(done) {
+        let async = function*() {
+            var rb = new RestBundle('Binky');
+            var config = {
+                color: 'purple',
+            }
+            var result = yield rb.saveConfig(config).then(r=>async.next(r)).catch(e=>async.throw(e));
+            should.strictEqual(result, config);
+            var result = yield rb.loadConfig().then(r=>async.next(r)).catch(e=>async.throw(e));
+            should.deepEqual(result, config);
+            done();
+        }();
+        async.next();
     });
 })

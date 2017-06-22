@@ -1,6 +1,7 @@
 (function(exports) {
     const ResourceMethod = require("./resource-method");
     const path = require("path");
+    const fs = require("fs");
     const express = require("express");
     const bodyParser = require("body-parser");
     const winston = require("winston");
@@ -279,13 +280,76 @@
                 return cmp;
             });
             restHandlers.forEach((resource) => {
-                winston.debug("RestBundle.bindExpress:", resource.method, "/" + this.name + "/" + resource.name + " => " + resource.mime);
+                winston.debug("RestBundle.bindExpress:", resource.method, 
+                    "/" + this.name + "/" + resource.name + " => " + resource.mime);
                 this.bindResource(app, resource);
             });
             rootApp.use(this.uribase, app); // don't pollute client's app
             return this;
         }
-    }
+
+        configPath(name = this.name) {
+            return path.normalize(path.join(__dirname, "../rb-config", name + ".json"));
+        }
+
+        loadConfig(name=this.name) {
+            return new Promise((resolve, reject) => {
+                var cp = this.configPath(name);
+
+                if (fs.existsSync(cp)) {
+                    fs.readFile(cp, (err, data) => {
+                        if (err) {
+                            winston.warn("loadConfig() ", err, 'E01');
+                            reject(err);
+                        } else {
+                            try {
+                                var obj = JSON.parse(data);
+                                resolve(obj);
+                            } catch (err) {
+                                winston.warn("loadConfig() ", err.message, 'E02');
+                                reject(err);
+                            }
+                        }
+                    });
+                } else {
+                    resolve({});
+                }
+            });
+        }
+
+        saveConfig(config, name=this.name) {
+            var that = this;
+            return new Promise((resolve, reject) => { try {
+                let async = function*() { 
+                    var cp = that.configPath(name);
+                    var dir = path.dirname(cp);
+
+                    if (!fs.existsSync(dir)) {
+                        yield fs.mkdir(dir, (err) => {
+                            if (err) {
+                                async.throw(err);
+                            } else {
+                                async.next(true);
+                            }
+                        });
+                    }
+                    var json = JSON.stringify(config);
+                    fs.writeFile(cp, json, (err) => {
+                        if (err) {
+                            async.throw(err);
+                        } else {
+                            async.next(true);
+                        }
+                    });
+                    resolve(config);
+                }();
+                async.next();
+            } catch (err) { reject(err); } });
+        }
+           
+
+    } // class RestBundle
+
 
     module.exports = exports.RestBundle = RestBundle;
 })(typeof exports === "object" ? exports : (exports = {}));

@@ -23,7 +23,7 @@ var restBundles = services.map((name) => new rb.RestBundle(name));
 restBundles.forEach(rb => rb.bindExpress(app));
 
 if (module.parent) {
-    app.restService = restBundles[0];  // supertest
+    app.locals.restService = restBundles[0];  // supertest
 } else {
     var ports = [80, 8080];
     var listener = ports.reduce( (listener, port) => {
