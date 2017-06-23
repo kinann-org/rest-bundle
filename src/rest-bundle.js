@@ -5,67 +5,7 @@
     const express = require("express");
     const bodyParser = require("body-parser");
     const winston = require("winston");
-    const WebSocket = require("ws");
-
-    class RbWebSocket {
-        constructor(restBundles, listener, options = {}) {
-            if (!listener) {
-                throw new Error("RbWebSocket(restBundle,listener,options) listener is required");
-            }
-            this.restBundles = restBundles;
-            this.restBundles.forEach(rb => {
-                var that = this;
-                rb.pushState = function() {
-                    winston.debug("direct pushState");
-                    return that.pushState();
-                }
-            });
-            this.listener = listener;
-            this.wss = new WebSocket.Server({
-                server: listener
-            });
-            this.sockets = new Set();
-            var port = listener.address().port;
-            winston.info("WebSocket listening on port:", port);
-            this.wss.on('connection', (ws, req) => {
-                const ip = req.connection.remoteAddress;
-                this.sockets.add(ws);
-                winston.debug("WebSocket connected client:", ip);
-                ws.on('close', () => {
-                    this.sockets.delete(ws);
-                    winston.debug('WebSocket disconnected client:', ip);
-                });
-            });
-            var pushStateInterval = options.pushStateInterval == null ? 1000 : options.pushStateInterval;
-            pushStateInterval && setInterval(() => {
-                winston.debug("interval pushState");
-                this.pushState();
-            }, pushStateInterval);
-        }
-        pushData(type, data) {
-            data = typeof data === 'string' ? JSON.parse(data) : data;
-            var message = JSON.stringify({
-                type,
-                data
-            });
-            winston.debug("pushing ", message);
-            this.sockets.forEach((ws) => ws.send(message));
-        }
-        pushState() {
-            return new Promise((resolve, reject) => {
-                var state = this.restBundles.reduce((acc, rb) => {
-                    return Object.assign(acc, {
-                        [rb.name]: rb.getState(),
-                    });
-                }, {});
-                var stateStr = JSON.stringify(state);
-                if (this.stateStr != stateStr) {
-                    this.pushData("state", stateStr);
-                    this.stateStr = stateStr;
-                }
-            });
-        }
-    }
+    const RbWebSocket = require("./rb-web-socket");
 
     class RestBundle {
         constructor(name, options = {}) {
@@ -129,7 +69,7 @@
         }
 
         pushState() {
-            // default is to do nothing unless you create an RbWebSocket to pushState()");
+            winston.debug("default pushState() does nothing");
         }
 
         taskPromise(name, cbPromise) {
@@ -280,7 +220,7 @@
                 return cmp;
             });
             restHandlers.forEach((resource) => {
-                winston.debug("RestBundle.bindExpress:", resource.method, 
+                winston.debug("RestBundle.bindExpress:", resource.method,
                     "/" + this.name + "/" + resource.name + " => " + resource.mime);
                 this.bindResource(app, resource);
             });
@@ -292,7 +232,7 @@
             return path.normalize(path.join(__dirname, "../rb-config", name + ".json"));
         }
 
-        loadConfig(name=this.name) {
+        loadConfig(name = this.name) {
             return new Promise((resolve, reject) => {
                 var cp = this.configPath(name);
 
@@ -317,36 +257,39 @@
             });
         }
 
-        saveConfig(config, name=this.name) {
+        saveConfig(config, name = this.name) {
             var that = this;
-            return new Promise((resolve, reject) => { try {
-                let async = function*() { 
-                    var cp = that.configPath(name);
-                    var dir = path.dirname(cp);
+            return new Promise((resolve, reject) => {
+                try {
+                    let async = function*() {
+                        var cp = that.configPath(name);
+                        var dir = path.dirname(cp);
 
-                    if (!fs.existsSync(dir)) {
-                        yield fs.mkdir(dir, (err) => {
+                        if (!fs.existsSync(dir)) {
+                            yield fs.mkdir(dir, (err) => {
+                                if (err) {
+                                    async.throw(err);
+                                } else {
+                                    async.next(true);
+                                }
+                            });
+                        }
+                        var json = JSON.stringify(config);
+                        fs.writeFile(cp, json, (err) => {
                             if (err) {
                                 async.throw(err);
                             } else {
                                 async.next(true);
                             }
                         });
-                    }
-                    var json = JSON.stringify(config);
-                    fs.writeFile(cp, json, (err) => {
-                        if (err) {
-                            async.throw(err);
-                        } else {
-                            async.next(true);
-                        }
-                    });
-                    resolve(config);
-                }();
-                async.next();
-            } catch (err) { reject(err); } });
+                        resolve(config);
+                    }();
+                    async.next();
+                } catch (err) {
+                    reject(err);
+                }
+            });
         }
-           
 
     } // class RestBundle
 
