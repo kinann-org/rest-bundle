@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -44,6 +44,10 @@
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.2.0"
   },
+  "engine-strict": true,
+  "engines": {
+    "node": ">=6.11.0"
+  },
   "scripts": {
     "build": "bash scripts/build",
     "build:vue": "npm run build:vue-dev && npm run build:vue-service",
@@ -52,7 +56,7 @@
     "clean": "rm -f *.log*; rimraf dist",
     "dev": "concurrently \"scripts/server.js test aloha\" \"npm run dev:vue\"",
     "dev:vue": "cross-env NODE_ENV=development webpack-dev-server --config cfg/webpack.dev.js --open --hot",
-    "start": "scripts/server.js ",
+    "start": "concurrently \"node --version\" \"scripts/server.js\" ",
     "test": "npm run test:node",
     "test:node": "mocha -w -R min --inline-diffs",
     "test:detail": "mocha -w --inline-diffs",

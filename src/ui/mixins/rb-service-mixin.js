@@ -95,7 +95,7 @@ module.exports = {
                 });
                 restBundle = this.$store.state.restBundle;
                 try {
-                    var wsurl = "ws://localhost:8080";
+                    var wsurl = this.restOrigin;
                     console.log("creating WebSocket", wsurl);
                     var ws = new WebSocket(wsurl);
                     ws.onmessage = that.wsOnMessage;
