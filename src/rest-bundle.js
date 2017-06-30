@@ -5,13 +5,13 @@
     const express = require("express");
     const bodyParser = require("body-parser");
     const winston = require("winston");
-    const RbWebSocket = require("./rb-web-socket");
 
     class RestBundle {
         constructor(name, options = {}) {
             if (name == null) {
                 throw new Error("bundle name is required");
             }
+            winston.info("creating RestBundle", name);
             this.name = name;
             this.uribase = options.uribase || "/" + this.name;
             this.appDir = options.appDir || require.resolve("vue").split("node_modules")[0];
@@ -35,10 +35,6 @@
                 return handler.call(that, req, res, next);
             }
             return new ResourceMethod(method, name, thatHandler, mime);
-        }
-
-        static get RbWebSocket() {
-            return RbWebSocket;
         }
 
         get handlers() {
@@ -69,7 +65,7 @@
         }
 
         pushState() {
-            winston.debug("default pushState() does nothing");
+            winston.warn("pushState() ignored (no web socket)");
         }
 
         taskPromise(name, cbPromise) {
@@ -103,6 +99,7 @@
             this.taskBag.push(name);
             this.pushState();
         }
+
         taskEnd(name) {
             if (this.taskBag.length < 1) {
                 throw new Error("taskEnd() expected:" + name + " actual:(no pending tasks)");
@@ -114,9 +111,9 @@
             this.taskBag.splice(iName, 1);
             this.pushState();
         }
+
         getState(req, res, next) {
             return {
-                heartbeat: Math.round(Date.now() / 1000),
                 tasks: this.taskBag,
             }
         }
@@ -204,6 +201,7 @@
 
         bindExpress(rootApp, restHandlers = this.handlers) {
             var app = express();
+            this.rootApp = rootApp;
             rootApp.use("/node_modules", express.static(this.node_modules));
             app.use(bodyParser.json());
             this.bindEjs(app);

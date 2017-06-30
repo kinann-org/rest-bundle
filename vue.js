@@ -4,6 +4,7 @@ import RbServices from "./src/ui/RbServices.vue";
 import RbAbout from "./src/ui/RbAbout.vue";
 import RbAboutItem from "./src/ui/RbAboutItem.vue";
 import RbTreeView from "./src/ui/RbTreeView.vue";
+import RbWebSocket from "./src/ui/RbWebSocket.vue";
 
 var components = {
     RbAbout,
@@ -12,6 +13,7 @@ var components = {
     RbServices,
     RbState,
     RbTreeView,
+    RbWebSocket,
 }
 
 const RbServiceMixin = require( "./src/ui/mixins/rb-service-mixin.js" );

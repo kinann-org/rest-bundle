@@ -18,22 +18,26 @@ var services = ["test"]; // for developer app, we always want a test service
 process.argv[1].match(__filename) && process.argv.forEach((val, index) => {
     (index > 1 && val[0] !== '-' && val !== "test") && services.push(val);
 });
-winston.info("creating RestBundles:", services.join(", "));
-var restBundles = services.map((name) => new rb.RestBundle(name));
+var restBundles = [new rb.RbServer()].concat(services.map((name) => new rb.RestBundle(name)));
 restBundles.forEach(rb => rb.bindExpress(app));
 
-if (module.parent) {
+if (module.parent) { // unit tests
     app.locals.restService = restBundles[0];  // supertest
+    var ports = new Array(100).fill(null).map((a,i) => 3000 + i); // lots of ports for mocha -w
 } else {
     var ports = [80, 8080];
-    var listener = ports.reduce( (listener, port) => {
-        return listener.listening && listener
-        || app.listen(port).on('error', function(error) {
-            if (error.code !== "EACCES") { throw error; }
-        })
-    }, {});
-    if (listener.listening) {
-        winston.info('Node.js http.Server listening on port:', listener.address().port);
-        var rbws = new rb.RestBundle.RbWebSocket(restBundles, listener);
-    }
 }
+
+var listener = ports.reduce( (listener, port) => {
+    return listener.listening && listener
+    || app.listen(port).on('error', function(error) {
+        if (error.code === "EACCES") { 
+            // 80 requires root
+        } else if (error.code === "EADDRINUSE" ) {
+            // supertest doesn't release port
+        } else { 
+            throw error; 
+        }
+    })
+}, {});
+app.locals.webSocket = new rb.RbWebSocket(restBundles, listener);

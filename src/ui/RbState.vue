@@ -2,9 +2,13 @@
 
 <div>
     <rb-about v-if="about" :name="componentName">
-        <p> Displays contents of the client <b>rest-bundle</b> Vuex Store in a TreeView. Normally used in a developer app.
-            RestBundle Vue components that use the RbService mixin will automatically create service state object:
-            <br>
+        <p> Displays the entire <b>rest-bundle</b> sub-tree of the client application Vuex Store in a TreeView. 
+            Normally used in a developer app, `RbState` displays:
+            <ol>
+                <li>RestBundle services are listed by name. The "RbServer" service is the RbServer server singleton.</li>
+                <li>Service models are listed underneath each named service. A service model comprises read-only 
+                    pushState properties as well as client-mutable properties</li>
+            </ol>
         </p>
         <p> <code>mixins: [ require("rest-bundle").vue/RbService) ]</code>
         </p>
@@ -33,10 +37,23 @@ var RbTreeView = require('./RbTreeView.vue');
 export default {
     mixins: [ 
         require("./mixins/rb-about-mixin.js"),
+        require("./mixins/rb-service-mixin.js"),
     ],
     methods: {
         rootState() {
             return this.$store.state.restBundle;
+        },
+    },
+    props: {
+        model: {
+            type: String,
+            default: "web-socket",
+            validator: (value) => value === "web-socket", // immutable
+        },
+        service: {
+            type: String,
+            default: "RbServer",
+            validator: (value) => value === "RbServer", // immutable
         },
     },
     data() {

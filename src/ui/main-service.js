@@ -9,7 +9,7 @@ require('./stylus/main.styl')
 
 Vue.use(VueAxios, axios);
 Vue.use(RbTreeView);
-Vue.use(Vuex);;
+Vue.use(Vuex);
 Vue.use(Vuetify);
 Vue.use(rbvue);
 

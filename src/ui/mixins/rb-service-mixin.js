@@ -2,8 +2,16 @@ const Vue = require("vue").default;
 const axios = require("axios");
 const debug = process.env.NODE_ENV !== 'production'
 
-function update(state, payload = {}) {
-    Object.keys(payload).forEach(key => Vue.set(state, key, payload[key]));
+function updateObject(state, payload = {}) {
+    var isObject = (v) => v != null && typeof v === 'object';
+    Object.keys(payload).forEach(key => {
+        var value = payload[key];
+        if (isObject(value) && isObject(state[key])) {
+            updateObject(state[key], value);
+        } else {
+            Vue.set(state, key, value);
+        }
+    });
 }
 
 module.exports = {
@@ -13,12 +21,20 @@ module.exports = {
             default: "test",
         }
     },
+    created() {
+        this.restBundleModel({
+            model: this.model,
+        });
+    },
     methods: {
         actions(a) { // default Component-scoped Vuex Module actions
             return a;
         },
         mutations(m) { // default Component-scoped Vuex Module actions
             return m;
+        },
+        restOrigin() {
+            return debug ? "http://localhost:8080" : location.origin;
         },
         wsOnMessage(event) {
             var ed = JSON.parse(event.data);
@@ -33,7 +49,7 @@ module.exports = {
                 console.warn("Ignoring web socket message:", ed);
             }
         },
-        httpGet(context, url) {
+        updateComponentStore(context, url) {
             var that = this;
             context.commit('update', {
                 httpStatus: "http",
@@ -61,16 +77,19 @@ module.exports = {
             });
         },
         restBundleModel(state) {
+            // The model is the union of:
+            // 1) pushed read-only state, and 
+            // 2) client-mutable fields
             var that = this;
             var rbService = that.restBundleService();
             if (rbService[that.model] == null) {
                 var mutations = that.mutations({
-                    update
+                    update: updateObject,
                 });
                 var actions = that.actions({
-                    getUpdate(context, payload) {
-                        var url = that.restOrigin + "/" + that.service + "/" + that.model;
-                        return that.httpGet(context, url);
+                    loadComponentModel(context, payload) {
+                        var url = that.restOrigin() + "/" + that.service + "/" + that.model;
+                        return that.updateComponentStore(context, url);
                     },
                 });
                 that.$store.registerModule(["restBundle", that.service, that.model], {
@@ -83,7 +102,7 @@ module.exports = {
             return rbService[that.model];
         }, // restBundleModel
         restBundleDispatch(mutation, payload, model = this.model, service = this.service) {
-            this.$store.dispatch(["restBundle", service, model, "getUpdate"].join("/"), payload);
+            this.$store.dispatch(["restBundle", service, model, "loadComponentModel"].join("/"), payload);
         },
         restBundleService(service = this && this.service) {
             var that = this;
@@ -95,7 +114,7 @@ module.exports = {
                 });
                 restBundle = this.$store.state.restBundle;
                 try {
-                    var wsurl = this.restOrigin;
+                    var wsurl = this.restOrigin().replace(/[^:]*/, 'ws');
                     console.log("creating WebSocket", wsurl);
                     var ws = new WebSocket(wsurl);
                     ws.onmessage = that.wsOnMessage;
@@ -109,12 +128,12 @@ module.exports = {
                     namespaced: true,
                     state: {},
                     mutations: {
-                        update
+                        update: updateObject,
                     },
                     actions: {
                         getState(context, payload) {
-                            var url = that.restOrigin + "/" + that.service + "/state";
-                            return that.httpGet(context, url);
+                            var url = that.restOrigin() + "/" + that.service + "/state";
+                            return that.updateComponentStore(context, url);
                         },
                     }
                 });
@@ -128,7 +147,7 @@ module.exports = {
             if (httpStatus === "http") {
                 return "http";
             } else if (httpStatus == "") {
-                return this.heartBeat % 4 == 1 ?
+                return this.pushState % 4 == 1 ?
                     "none" :
                     (this.rbBusy ? "hourglass_empty" : "check");
             } else {
@@ -142,14 +161,16 @@ module.exports = {
             var tasks = this.rbTasks;
             return tasks == null || tasks.length > 0;
         },
-        restOrigin() {
-            return debug ? "http://localhost:8080" : location.origin;
-        },
         serviceFromUrl() {
             var path = location.href.split("#")[0];
             var subpaths = path.split("/");
             console.log("subpaths", subpaths);
             return subpaths[3] || "test";
+        },
+        pushCount() {
+            var srb = this.restBundleService('RbServer');
+            var rbws = srb && srb['web-socket'];
+            return rbws && rbws.pushCount;
         },
         httpStatus() {
             return this.rbModel.httpStatus;

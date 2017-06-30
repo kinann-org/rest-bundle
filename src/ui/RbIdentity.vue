@@ -3,7 +3,7 @@
 <div>
     <rb-about v-if="about" :name="componentName">
         <p> Displays RestBundle service information returned by <code>GET /identity</code>. In addition,
-            if the server provides periodic <code>RbWebSocket.pushState()</code> heartbeats, the
+            if the server provides periodic <code>RbWebSocket.pushState()</code>, 
             the checkmark icon will pulse for connected services.
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
@@ -16,8 +16,8 @@
             <div class="rb-panel-icon" >
                 <v-icon v-if='httpStatus==="http"' small class="warning--text " >{{rbIcon}}</v-icon>
                 <v-icon v-if='httpStatus && httpStatus !== "http"' small class="error--text " >{{rbIcon}}</v-icon>
-                <v-icon v-show='httpStatus==="" && (heartbeat % 2) == 0' xsmall class="success--text " >{{rbIcon}}</v-icon>
-                <v-icon v-show='httpStatus==="" && (heartbeat % 2) != 0' xsmall class="green--text text--darken-2" >{{rbIcon}}</v-icon>
+                <v-icon v-show='httpStatus==="" && (pushCount % 2) == 0' xsmall class="success--text " >{{rbIcon}}</v-icon>
+                <v-icon v-show='httpStatus==="" && (pushCount % 2) != 0' xsmall class="green--text text--darken-2" >{{rbIcon}}</v-icon>
             </div>
             <div class="rb-panel-header" >Service Identity: /{{service}}</div>
         </div>
@@ -59,8 +59,8 @@
                     <v-flex xs9> <a :href='serviceLink("/ui")' target="_blank">{{serviceLink("/ui")}}</a> </v-flex>
                 </v-layout>
                 <v-layout row >
-                    <v-flex xs2><b>Heartbeat:</b></v-flex>
-                    <v-flex xs9> {{heartbeat}} </v-flex>
+                    <v-flex xs2><b>pushCount:</b></v-flex>
+                    <v-flex xs9> {{pushCount}} </v-flex>
                 </v-layout>
                 <v-layout row >
                     <v-flex xs2><b>Tasks:</b></v-flex>
@@ -89,9 +89,6 @@
             require("./mixins/rb-service-mixin.js"),
         ],
         computed: {
-            heartbeat() { 
-                return this.restBundleService().heartbeat;
-            },
             package() { 
                 return this.rbModel.package;
             },
@@ -110,7 +107,7 @@
             }
         },
         beforeMount() {
-            this.restBundleDispatch("getUpdate");
+            this.restBundleDispatch("loadComponentModel");
         },
         mounted() {
             console.log("mounted");
