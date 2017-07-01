@@ -21,6 +21,12 @@ module.exports = {
             default: "test",
         }
     },
+    data() {
+        return {
+            webSocket: this.webSocket,
+            isConnected: null,
+        }
+    },
     created() {
         this.restBundleModel({
             model: this.model,
@@ -116,8 +122,10 @@ module.exports = {
                 try {
                     var wsurl = this.restOrigin().replace(/[^:]*/, 'ws');
                     console.log("creating WebSocket", wsurl);
-                    var ws = new WebSocket(wsurl);
-                    ws.onmessage = that.wsOnMessage;
+                    that.webSocket = new WebSocket(wsurl);
+                    that.webSocket.onmessage = that.wsOnMessage;
+                    that.webSocket.onclose = (event) => Vue.set(that, 'isConnected', false);
+                    that.webSocket.onopen = (event) => Vue.set(that, 'isConnected', true);
                 } catch (err) {
                     console.log("Could not open web socket", err);
                 }

@@ -50,6 +50,7 @@
     <main>
         <v-container fluid> <router-view/> </v-container>
     </main>
+    <rb-web-socket/>
 </v-app>
 
 </template>  
@@ -58,6 +59,7 @@
 import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
+import RbWebSocket from './RbWebSocket.vue';
 import rbvue from "../../vue";
 
 export default {
@@ -95,6 +97,7 @@ export default {
         Introduction,
         AllServices,
         Service,
+        RbWebSocket,
     },
 }
 
