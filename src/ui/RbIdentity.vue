@@ -109,9 +109,6 @@
         beforeMount() {
             this.restBundleDispatch("loadComponentModel");
         },
-        mounted() {
-            console.log("mounted");
-        },
         methods: {
             serviceLink(path) {
                 var host = location.port === "4000" 

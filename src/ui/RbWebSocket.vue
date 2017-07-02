@@ -9,14 +9,14 @@
     <div class='rbws-example' v-if="about">
         <div :class="rbwsIconClass" v-on:click='toggleDetail' > &nbsp; </div>
         <transition name='fade'>
-            <div v-if='showDetail && isConnected' class="rbws-text">connected: {{pushCount}}</div>
+            <div v-if='showDetail && isConnected' class="rbws-text">messages: {{pushCount}}</div>
             <div v-if='!isConnected' class="rbws-no-connection">NO CONNECTION</div>
         </transition>
     </div>
-    <div class="rbws-container">
+    <div class="rbws-container" v-if="!about">
         <div :class="rbwsIconClass" v-on:click='toggleDetail' > &nbsp; </div>
         <transition name='fade'>
-            <div v-if='showDetail' class="rbws-text">connected: {{pushCount}}</div>
+            <div v-if='showDetail' class="rbws-text">messages: {{pushCount}}</div>
             <div v-if='!isConnected' class="rbws-no-connection">NO CONNECTION</div>
         </transition>
     </div>
@@ -24,6 +24,8 @@
 
 </template>
 <script>
+
+const Vue = require("vue").default;
 
     export default {
         name: "RbWebSocket",
@@ -40,12 +42,41 @@
             },
         },
         methods: {
+            serviceLink(path) {
+                var host = location.port === "4000" 
+                    ? location.hostname + ":8080"
+                    : location.host;
+                return "http://" + host + "/" + this.service + path;
+            },
+            toggleDetail() {
+                var srb = this.restBundleService('RbServer');
+                var rbws = srb && srb['web-socket'];
+                rbws && Vue.set(rbws, 'showDetail',  !rbws.showDetail);
+            },
+            wsOnMessage(event) {
+                var ed = JSON.parse(event.data);
+                if (ed.type === 'state') {
+                    var state = ed.data;
+                    Object.keys(state).forEach((service) => {
+                        var serviceModule = this.$store._modules.get(["restBundle", service]);
+                        var context = serviceModule && serviceModule.context;
+                        context && context.commit("update", state[service]);
+                    });
+                } else {
+                    console.warn("Ignoring web socket message:", ed);
+                }
+            },
         },
         mixins: [ 
             require("./mixins/rb-about-mixin.js"),
             require("./mixins/rb-service-mixin.js"),
         ],
         computed: {
+            showDetail() {
+                var srb = this.restBundleService('RbServer');
+                var rbws = srb && srb['web-socket'];
+                return rbws && rbws.showDetail;
+            },
             rbwsIconClass() {
                 var c = 'rbws-icon ';
                 c += this.showDetail || !this.isConnected ? 'rbws-icon-detail ' : 'rbws-icon-terse ';
@@ -59,22 +90,27 @@
         },
         data() {
             return {
-                showDetail: false,
+                webSocket: this.webSocket,
+                isConnected: null,
+            }
+        },
+        created() {
+            var srb = this.restBundleService('RbServer');
+            var rbws = srb && srb['web-socket'];
+            rbws && rbws.showDetail == null && Vue.set(rbws, "showDetail", false);
+            try {
+                var wsurl = this.restOrigin().replace(/[^:]*/, 'ws');
+                console.log("creating WebSocket", wsurl);
+                this.webSocket = new WebSocket(wsurl);
+                this.webSocket.onmessage = this.wsOnMessage;
+                this.webSocket.onclose = (event) => Vue.set(this, 'isConnected', false);
+                this.webSocket.onopen = (event) => Vue.set(this, 'isConnected', true);
+            } catch (err) {
+                console.log("Could not open web socket", err);
             }
         },
         beforeMount() {
             this.restBundleDispatch("loadComponentModel");
-        },
-        methods: {
-            serviceLink(path) {
-                var host = location.port === "4000" 
-                    ? location.hostname + ":8080"
-                    : location.host;
-                return "http://" + host + "/" + this.service + path;
-            },
-            toggleDetail() {
-                this.showDetail = !this.showDetail;
-            },
         },
     }
 
@@ -102,6 +138,7 @@
 .rbws-icon-terse {
 }
 .rbws-icon-detail {
+    border-bottom-left-radius: 0.5em;
     height: 2em;
 }
 .rbws-icon-active0 {

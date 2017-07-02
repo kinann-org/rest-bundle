@@ -21,12 +21,6 @@ module.exports = {
             default: "test",
         }
     },
-    data() {
-        return {
-            webSocket: this.webSocket,
-            isConnected: null,
-        }
-    },
     created() {
         this.restBundleModel({
             model: this.model,
@@ -41,19 +35,6 @@ module.exports = {
         },
         restOrigin() {
             return debug ? "http://localhost:8080" : location.origin;
-        },
-        wsOnMessage(event) {
-            var ed = JSON.parse(event.data);
-            if (ed.type === 'state') {
-                var state = ed.data;
-                Object.keys(state).forEach((service) => {
-                    var serviceModule = this.$store._modules.get(["restBundle", service]);
-                    var context = serviceModule && serviceModule.context;
-                    context && context.commit("update", state[service]);
-                });
-            } else {
-                console.warn("Ignoring web socket message:", ed);
-            }
         },
         updateComponentStore(context, url) {
             var that = this;
@@ -119,16 +100,6 @@ module.exports = {
                     state: {},
                 });
                 restBundle = this.$store.state.restBundle;
-                try {
-                    var wsurl = this.restOrigin().replace(/[^:]*/, 'ws');
-                    console.log("creating WebSocket", wsurl);
-                    that.webSocket = new WebSocket(wsurl);
-                    that.webSocket.onmessage = that.wsOnMessage;
-                    that.webSocket.onclose = (event) => Vue.set(that, 'isConnected', false);
-                    that.webSocket.onopen = (event) => Vue.set(that, 'isConnected', true);
-                } catch (err) {
-                    console.log("Could not open web socket", err);
-                }
             }
             if (restBundle[service] == null) {
                 var servicePath = ["restBundle", service];

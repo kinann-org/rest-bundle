@@ -83,12 +83,11 @@
         pushState() {
             return new Promise((resolve, reject) => {
                 this.pushCount++;
-                var acc = this.getState();
                 var state = this.restBundles.reduce((acc, rb) => {
                     return Object.assign(acc, {
                         [rb.name]: rb.getState(),
                     });
-                }, acc);
+                }, {});
                 var stateStr = JSON.stringify(state);
                 if (this.stateStr != stateStr) {
                     this.pushData("state", stateStr);
