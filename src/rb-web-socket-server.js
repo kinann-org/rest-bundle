@@ -34,6 +34,9 @@
                     this.sockets.delete(ws);
                     winston.debug('WebSocket disconnected client:', ip);
                 });
+                ws.on('error', (error) => {
+                    winston.error(this.constructor.name, err);
+                });
             });
             this.pushCount = 0;
             this.setModel({

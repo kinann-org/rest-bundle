@@ -14,15 +14,19 @@ app.all('*', function(req, res, next) {
 app.use("/", express.static(path.join(__dirname, "../src/ui")));
 app.use("/dist", express.static(path.join(__dirname, "../dist")));
 
-var services = ["test"]; // for developer app, we always want a test service
+var restBundles = [
+    new rb.RbServer(),          // [0] server singleton
+    new rb.RestBundle("test"),  // [1] developer testing
+];
 process.argv[1].match(__filename) && process.argv.forEach((val, index) => {
-    (index > 1 && val[0] !== '-' && val !== "test") && services.push(val);
+    if (index > 1 && val[0] !== '-' && val !== "test") {
+        restBundles.push(new rb.RestBundle(val));
+    }
 });
-var restBundles = [new rb.RbServer()].concat(services.map((name) => new rb.RestBundle(name)));
 restBundles.forEach(rb => rb.bindExpress(app));
 
 if (module.parent) { // unit tests
-    app.locals.restService = restBundles[0];  // supertest
+    app.locals.restService = restBundles[1];  // supertest
     var ports = new Array(100).fill(null).map((a,i) => 3000 + i); // lots of ports for mocha -w
 } else {
     var ports = [80, 8080];
