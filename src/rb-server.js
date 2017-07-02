@@ -9,10 +9,36 @@
 
     class RbServer extends RestBundle {
         constructor(name, options = {}) {
-            super("RbServer", Object.assign({
-                srcPkg: require("../package.json"),
-            }, options));
+            super("RbServer", RbServer.initOptions(options));
         }
+        
+        static initOptions(options) {
+            options = Object.assign({
+                srcPkg: require("../package.json"),
+            }, options);
+            options.logDefault && options.logDefault() || this.logDefault();
+            return options;
+        }
+
+        static logDefault() {
+            winston.remove(winston.transports.Console);
+            winston.add(winston.transports.Console, {
+                timestamp: () => new Date().toLocaleTimeString([], { hour12: false, }),
+                formatter: (options) => {
+                    try {
+                        var result =  options.timestamp() +' '+ 
+                            options.level.toUpperCase() +' '+ 
+                            (options.message ? options.message : '') +
+                            (options.meta && Object.keys(options.meta).length ? ' '+ JSON.stringify(options.meta) : '') +
+                            "";
+                        return result;
+                    } catch (err) {
+                        console.log("winston died", err);
+                        return err.message;
+                    }
+                },
+            });
+        }   
 
         get handlers() {
             return super.handlers.concat([
