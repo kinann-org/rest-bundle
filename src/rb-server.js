@@ -1,10 +1,10 @@
 /**
  * RbServer is the RestBundle for a server singleton
- * that manages shared resources such as rb-web-socket.
+ * that manages shared resources such as rb-web-socket-server.
  */
 (function(exports) {
     const winston = require("winston");
-    const RbWebSocket = require("./rb-web-socket");
+    const RbWebSocketServer = require("./rb-web-socket-server");
     const RestBundle = require("./rest-bundle");
 
     class RbServer extends RestBundle {

@@ -3,7 +3,7 @@
 <div>
     <rb-about v-if="about" :name="componentName">
         <p> Displays RestBundle service information returned by <code>GET /identity</code>. In addition,
-            if the server provides periodic <code>RbWebSocket.pushState()</code>, 
+            if the server provides periodic <code>RbWebSocketServer.pushState()</code>, 
             the checkmark icon will pulse for connected services.
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>

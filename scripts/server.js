@@ -40,4 +40,4 @@ var listener = ports.reduce( (listener, port) => {
         }
     })
 }, {});
-app.locals.webSocket = new rb.RbWebSocket(restBundles, listener);
+app.locals.webSocket = new rb.RbWebSocketServer(restBundles, listener);
