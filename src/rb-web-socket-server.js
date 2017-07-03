@@ -83,22 +83,27 @@
             }
         }
 
+        getAllState() {
+            return this.restBundles.reduce((acc, rb) => {
+                return Object.assign(acc, {
+                    [rb.name]: rb.getState(),
+                });
+            }, {});
+        }
+
         pushState() {
             return new Promise((resolve, reject) => {
-                var state = this.restBundles.reduce((acc, rb) => {
-                    return Object.assign(acc, {
-                        [rb.name]: rb.getState(),
-                    });
-                }, {});
-                var stateStr = JSON.stringify(state);
                 this.pushCount++;
-                if (this.stateStr != stateStr) {
-                    stateStr = JSON.stringify(state);
+                var allState = this.getAllState();
+                delete allState['web-socket'].pushCount;
+                var allStateStr = JSON.stringify(allState);
+                if (this.allStateStr != allStateStr) {
+                    var pushedData = JSON.stringify(this.getAllState());
+                    this.allStateStr = allStateStr;
                 } else {
-                    stateStr = JSON.stringify(this.getState());
+                    var pushedData = JSON.stringify(this.getState());
                 }
-                this.pushData("state", stateStr);
-                this.stateStr = stateStr;
+                this.pushData("state", pushedData);
             });
         }
 
