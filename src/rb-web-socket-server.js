@@ -85,17 +85,20 @@
 
         pushState() {
             return new Promise((resolve, reject) => {
-                this.pushCount++;
                 var state = this.restBundles.reduce((acc, rb) => {
                     return Object.assign(acc, {
                         [rb.name]: rb.getState(),
                     });
                 }, {});
                 var stateStr = JSON.stringify(state);
+                this.pushCount++;
                 if (this.stateStr != stateStr) {
-                    this.pushData("state", stateStr);
-                    this.stateStr = stateStr;
+                    stateStr = JSON.stringify(state);
+                } else {
+                    stateStr = JSON.stringify(this.getState());
                 }
+                this.pushData("state", stateStr);
+                this.stateStr = stateStr;
             });
         }
 
