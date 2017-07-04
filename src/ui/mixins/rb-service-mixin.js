@@ -3,7 +3,7 @@ const axios = require("axios");
 const debug = process.env.NODE_ENV !== 'production'
 
 function updateObject(state, payload = {}) {
-    var isObject = (v) => v != null && typeof v === 'object';
+    var isObject = (v) => v != null && typeof v === 'object' && !(v instanceof Array);
     Object.keys(payload).forEach(key => {
         var value = payload[key];
         if (isObject(value) && isObject(state[key])) {
