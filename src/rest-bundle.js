@@ -11,7 +11,7 @@
             if (name == null) {
                 throw new Error("bundle name is required");
             }
-            winston.info('new', this.constructor.name+'("'+ name + '",)');
+            winston.info('new', this.constructor.name+'("'+ name + '"...)');
             this.name = name;
             this.uribase = options.uribase || "/" + this.name;
             this.appDir = options.appDir || require.resolve("vue").split("node_modules")[0];

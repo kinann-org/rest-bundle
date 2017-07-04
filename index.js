@@ -2,7 +2,7 @@
     ///////////////// class ////////////////////
     var pkg = {
         RestBundle: require("./src/rest-bundle"),
-        RbWebSocketServer: require("./src/rb-web-socket-server"),
+        RbSocketServer: require("./src/rb-socket-server"),
         RbServer: require("./src/rb-server"),
         ResourceMethod: require("./src/resource-method"),
     };

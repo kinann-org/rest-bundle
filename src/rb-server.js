@@ -1,10 +1,10 @@
 /**
  * RbServer is the RestBundle for a server singleton
- * that manages shared resources such as rb-web-socket-server.
+ * that manages shared resources such as rb-socket-server.
  */
 (function(exports) {
     const winston = require("winston");
-    const RbWebSocketServer = require("./rb-web-socket-server");
+    const RbSocketServer = require("./rb-socket-server");
     const RestBundle = require("./rest-bundle");
 
     class RbServer extends RestBundle {
@@ -47,24 +47,56 @@
         }
 
         getWebSocket(req, res, next) {
-            var rbws = this.rootApp && this.rootApp.locals.webSocket;
-            return rbws && rbws.getModel() || {error: "no web socket"};
+            return this.rbwss && this.rbwss.getModel() || {error: "no web socket"};
         }
 
         postWebSocket(req, res, next) {
-            var rbws = this.rootApp && this.rootApp.locals.rbws;
-            if (!rbws) {
+            var rbwss = this.rbwss;
+            if (!rbwss) {
                 throw new Error("no web socket");
             }
-            rbws.setModel(req.body);
-            return rbws.getModel();
+            rbwss.setModel(req.body);
+            return rbwss.getModel();
         }
 
         getState() {
             var state = super.getState();
-            var rbws = this.rootApp && this.rootApp.locals.webSocket;
-            rbws && (state = Object.assign(state, rbws.getState()));
+            var rbwss = this.rbwss;
+            rbwss && (state = Object.assign(state, rbwss.getState()));
             return state;
+        }
+
+        close() {
+            if (this.rootApp) {
+                this.rbwss.close();
+                winston.info("closing web server");
+                this.httpServer.close();
+            }
+        }
+
+        listen(app, restBundles, ports = [8080,80, 3000]) {
+            if (this.httpServer) {
+                throw new Error(this.constructor.name + ".listen() can only be called once");
+            }
+            if (restBundles.filter(rb=>rb===this)[0] == null) {
+                restBundles.push(this);
+            }
+            restBundles.forEach(rb => rb.bindExpress(app));
+
+            this.httpServer = ports.reduce( (listener, port) => {
+                return listener.listening && listener
+                || app.listen(port).on('error', function(error) {
+                    if (error.code === "EACCES") { 
+                        // 80 requires root
+                    } else if (error.code === "EADDRINUSE" ) {
+                        // supertest doesn't release port
+                    } else { 
+                        throw error; 
+                    }
+                })
+            }, {});
+            this.rbwss = new RbSocketServer(restBundles, this.httpServer);
+            return this;
         }
 
     } // class RbServer

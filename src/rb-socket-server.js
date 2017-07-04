@@ -2,14 +2,14 @@
     const winston = require("winston");
     const WebSocket = require("ws");
 
-    class RbWebSocketServer {
+    class RbSocketServer {
 
         constructor(restBundles, listener, options = {}) {
             if (!listener) {
-                throw new Error("RbWebSocketServer(restBundle,listener,options) listener is required");
+                throw new Error("RbSocketServer(restBundle,listener,options) listener is required");
             }
             if (!listener.listening) {
-                throw new Error("RbWebSocketServer requires an active listener");
+                throw new Error("RbSocketServer requires an active listener");
             }
             this.restBundles = restBundles;
             this.restBundles.forEach(rb => {
@@ -25,7 +25,7 @@
             });
             this.sockets = new Set();
             var port = listener.address().port;
-            winston.info("RbWebSocketServer listening on port:", port);
+            winston.info("RbSocketServer listening on port:", port);
             this.wss.on('connection', (ws, req) => {
                 const ip = req.connection.remoteAddress;
                 this.sockets.add(ws);
@@ -44,13 +44,21 @@
             });
         }
 
+        close() {
+            winston.debug(this.constructor.name, "close()...");
+            clearInterval(this.pushStateId);
+            this.wss.close();
+            winston.info(this.constructor.name, "close()");
+        }
+
         pushData(type, data) {
             data = typeof data === 'string' ? JSON.parse(data) : data;
             var message = JSON.stringify({
                 type,
                 data
             });
-            winston.debug("pushing ", message);
+            this.pushCount++;
+            winston.debug("push", this.pushCount,  message);
             this.sockets.forEach((ws) => ws.send(message));
         }
 
@@ -68,7 +76,6 @@
                         clearInterval(this.pushStateId);
                     }
                     this.pushStateId = setInterval(() => {
-                        winston.debug("RbWebSocketServer pushStateMillis:", this.pushStateMillis);
                         this.pushState();
                     }, this.pushStateMillis);
                 }
@@ -93,21 +100,16 @@
 
         pushState() {
             return new Promise((resolve, reject) => {
-                this.pushCount++;
-                var allState = this.getAllState();
-                delete allState['web-socket'].pushCount;
-                var allStateStr = JSON.stringify(allState);
-                if (this.allStateStr != allStateStr) {
-                    var pushedData = JSON.stringify(this.getAllState());
-                    this.allStateStr = allStateStr;
-                } else {
-                    var pushedData = JSON.stringify(this.getState());
+                try {
+                    this.pushData("state", this.getAllState());
+                } catch (err) {
+                    winston.error(err);
+                    reject(err);
                 }
-                this.pushData("state", pushedData);
             });
         }
 
-    } // class RbWebSocketServer
+    } // class RbSocketServer
 
-    module.exports = exports.RbWebSocketServer = RbWebSocketServer;
+    module.exports = exports.RbSocketServer = RbSocketServer;
 })(typeof exports === "object" ? exports : (exports = {}));

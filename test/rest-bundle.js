@@ -6,7 +6,11 @@ const supertest = require("supertest");
     const pkg = require("../package.json");
     const RestBundle = require("../index.js").RestBundle;
     const express = require("express");
+    const WebSocket = require("ws");
     winston.level = "warn";
+    function testRb(app) {
+        return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
+    }
 
     it("RestBundle can be extended", function(done) {
         class TestBundle extends RestBundle {
@@ -77,9 +81,9 @@ const supertest = require("supertest");
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
-    it("POST /echo generates HTTP200 response with a Promise", function(done) {
+    it("TESTPOST /echo generates HTTP200 response with a Promise", function(done) {
         var app = require("../scripts/server.js");
-        var service = app.locals.restService;
+        var service = testRb(app);
         service.taskBag.length.should.equal(0);
         service.taskBegin("testTask");
         service.taskBag.length.should.equal(1);
@@ -162,5 +166,9 @@ const supertest = require("supertest");
             done();
         }();
         async.next();
+    });
+    it("Last TEST closes test suite for watch", function() {
+        var app = require("../scripts/server.js");
+        app.locals.rbServer.close();
     });
 })
