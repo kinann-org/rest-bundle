@@ -79,7 +79,8 @@
             }
         }
 
-        listen(app, restBundles, ports = [8080,80, 3000]) {
+        listen(app, restBundles, ports=[80,8080]) {
+            ports = ports.concat(new Array(100).fill(3000).map((p,i) => p+i));
             try {
                 if (this.httpServer) {
                     throw new Error(this.constructor.name + ".listen() can only be called once");

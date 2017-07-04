@@ -27,4 +27,5 @@ argv.forEach((a, i) => {
 restBundles.push(new rb.RestBundle("test")); // documentation and test
 
 // create http server and web socket
-app.locals.rbServer = new rb.RbServer().listen(app, restBundles); 
+var ports = [80, 8080].concat(new Array(100).fill(3000).map((p,i)=>p+i));
+app.locals.rbServer = new rb.RbServer().listen(app, restBundles, ports); 
