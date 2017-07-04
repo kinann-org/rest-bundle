@@ -47,55 +47,65 @@
         }
 
         getWebSocket(req, res, next) {
-            return this.rbwss && this.rbwss.getModel() || {error: "no web socket"};
+            return this.rbss && this.rbss.getModel() || {error: "no web socket"};
         }
 
         postWebSocket(req, res, next) {
-            var rbwss = this.rbwss;
-            if (!rbwss) {
+            var rbss = this.rbss;
+            if (!rbss) {
                 throw new Error("no web socket");
             }
-            rbwss.setModel(req.body);
-            return rbwss.getModel();
+            rbss.setModel(req.body);
+            return rbss.getModel();
         }
 
         getState() {
             var state = super.getState();
-            var rbwss = this.rbwss;
-            rbwss && (state = Object.assign(state, rbwss.getState()));
+            var rbss = this.rbss;
+            rbss && (state = Object.assign(state, rbss.getState()));
             return state;
         }
 
         close() {
             if (this.rootApp) {
-                this.rbwss.close();
-                winston.info("closing web server");
-                this.httpServer.close();
+                if (this.rbss) {
+                    winston.info("closing RbSocketServer");
+                    this.rbss.close();
+                }
+                if (this.httpServer) {
+                    winston.info("closing web server");
+                    this.httpServer && this.httpServer.close();
+                }
             }
         }
 
         listen(app, restBundles, ports = [8080,80, 3000]) {
-            if (this.httpServer) {
-                throw new Error(this.constructor.name + ".listen() can only be called once");
-            }
-            if (restBundles.filter(rb=>rb===this)[0] == null) {
-                restBundles.push(this);
-            }
-            restBundles.forEach(rb => rb.bindExpress(app));
+            try {
+                if (this.httpServer) {
+                    throw new Error(this.constructor.name + ".listen() can only be called once");
+                }
+                if (restBundles.filter(rb=>rb===this)[0] == null) {
+                    restBundles.push(this);
+                }
+                restBundles.forEach(rb => rb.bindExpress(app));
 
-            this.httpServer = ports.reduce( (listener, port) => {
-                return listener.listening && listener
-                || app.listen(port).on('error', function(error) {
-                    if (error.code === "EACCES") { 
-                        // 80 requires root
-                    } else if (error.code === "EADDRINUSE" ) {
-                        // supertest doesn't release port
-                    } else { 
-                        throw error; 
-                    }
-                })
-            }, {});
-            this.rbwss = new RbSocketServer(restBundles, this.httpServer);
+                this.httpServer = ports.reduce( (listener, port) => {
+                    return listener.listening && listener
+                    || app.listen(port).on('error', function(error) {
+                        if (error.code === "EACCES") { 
+                            // 80 requires root
+                        } else if (error.code === "EADDRINUSE" ) {
+                            // supertest doesn't release port
+                        } else { 
+                            throw error; 
+                        }
+                    })
+                }, {});
+                this.rbss = new RbSocketServer(restBundles, this.httpServer);
+            } catch (err) {
+                winston.error(err);
+                throw err;
+            }
             return this;
         }
 
