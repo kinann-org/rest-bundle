@@ -1,13 +1,11 @@
 <template>
 
 <v-card flat>
-    <v-card-row class="primary" >
-        <v-card-title class="white--text">
-            <span >Service Home Page</span>
-            <v-spacer></v-spacer>
-            <span >/{{serviceFromUrl}}</span>
-        </v-card-title>
-    </v-card-row>
+    <v-card-title class="primary white--text">
+        <span >Service Home Page</span>
+        <v-spacer></v-spacer>
+        <span >/{{serviceFromUrl}}</span>
+    </v-card-title>
     <v-card-text >
         <p> A RestBundle service can provide a dedicated home page to handle service specific interactions.
             If a RestBundle service provides a dedicated home page, it should be located at <code>/SERVICE/ui</code>.
