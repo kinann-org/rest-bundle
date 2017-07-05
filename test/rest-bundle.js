@@ -48,18 +48,6 @@ const supertest = require("supertest");
         var app = express();
         should.throws(() => tb.bindExpress(app));
     })
-    it("GET /server/web-socket returns server singleton web socket model", function(done) {
-        var app = require("../scripts/server.js");
-        supertest(app).get("/RbServer/web-socket").expect((res) => {
-            res.statusCode.should.equal(200);
-            res.headers["content-type"].should.match(/json/);
-            res.headers["content-type"].should.match(/utf-8/);
-            should.deepEqual(res.body, {
-                pushCount: 0,           // state property (client read-only)
-                pushStateMillis: 1000,  // model property (client-mutable)
-            });
-        }).end((err,res) => {if (err) throw err; else done(); });
-    })
     it("GET /state returns RestBundle singleton state", function(done) {
         var app = require("../scripts/server.js");
         supertest(app).get("/test/state").expect((res) => {
@@ -81,7 +69,7 @@ const supertest = require("supertest");
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
-    it("TESTPOST /echo generates HTTP200 response with a Promise", function(done) {
+    it("POST /echo generates HTTP200 response with a Promise", function(done) {
         var app = require("../scripts/server.js");
         var service = testRb(app);
         service.taskBag.length.should.equal(0);

@@ -196,13 +196,17 @@
 
         constructor() {}
 
-        hash(value) {
+        hashCached(value) {
+            return this.hash(value, true);
+        }
+
+        hash(value, cached=false) {
             if (typeof value === 'string') {
                 return md5(value);
             } else if (value instanceof Array) {
                 var acc = "";
-                acc = value.reduce((a,v) => a+this.hash(v), acc);
-                return this.hash(acc);
+                acc = value.reduce((a,v) => a+this.hash(v,cached), acc);
+                return this.hash(acc,cached);
             } else if (typeof value === 'number') {
                 value = value + '';
                 return this.hash(value);
@@ -213,11 +217,13 @@
             } else if (typeof value === 'function') {
                 return this.hash(value.toString());
             } else if (typeof value === 'object') {
-                if (value.rbhash) {
+                if (cached && value.rbhash) {
                     return value.rbhash;
                 }
                 var keys = Object.keys(value).sort();
-                var acc = keys.reduce((a,k) => a+k+':'+value[k]+',', "");
+                var acc = keys.reduce((a,k) => {
+                    return k === 'rbhash' ? a : (a+k+':'+value[k]+',')
+                }, "");
                 return this.hash(acc);
             }
             throw new Error("hash() not supported:" + typeof(value));

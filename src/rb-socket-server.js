@@ -64,9 +64,9 @@
 
         getModel() {
             var model = this.getState()['web-socket'];
-            return Object.assign(model, {
+            return {
                 pushStateMillis: this.pushStateMillis,
-            });
+            };
         }
 
         setModel(model) {

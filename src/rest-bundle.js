@@ -47,20 +47,19 @@
         }
 
         static onRequestSuccess(req, res, data, next, mime) {
-            res.status(200);
-            res.type(mime);
+            res.status(res.locals.status);
+            res.type(res.locals.mime);
             res.send(data);
             next && next('route');
         }
 
         static onRequestFail(req, res, err, next) {
-            res.status(500);
-            res.type("application/json");
-            winston.log("info", req.method, req.url, "=> HTTP500", err);
-            var data = {
-                error: err.message,
-            }
-            res.send(data);
+            var status = res.locals.status !== 200 && res.locals.status || 500;
+            res.status(status);
+            res.type(res.locals.mime);
+            winston.info(req.method, req.url, "=> HTTP"+status, err.message);
+            winston.debug(err);
+            res.send(res.locals.data || { error: err.message });
             next && next('route');
         }
 
@@ -137,6 +136,8 @@
         }
 
         process(req, res, next, handler, mime) {
+            res.locals.status = 200;
+            res.locals.mime = mime;
             var promise = new Promise((resolve, reject) => {
                 var result = handler(req, res);
                 if (result instanceof Promise) {

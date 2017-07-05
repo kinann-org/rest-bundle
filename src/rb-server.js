@@ -6,10 +6,12 @@
     const winston = require("winston");
     const RbSocketServer = require("./rb-socket-server");
     const RestBundle = require("./rest-bundle");
+    const RbHash = require("./rb-hash");
 
     class RbServer extends RestBundle {
         constructor(name, options = {}) {
             super("RbServer", RbServer.initOptions(options));
+            this.rbh = new RbHash();
         }
         
         static initOptions(options) {
@@ -43,20 +45,41 @@
         get handlers() {
             return super.handlers.concat([
                 this.resourceMethod("get", "web-socket", this.getWebSocket),
+                this.resourceMethod("put", "web-socket", this.putWebSocket),
             ]);
         }
 
         getWebSocket(req, res, next) {
-            return this.rbss && this.rbss.getModel() || {error: "no web socket"};
+            if (!this.rbss) {
+                throw new Error("no web socket");
+            }
+            var response = this.rbss.getModel();
+            response.rbhash = this.rbh.hash(response);
+            return response;
         }
 
-        postWebSocket(req, res, next) {
+        putWebSocket(req, res, next) {
             var rbss = this.rbss;
             if (!rbss) {
                 throw new Error("no web socket");
             }
+            var model = rbss.getModel();
+            var hash = this.rbh.hash(model);
+            if (req.body.rbhash !== hash) {
+                var err = new Error("Expected rbhash:" + hash + " actual:" + req.body.rbhash);
+                res.locals.status = 409;
+                var model = this.rbss.getModel();
+                model.rbhash = this.rbh.hash(model);
+                res.locals.data = {
+                    error: err.message,
+                    data: model,
+                }
+                throw err;
+            }
             rbss.setModel(req.body);
-            return rbss.getModel();
+            var model = rbss.getModel();
+            model.rbhash = this.rbh.hash(model);
+            return model;
         }
 
         getState() {

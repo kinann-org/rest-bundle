@@ -2,7 +2,7 @@
     const should = require("should");
     const RbHash = exports.RbHash || require('../index').RbHash;
 
-    it("TESThash(string) returns hash code", function() {
+    it("hash(string) calculates hash code", function() {
         var rbh = new RbHash();
         // MD5 test
         should.equal(rbh.hash(''), 'd41d8cd98f00b204e9800998ecf8427e');
@@ -19,26 +19,26 @@
         should.equal(rbh.hash('hello'), rbh.hash('hello'));
         should.notEqual(rbh.hash('goodbye'), rbh.hash('hello'));
     });
-    it("TESThash(Array) returns hash code", function() {
+    it("hash(Array) calculates hash code", function() {
         var rbh = new RbHash();
         should.equal(rbh.hash(['HTML']), rbh.hash(rbh.hash('HTML')));
         should.equal(rbh.hash(['HT','ML']), rbh.hash(rbh.hash('HT')+rbh.hash('ML')));
         should.equal(rbh.hash([1,2]), rbh.hash(rbh.hash('1')+rbh.hash('2')));
     });
-    it("TESThash(number) returns hash code", function() {
+    it("hash(number) calculates hash code", function() {
         var rbh = new RbHash();
         should.equal(rbh.hash('123'), rbh.hash(123));
         should.equal(rbh.hash('123.456'), rbh.hash(123.456));
     });
-    it("TESThash(null) returns hash code", function() {
+    it("hash(null) calculates hash code", function() {
         var rbh = new RbHash();
         should.equal(rbh.hash('null'), rbh.hash(null));
     });
-    it("TESThash(undefined) returns hash code", function() {
+    it("hash(undefined) calculates hash code", function() {
         var rbh = new RbHash();
         should.equal(rbh.hash('undefined'), rbh.hash(undefined));
     });
-    it("TESThash(function) returns hash code", function() {
+    it("hash(function) calculates hash code", function() {
         var rbh = new RbHash();
         function f(x) { return x*x; }
         var fstr = f.toString();
@@ -48,16 +48,18 @@
         should.equal(rbh.hash(f), rbh.hash(fstr));
         should.equal(rbh.hash(g), rbh.hash(gstr));
     });
-    it("TESThash(object) returns hash code", function() {
+    it("hash(object) calculates or calculates hash code", function() {
         var rbh = new RbHash();
         should.equal(rbh.hash({a:1}), rbh.hash('a:1,'));
         should.equal(rbh.hash({a:1,b:2}), rbh.hash('a:1,b:2,'));
         should.equal(rbh.hash({b:2,a:1}), rbh.hash('a:1,b:2,')); // keys are ordered
-
-        // The object property "rbhash" is special
-        var hfoo = rbh.hash('foo');
-        should.equal(rbh.hash({rbhash:hfoo}), hfoo);
-        should.equal(rbh.hash({rbhash:hfoo,anything:'do-not-care'}), hfoo);
-        should.equal(rbh.hash([{rbhash:hfoo,anything:'do-not-care'}]), rbh.hash(hfoo));
+    });
+    it("hashCached(object) returns existing hash code if present", function() {
+        var rbh = new RbHash();
+        var hfoo = rbh.hashCached('foo');
+        should.equal(rbh.hashCached({rbhash:hfoo}), hfoo);
+        should.equal(rbh.hashCached({rbhash:hfoo,anything:'do-not-care'}), hfoo);
+        should.equal(rbh.hashCached([{rbhash:hfoo,anything:'do-not-care'}]), rbh.hash(hfoo));
+        should.equal(rbh.hashCached({rbhash:'some-hash', a:1}), 'some-hash');
     });
 })
