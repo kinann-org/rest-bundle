@@ -12,23 +12,18 @@
 }
 .rb-panel-header {
     position:absolute; 
-    top:0.5em;
+    top:0.7em;
     left:2.5em;
 }
 .rb-panel-icon {
     position:absolute;
-    top:0.35em;
+    top:0.55em;
     left:0.5em;
 }
 
-p > ul {
-    margin-top: 0.5em;
-    margin-left: 0.5em;
-}
 a {
     text-decoration: none;
 }
 a:hover {
     text-decoration: underline;
 }
-

@@ -12,7 +12,7 @@
     <h4>{{name}} <code>&lt;{{toKebabCase(name)}}&gt;</code></h4>
     <slot>The default slot for <code>rb-about</code> displays content here</slot>
 
-    <v-tabs grow scroll-bars v-model="active" dark >
+    <v-tabs grow scroll-bars v-model="active" light >
         <v-tabs-bar slot="activators" class="white">    
           <v-tabs-item :href='"#about-tab-props"' ripple >Properties</v-tabs-item>
           <v-tabs-item :href='"#about-tab-slots"' ripple v-if="$slots.slot">Slots</v-tabs-item>

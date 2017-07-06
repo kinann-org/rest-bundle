@@ -2,24 +2,53 @@
 
 <div >
     <rb-about v-if="about" :name="componentName">
-        <p> Displays information for RestBundle web socket server singleton.
+        <p> Displays web socket connection status. Refreshing page after lost connection
+            will restore connecdtion if server is active.
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
     </rb-about>
     <div class='rbws-example' v-if="about">
-        <div :class="rbwsIconClass" v-on:click='toggleDetail' > &nbsp; </div>
-        <transition name='fade'>
-            <div v-if='showDetail && isConnected' class="rbws-text">messages: {{pushCount}}</div>
-            <div v-if='!isConnected' class="rbws-no-connection">NO CONNECTION</div>
-        </transition>
+        <v-btn :class="rbwsBtnClass" icon large hover 
+            @click.native.stop="openDialog()">
+            <v-icon v-if="isConnected" :class="rbwsBtnClass" large>http</v-icon>
+            <v-icon v-if="!isConnected" x-large>error</v-icon>
+        </v-btn>
     </div>
     <div class="rbws-container" v-if="!about">
-        <div :class="rbwsIconClass" v-on:click='toggleDetail' > &nbsp; </div>
-        <transition name='fade'>
-            <div v-if='showDetail' class="rbws-text">messages: {{pushCount}}</div>
-            <div v-if='!isConnected' class="rbws-no-connection">NO CONNECTION</div>
-        </transition>
+        <v-btn :class="rbwsBtnClass" icon large hover 
+            @click.native.stop="openDialog()">
+            <v-icon v-if="isConnected" :class="rbwsBtnClass" large>http</v-icon>
+            <v-icon v-if="!isConnected" x-large>error</v-icon>
+        </v-btn>
+        <v-toolbar v-if="!isConnected"
+            class="red" style='position:fixed; bottom:0px; right:0px; left: 0px;'>
+            <v-icon x-large dark>error</v-icon>
+            <v-toolbar-title class="white--text">
+                Connection lost
+            </v-toolbar-title>
+            <v-spacer/>
+            <v-btn fab dark small flat class="red" 
+                @click.native.stop="reload()" >
+                <v-icon dark>refresh</v-icon>
+            </v-btn>
+        </v-toolbar>
     </div>
+    <v-dialog v-model="dialog" lazy absolute>
+      <v-card>
+        <v-card-title >messages: {{pushCount}}</v-card-title>
+        <v-card-text v-if="isConnected">
+            <v-text-field name="name_pushStateMillis" id="id_pushStateMillis"
+                label="pushStateMillis" ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="green--text darken-1" flat="flat" 
+            v-if="!isConnected"
+            @click.native="reload()">Refresh</v-btn>
+          <v-btn class="green--text darken-1" flat="flat" @click.native="dialog = false">Done</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </div>
 
 </template>
@@ -52,6 +81,12 @@ const Vue = require("vue").default;
                 var srb = this.restBundleService('RbServer');
                 var rbws = srb && srb['web-socket'];
                 rbws && Vue.set(rbws, 'showDetail',  !rbws.showDetail);
+            },
+            reload() {
+                window.location.reload();
+            },
+            openDialog() {
+                this.dialog = true;
             },
             wsOnMessage(event) {
                 var ed = JSON.parse(event.data);
@@ -87,11 +122,23 @@ const Vue = require("vue").default;
                 }
                 return c;
             },
+            rbwsBtnClass() {
+                var c = '';
+                if (this.isConnected) {
+                    c += 'grey darken-4 green--text'
+                    c += (this.pushCount % 2) ? ' text--darken-1' : ' text--lighten-2';
+                } else {
+                    c += 'red white--text';
+                }
+                return c;
+            },
         },
         data() {
             return {
                 webSocket: this.webSocket,
                 isConnected: null,
+                dialog: false,
+                hover: false,
             }
         },
         created() {
@@ -117,11 +164,7 @@ const Vue = require("vue").default;
 </script>
 <style> 
 .rbws-container {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    display: flex;
-    z-index: 99999;
+    position: relative;
 }
 .rbws-example {
     display: flex;
@@ -139,7 +182,7 @@ const Vue = require("vue").default;
 }
 .rbws-icon-detail {
     border-bottom-left-radius: 0.5em;
-    height: 2em;
+    height: 3.8em;
 }
 .rbws-icon-active0 {
     background-color: rgba(35,155,86,1);
