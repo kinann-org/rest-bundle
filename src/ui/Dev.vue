@@ -1,17 +1,6 @@
 <template>
 
 <v-app id="dev-app">
-    <v-toolbar fixed flat class="black" >
-        <v-toolbar-side-icon class="black white--text" @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <v-toolbar-title class="grey--text text--lighten-1">
-            <div style="display:flex; flex-flow:column; ">
-                <span class="mr-2" >{{package.name}} {{package.version}}</span>
-                <span class="caption">developer application</span>
-            </div>
-        </v-toolbar-title>
-        <v-spacer/>
-        <rb-web-socket/>
-    </v-toolbar>
    <v-navigation-drawer persistent light v-model="drawer" light>
       <v-list dense>
         <v-list-tile exact router :href="item.href"
@@ -51,6 +40,17 @@
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
+    <v-toolbar fixed flat class="black" >
+        <v-toolbar-side-icon class="black white--text" @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-title class="grey--text text--lighten-1">
+            <div style="display:flex; flex-flow:column; ">
+                <span class="mr-2" >{{package.name}} {{package.version}}</span>
+                <span class="caption">developer application</span>
+            </div>
+        </v-toolbar-title>
+        <v-spacer/>
+        <rb-web-socket/>
+    </v-toolbar>
     <main>
         <v-container fluid> <router-view/> </v-container>
     </main>

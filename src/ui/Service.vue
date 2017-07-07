@@ -1,7 +1,7 @@
 <template>
 
 <v-card flat>
-    <v-card-title class="primary white--text">
+    <v-card-title class="primary white--text title">
         <span >Service Home Page</span>
         <v-spacer></v-spacer>
         <span >/{{serviceFromUrl}}</span>
@@ -23,7 +23,8 @@
     </v-card-text>
 </v-card>
 
-</template><script>
+</template>
+<script>
 
 import rbvue from "../../vue.js";
 
