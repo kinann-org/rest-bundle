@@ -107,7 +107,7 @@
             }
         },
         beforeMount() {
-            this.restBundleDispatch("loadApi");
+            this.rbDispatch("apiLoad");
         },
         methods: {
             serviceLink(path) {

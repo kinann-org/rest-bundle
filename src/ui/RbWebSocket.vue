@@ -9,44 +9,44 @@
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
     </rb-about>
     <div class='rbws-example' v-if="about">
-        <v-btn v-if="isConnected" :class="rbwsBtnClass" icon large hover 
+        <v-btn v-if="rbConnected" :class="rbwsBtnClass" icon large hover 
             @click.native.stop="apiOpen()">
             <v-icon :class="rbwsBtnClass" large>http</v-icon>
         </v-btn>
-        <v-btn v-if="!isConnected"
+        <v-btn v-if="!rbConnected"
             class="red darken-4 white--text headline" icon large hover 
             @click.native.stop="apiOpen()">&#x26a0;</v-btn>
     </div>
     <div class="rbws-container" v-if="!about">
-        <v-btn v-if="isConnected" :class="rbwsBtnClass" icon large hover 
+        <v-btn v-if="rbConnected" :class="rbwsBtnClass" icon large hover 
             @click.native.stop="apiOpen()">
             <v-icon :class="rbwsBtnClass" large>http</v-icon>
         </v-btn>
-        <v-btn v-if="!isConnected"
+        <v-btn v-if="!rbConnected"
             class="red darken-4 white--text headline" icon large hover 
             @click.native.stop="apiOpen()">&#x26a0;</v-btn>
     </div>
     <v-dialog v-model="apiDialog" lazy persistent absolute width="90%">
       <v-card>
         <v-card-title >messages: {{pushCount}}</v-card-title>
-        <v-card-text v-if="isConnected">
+        <v-card-text v-if="rbConnected">
             <v-text-field name="name_pushStateMillis" id="id_pushStateMillis"
                 v-model='api.pushStateMillis'
                 label="pushStateMillis" ></v-text-field>
         </v-card-text>
-        <v-card-text v-if="apiSaveError" raised hover class="subheading error-card">
-            {{apiSaveError.response.data.error}}
+        <v-card-text v-for="ae in apiErrors" raised hover class="subheading error-card" :key='ae'>
+            {{ae}}
         </v-card-text>
-        <v-card-text v-if="!isConnected" raised hover class="subheading error-card">
+        <v-card-text v-if="!rbConnected" raised hover class="subheading error-card">
             Connection lost. Refresh when server is available.
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="green--text darken-1" flat="flat" @click.native="apiCancel()">Cancel</v-btn>
           <v-btn class="green--text darken-1" flat="flat" 
-            v-if="!isConnected"
+            v-if="!rbConnected"
             @click.native="apiRefresh()">Refresh</v-btn>
-          <v-btn v-if="isConnected"
+          <v-btn v-if="rbConnected"
             class="green--text darken-1" flat="flat" 
             @click.native="apiSave(api)">Save</v-btn>
         </v-card-actions>
@@ -73,49 +73,11 @@ const Vue = require("vue").default;
                 validator: (value) => value === "RbServer", // immutable
             },
         },
+        mixins: [ 
+            require("./mixins/rb-about-mixin.js"),
+            require("./mixins/rb-api-mixin.js"),
+        ],
         methods: {
-            serviceLink(path) {
-                var host = location.port === "4000" 
-                    ? location.hostname + ":8080"
-                    : location.host;
-                return "http://" + host + "/" + this.service + path;
-            },
-            toggleDetail() {
-                var srb = this.restBundleService('RbServer');
-                var rbws = srb && srb['web-socket'];
-                rbws && Vue.set(rbws, 'showDetail',  !rbws.showDetail);
-            },
-            apiRefresh() {
-                this.apiDialog = false;
-                window.location.reload();
-            },
-            apiOpen() {
-                var model = this.restBundleModel();
-                this.api = Object.assign(this.api, model.api);
-                this.apiDialog = true;
-                this.apiSaveError = null;
-            },
-            apiCancel() {
-                this.apiDialog = false;
-            },
-            apiSave(api) {
-                this.apiSaveError = null;
-                var url = this.restOrigin() + "/" + this.service + "/" + this.model;
-                this.$http.put(url, { api })
-                .then(res => {
-                    var model = this.restBundleModel();
-                    if (model) {
-                        this.$store.commit(['restBundle', this.service, this.model, 'update'].join('/'), res.data);
-                        this.api = res.data.api;
-                        this.apiDialog = false;
-                    } else {
-                        throw new Error("sadness");
-                    }
-                })
-                .catch(err => {
-                    this.apiSaveError = err;
-                });
-            },
             wsOnMessage(event) {
                 var ed = JSON.parse(event.data);
                 if (ed.type === 'state') {
@@ -130,19 +92,10 @@ const Vue = require("vue").default;
                 }
             },
         },
-        mixins: [ 
-            require("./mixins/rb-about-mixin.js"),
-            require("./mixins/rb-service-mixin.js"),
-        ],
         computed: {
-            showDetail() {
-                var srb = this.restBundleService('RbServer');
-                var rbws = srb && srb['web-socket'];
-                return rbws && rbws.showDetail;
-            },
             rbwsBtnClass() {
                 var c = '';
-                if (this.isConnected) {
+                if (this.rbConnected) {
                     c += 'grey darken-4 green--text'
                     c += (this.pushCount % 2) ? ' text--darken-1' : ' text--lighten-2';
                 } else {
@@ -154,37 +107,31 @@ const Vue = require("vue").default;
         data() {
             return {
                 webSocket: this.webSocket,
-                isConnected: null,
-                apiDialog: false,
-                apiSaveError: null,
-                hover: false,
-                api: {
-                    pushStateMillis: 'loading...',
-                },
             }
         },
         created() {
             var srb = this.restBundleService('RbServer');
             var rbws = srb && srb['web-socket'];
-            rbws && rbws.showDetail == null && Vue.set(rbws, "showDetail", false);
             try {
                 var wsurl = this.restOrigin().replace(/[^:]*/, 'ws');
-                console.log("creating WebSocket", wsurl);
                 this.webSocket = new WebSocket(wsurl);
                 this.webSocket.onmessage = this.wsOnMessage;
-                this.webSocket.onclose = (event) => Vue.set(this, 'isConnected', false);
-                this.webSocket.onopen = (event) => Vue.set(this, 'isConnected', true);
+                this.webSocket.onopen = (event) => {
+                    this.rbCommit({
+                        rbConnected: true,
+                    });
+                }
+                this.webSocket.onclose = (event) => {
+                    this.rbCommit({
+                        rbConnected: false,
+                    });
+                }
             } catch (err) {
                 console.log("Could not open web socket", err);
             }
         },
         beforeMount() {
-            this.restBundleDispatch("loadApi")
-            .then(res => {
-                console.warn("loadApi", res);
-                this.updateObject(this.api, res.api);
-            })
-            .catch(err => console.error(err));
+            this.apiLoad();
         },
     }
 

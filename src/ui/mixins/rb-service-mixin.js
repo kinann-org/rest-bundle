@@ -64,6 +64,9 @@ module.exports = {
                 });
             });
         },
+        rbCommit(data, mutation='update', service=this.service, model=this.model) {
+            this.$store.commit(['restBundle', service, model, mutation].join('/'), data);
+        },
         restBundleModel(initialState) {
             // The model is the union of:
             // 1) pushed read-only state, and 
@@ -75,7 +78,7 @@ module.exports = {
                     update: updateObject,
                 });
                 var actions = that.actions({
-                    loadApi(context, payload) {
+                    apiLoad(context, payload) {
                         var url = that.restOrigin() + "/" + that.service + "/" + that.model;
                         return that.updateComponentStore(context, url);
                     },
@@ -89,8 +92,15 @@ module.exports = {
             }
             return rbService[that.model];
         }, // restBundleModel
-        restBundleDispatch(mutation, payload, model = this.model, service = this.service) {
-            return this.$store.dispatch(["restBundle", service, model, "loadApi"].join("/"), payload);
+        rbDispatch(action, payload, model = this.model, service = this.service) {
+            if (action == null) {
+                throw new Error("rbDispatch() action is required");
+            }
+            return this.$store.dispatch(["restBundle", service, model, action].join("/"), payload);
+        },
+        restBundleDispatch(action) {
+            console.log("restBundleDispatch is deprecated. Use rbDispatch");
+            return rbDispatch(action);
         },
         restBundleService(service = this && this.service) {
             var that = this;
@@ -122,6 +132,13 @@ module.exports = {
         },
     },
     computed: {
+        rbConnected() {
+            try {
+                return this.$store.state.restBundle.RbServer["web-socket"].rbConnected;
+            } catch (err) {
+                return false;
+            }
+        },
         rbIcon() {
             var httpStatus = this.httpStatus;
             if (httpStatus === "http") {
