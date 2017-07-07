@@ -27,16 +27,20 @@
             winston.add(winston.transports.Console, {
                 timestamp: () => new Date().toLocaleTimeString([], { hour12: false, }),
                 formatter: (options) => {
+                    var result =  options.timestamp() +' '+ 
+                        options.level.toUpperCase() +' '+ 
+                        (options.message ? options.message : '');
                     try {
-                        var result =  options.timestamp() +' '+ 
-                            options.level.toUpperCase() +' '+ 
-                            (options.message ? options.message : '') +
-                            (options.meta && Object.keys(options.meta).length ? ' '+ JSON.stringify(options.meta) : '') +
-                            "";
+                        if (options.meta) {
+                            var keys = Object.keys(options.meta);
+                            if (keys.length) {
+                                result +=  ' '+ (options.meta.message != null ? options.meta.message : JSON.stringify(options.meta));
+                            }
+                        }
                         return result;
                     } catch (err) {
-                        console.log("winston died", err);
-                        return err.message;
+                        console.log("winston logging error", err, Object.keys(options.meta));
+                        return result + err.message;
                     }
                 },
             });
@@ -53,9 +57,11 @@
             if (!this.rbss) {
                 throw new Error("no web socket");
             }
-            var response = this.rbss.getModel();
-            response.rbhash = this.rbh.hash(response);
-            return response;
+            var model = this.rbss.getModel();
+            model.rbhash = this.rbh.hash(model);
+            return {
+                api: model,
+            }
         }
 
         putWebSocket(req, res, next) {
@@ -65,21 +71,34 @@
             }
             var model = rbss.getModel();
             var hash = this.rbh.hash(model);
-            if (req.body.rbhash !== hash) {
-                var err = new Error("Expected rbhash:" + hash + " actual:" + req.body.rbhash);
+            var api = req.body.api;
+            if (api == null || api.rbhash == null) {
+                var err = new Error("Bad request:" + JSON.stringify(req.body));
+                res.locals.status = 400;
+                res.locals.data = {
+                    error: err.message,
+                }
+                throw err;
+            }
+            if (api.rbhash !== hash) {
+                var err = new Error("Save ignored--service data has changed.");
                 res.locals.status = 409;
                 var model = this.rbss.getModel();
                 model.rbhash = this.rbh.hash(model);
                 res.locals.data = {
                     error: err.message,
-                    data: model,
+                    data: {
+                        api: model,
+                    }
                 }
                 throw err;
             }
-            rbss.setModel(req.body);
+            rbss.setModel(api);
             var model = rbss.getModel();
             model.rbhash = this.rbh.hash(model);
-            return model;
+            return {
+                api: model
+            }
         }
 
         getState() {

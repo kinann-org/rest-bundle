@@ -52,8 +52,9 @@
         }();
         async.next();
     })
-    it("PUT /server/web-socket rejects conflicting update", function(done) {
+    it("TESTPUT /server/web-socket rejects conflicting update", function(done) {
         var async = function * () {
+            winston.level = 'info';
             try {
                 var app = require("../scripts/server.js");
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
@@ -62,8 +63,10 @@
                 var rbhash = res.body.rbhash;
                 var modelCurrent = res.body;
                 var conflictingUpdate = Object.assign({}, modelCurrent, {
-                    pushStateMillis: 1234,
-                    rbhash: 'some-other-hash',
+                    api: {
+                        pushStateMillis: 1234,
+                        rbhash: 'some-other-hash',
+                    }
                 }); 
                 var res = yield supertest(app).put("/RbServer/web-socket").send(conflictingUpdate).expect((res) => {
                     res.statusCode.should.equal(409);

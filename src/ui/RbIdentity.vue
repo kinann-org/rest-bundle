@@ -107,7 +107,7 @@
             }
         },
         beforeMount() {
-            this.restBundleDispatch("loadComponentModel");
+            this.restBundleDispatch("loadApi");
         },
         methods: {
             serviceLink(path) {

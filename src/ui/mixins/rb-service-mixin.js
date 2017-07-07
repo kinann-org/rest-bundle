@@ -27,6 +27,7 @@ module.exports = {
         });
     },
     methods: {
+        updateObject,
         actions(a) { // default Component-scoped Vuex Module actions
             return a;
         },
@@ -63,7 +64,7 @@ module.exports = {
                 });
             });
         },
-        restBundleModel(state) {
+        restBundleModel(initialState) {
             // The model is the union of:
             // 1) pushed read-only state, and 
             // 2) client-mutable fields
@@ -74,14 +75,14 @@ module.exports = {
                     update: updateObject,
                 });
                 var actions = that.actions({
-                    loadComponentModel(context, payload) {
+                    loadApi(context, payload) {
                         var url = that.restOrigin() + "/" + that.service + "/" + that.model;
                         return that.updateComponentStore(context, url);
                     },
                 });
                 that.$store.registerModule(["restBundle", that.service, that.model], {
                     namespaced: true,
-                    state: state || {},
+                    state: initialState || {},
                     actions,
                     mutations,
                 });
@@ -89,7 +90,7 @@ module.exports = {
             return rbService[that.model];
         }, // restBundleModel
         restBundleDispatch(mutation, payload, model = this.model, service = this.service) {
-            this.$store.dispatch(["restBundle", service, model, "loadComponentModel"].join("/"), payload);
+            return this.$store.dispatch(["restBundle", service, model, "loadApi"].join("/"), payload);
         },
         restBundleService(service = this && this.service) {
             var that = this;
