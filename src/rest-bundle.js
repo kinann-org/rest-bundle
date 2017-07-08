@@ -227,25 +227,25 @@
             return this;
         }
 
-        configPath(name = this.name) {
-            return path.normalize(path.join(__dirname, "../rb-config", name + ".json"));
+        apiModelPath(name = this.name) {
+            return path.normalize(path.join(__dirname, "../api-model", name + ".json"));
         }
 
-        loadConfig(name = this.name) {
+        loadApiModel(name = this.name) {
             return new Promise((resolve, reject) => {
-                var cp = this.configPath(name);
+                var cp = this.apiModelPath(name);
 
                 if (fs.existsSync(cp)) {
                     fs.readFile(cp, (err, data) => {
                         if (err) {
-                            winston.warn("loadConfig() ", err, 'E01');
+                            winston.warn("loadApiModel() ", err, 'E01');
                             reject(err);
                         } else {
                             try {
                                 var obj = JSON.parse(data);
                                 resolve(obj);
                             } catch (err) {
-                                winston.warn("loadConfig() ", err.message, 'E02');
+                                winston.warn("loadApiModel() ", err.message, 'E02');
                                 reject(err);
                             }
                         }
@@ -256,13 +256,13 @@
             });
         }
 
-        saveConfig(config, name = this.name) {
+        saveApiModel(apiModel, name = this.name) {
             var that = this;
             return new Promise((resolve, reject) => {
                 try {
                     let async = function*() {
-                        var cp = that.configPath(name);
-                        var dir = path.dirname(cp);
+                        var amp = that.apiModelPath(name);
+                        var dir = path.dirname(amp);
 
                         if (!fs.existsSync(dir)) {
                             yield fs.mkdir(dir, (err) => {
@@ -273,15 +273,15 @@
                                 }
                             });
                         }
-                        var json = JSON.stringify(config);
-                        fs.writeFile(cp, json, (err) => {
+                        var json = JSON.stringify(apiModel);
+                        fs.writeFile(amp, json, (err) => {
                             if (err) {
                                 async.throw(err);
                             } else {
                                 async.next(true);
                             }
                         });
-                        resolve(config);
+                        resolve(apiModel);
                     }();
                     async.next();
                 } catch (err) {

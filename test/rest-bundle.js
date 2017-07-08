@@ -125,32 +125,32 @@ const supertest = require("supertest");
         kebab("abc").should.equal("abc");
         kebab("aBC").should.equal("a-b-c");
     });
-    it("configPath() returns RestBundle configuration path", function() {
+    it("apiModelPath() returns RestBundle api model path", function() {
         var rb = new RestBundle('Binky');
-        var cp = rb.configPath();
-        should.strictEqual(cp.endsWith('/rb-config/Binky.json'), true);
-        var cp = rb.configPath("MyRestBundle");
-        should.strictEqual(cp.endsWith('/rb-config/MyRestBundle.json'), true);
+        var amp = rb.apiModelPath();
+        should.strictEqual(amp.endsWith('/api-model/Binky.json'), true);
+        var amp = rb.apiModelPath("MyRestBundle");
+        should.strictEqual(amp.endsWith('/api-model/MyRestBundle.json'), true);
     });
-    it("loadConfig() returns RestBundle configuration Promise", function(done) {
+    it("loadApiModel() returns RestBundle apiModel Promise", function(done) {
         let async = function*() {
             var rb = new RestBundle('Binky');
-            var result = yield rb.loadConfig("NoConfig").then(r=>async.next(r)).catch(e=>async.throw(e));
+            var result = yield rb.loadApiModel("NoApiModel").then(r=>async.next(r)).catch(e=>async.throw(e));
             should.deepEqual(result, {});
             done();
         }();
         async.next();
     });
-    it("saveConfig(config) saves RestBundle configuration", function(done) {
+    it("saveApiModel(apiModel) saves RestBundle api model", function(done) {
         let async = function*() {
             var rb = new RestBundle('Binky');
-            var config = {
+            var apiModel = {
                 color: 'purple',
             }
-            var result = yield rb.saveConfig(config).then(r=>async.next(r)).catch(e=>async.throw(e));
-            should.strictEqual(result, config);
-            var result = yield rb.loadConfig().then(r=>async.next(r)).catch(e=>async.throw(e));
-            should.deepEqual(result, config);
+            var result = yield rb.saveApiModel(apiModel).then(r=>async.next(r)).catch(e=>async.throw(e));
+            should.strictEqual(result, apiModel);
+            var result = yield rb.loadApiModel().then(r=>async.next(r)).catch(e=>async.throw(e));
+            should.deepEqual(result, apiModel);
             done();
         }();
         async.next();

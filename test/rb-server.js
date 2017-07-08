@@ -28,7 +28,7 @@
             });
         }).end((err,res) => {if (err) throw err; else done(); });
     })
-    it("TESTPUT /server/web-socket updates web socket model", function(done) {
+    it("PUT /server/web-socket updates web socket model", function(done) {
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");

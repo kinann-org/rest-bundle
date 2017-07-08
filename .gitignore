@@ -1,5 +1,5 @@
 # #rest-bundle
-rb-config/
+api-model/
 
 # Angular
 src/**/*.map
