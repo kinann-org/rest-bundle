@@ -5,10 +5,12 @@ import RbAbout from "./src/ui/RbAbout.vue";
 import RbAboutItem from "./src/ui/RbAboutItem.vue";
 import RbTreeView from "./src/ui/RbTreeView.vue";
 import RbWebSocket from "./src/ui/RbWebSocket.vue";
+import RbApiDialog from "./src/ui/RbApiDialog.vue";
 
 var components = {
     RbAbout,
     RbAboutItem,
+    RbApiDialog,
     RbIdentity,
     RbServices,
     RbState,

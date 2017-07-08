@@ -1,135 +1,130 @@
 <template>
 
-</div>
-    <v-dialog v-model="apiDialog" lazy persistent absolute width="90%">
+<div >
+    <rb-about v-if="about" :name="componentName">
+        <p> Displays dialog for changing api model.
+        </p>
+        <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
+        <rb-about-item name="apiSvc" value="required" slot="prop">Vue component with rb-api-mixin.</rb-about-item>
+    </rb-about>
+    <div v-if="about">
+        <v-btn @click.native.stop='apiSvc.apiDialog = true'
+            primary
+            > Example </v-btn>
+    </div>
+    <v-dialog v-model="apiSvc.apiDialog" lazy persistent absolute width="90%">
       <v-card>
-        <v-card-title >messages: {{pushCount}}</v-card-title>
-        <v-card-text v-if="isConnected">
-            <v-text-field name="name_pushStateMillis" id="id_pushStateMillis"
-                v-model='api.pushStateMillis'
-                label="pushStateMillis" ></v-text-field>
+        <v-toolbar dark flat class="secondary">
+            <v-btn icon small hover dark @click.native.stop='apiCancel()' >
+                <v-icon>close</v-icon>
+            </v-btn>
+            <v-toolbar-title><slot name="title">Dialog title</slot></v-toolbar-title>
+            <v-spacer/>
+            <v-btn v-if="!rbConnected" flat="flat" @click.native="apiRefresh()">Refresh</v-btn>
+            <v-btn v-if="rbConnected" flat="flat" @click.native="apiSave(apiSvc.api)">Save</v-btn>
+        </v-toolbar>
+        <v-card-text>
+            <slot>
+                Dialog content goes here (use &lt;v-card-text&gt;)
+                <v-text-field name="name_sampleInput" id="id_sampleInput"
+                    v-model='apiSvc.api.sampleInput' 
+                    label="Type something" ></v-text-field>
+            </slot>
         </v-card-text>
-        <v-card-text v-for="ae in apiErrors" raised hover class="subheading error-card">
-            {{ae}}
+        <v-card-text v-for="ae in apiSvc.apiErrors" raised hover class="error-card" :key='ae'>
+            &#x2639; {{ae}}
         </v-card-text>
-        <v-card-text v-if="!isConnected" raised hover class="subheading error-card">
-            Connection lost. Refresh when server is available.
+        <v-card-text v-if="!rbConnected" raised hover class="error-card">
+            &#x2639; Connection lost. Refresh when server is available.
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn class="green--text darken-1" flat="flat" @click.native="apiCancel()">Cancel</v-btn>
-          <v-btn class="green--text darken-1" flat="flat" 
-            v-if="!isConnected"
-            @click.native="apiRefresh()">Refresh</v-btn>
-          <v-btn v-if="isConnected"
-            class="green--text darken-1" flat="flat" 
-            @click.native="apiSave(api)">Save</v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
 </div>
 
 </template>
 <script>
-
 const Vue = require("vue").default;
-
-    export default {
-        name: "RbApiDialog",
-        props: {
-            model: {
-                type: String,
-                required: true,
-            },
-            service: {
-                type: String,
-                required: true,
-            },
-        },
-        methods: {
-            apiRefresh() {
-                this.apiDialog = false;
-                window.location.reload();
-            },
-            apiOpen() {
-                var model = this.restBundleModel();
-                this.api = Object.assign(this.api, model.api);
-                this.apiDialog = true;
-                this.apiErrors = [];
-            },
-            apiCancel() {
-                this.apiDialog = false;
-            },
-            apiSave(api) {
-                this.apiErrors = [];
-                var url = this.restOrigin() + "/" + this.service + "/" + this.model;
-                this.$http.put(url, { api })
-                .then(res => {
-                    var model = this.restBundleModel();
-                    if (model) {
-                        this.$store.commit(['restBundle', this.service, this.model, 'update'].join('/'), res.data);
-                        this.api = res.data.api;
-                        this.apiDialog = false;
-                    } else {
-                        throw new Error("sadness");
-                    }
-                })
-                .catch(err => {
-                    this.apiErrors.push(err);
-                });
-            },
-        },
-        mixins: [ 
-            require("./mixins/rb-about-mixin.js"),
-            require("./mixins/rb-service-mixin.js"),
-        ],
-        computed: {
-            rbwsBtnClass() {
-                var c = '';
-                if (this.isConnected) {
-                    c += 'grey darken-4 green--text'
-                    c += (this.pushCount % 2) ? ' text--darken-1' : ' text--lighten-2';
-                } else {
-                    c += 'red white--text';
-                }
-                return c;
-            },
-        },
-        data() {
-            return {
-                isConnected: null,
-                apiDialog: false,
-                apiErrors: [],
-                hover: false,
-                api: {
-                    pushStateMillis: 'loading...',
-                },
-            }
-        },
-        created() {
-            var srb = this.restBundleService('RbServer');
-            var rbws = srb && srb['web-socket'];
-            rbws && rbws.showDetail == null && Vue.set(rbws, "showDetail", false);
-            try {
-                var wsurl = this.restOrigin().replace(/[^:]*/, 'ws');
-                console.log("creating WebSocket", wsurl);
-                this.webSocket = new WebSocket(wsurl);
-                this.webSocket.onmessage = this.wsOnMessage;
-                this.webSocket.onclose = (event) => Vue.set(this, 'isConnected', false);
-                this.webSocket.onopen = (event) => Vue.set(this, 'isConnected', true);
-            } catch (err) {
-                console.log("Could not open web socket", err);
-            }
-        },
-        beforeMount() {
-            this.rbDispatch("apiLoad")
-            .then(res => {
-                console.warn("apiLoad", res);
-                this.updateObject(this.api, res.api);
-            })
-            .catch(err => console.error(err));
-        },
+class ExampleService {
+    constructor() {
+        this.apiDialog = true;
+        this.api = {
+            sampleInput: 1234,
+        };
     }
+    apiRefresh() {
+        console.log("apiRefresh");
+        window.location.reload();
+    }
+    apiCancel() {
+        console.log("apiCancel");
+        this.apiDialog = false;
+    }
+    apiSave(api) {
+        console.log("apiSave", api);
+        this.apiDialog = false;
+    }
+    get rbConnected() {
+        return true;
+    }
+}
+var exampleSvc = new ExampleService();
+
+export default {
+    name: "RbApiDialog",
+    props: {
+        apiSvc: {
+            default: () => (new class {
+                constructor() {
+                    this.apiDialog = true;
+                    this.api = {
+                        sampleInput: 1234,
+                    };
+                }
+                apiRefresh() {
+                    console.log("apiRefresh");
+                    window.location.reload();
+                }
+                apiCancel() {
+                    console.log("apiCancel");
+                    this.apiDialog = false;
+                    Vue.set(this.api, "sampleInput", 1234);
+                }
+                apiSave(api) {
+                    console.log("apiSave", api);
+                    this.apiDialog = false;
+                }
+                get rbConnected() {
+                    return true;
+                }
+
+            }),
+        },
+    },
+    methods: {
+        apiRefresh() {
+            return this.apiSvc.apiRefresh();
+        },
+        apiSave(api) {
+            return this.apiSvc.apiSave(api);
+        },
+        apiCancel() {
+            return this.apiSvc.apiCancel();
+        },
+    },
+    mixins: [ 
+        require("./mixins/rb-about-mixin.js"),
+    ],
+    computed: {
+        rbConnected() {
+            return this.apiSvc.rbConnected;
+        },
+    },
+    data() {
+        return {
+            apiDialog: false,
+        }
+    },
+}
 
 </script>
 <style> 
@@ -137,15 +132,7 @@ const Vue = require("vue").default;
     color: white;
     background-color: #b71c1c;
     border-top: 1pt solid #fff;
-    margin-left: 1em;
-    margin-right: 1em;
-}
-.rbws-container {
-    position: relative;
-    padding-top: 1.5em;
-}
-.rbws-example {
-    display: flex;
+    font-size: 110%;
 }
 </style>
 
