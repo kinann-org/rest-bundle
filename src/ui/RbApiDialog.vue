@@ -13,7 +13,7 @@
             > Example </v-btn>
     </div>
     <v-dialog v-model="apiSvc.apiDialog" lazy persistent absolute width="90%">
-      <v-card>
+      <v-card >
         <v-toolbar dark flat class="secondary">
             <v-btn icon small hover dark @click.native.stop='apiCancel()' >
                 <v-icon>close</v-icon>
@@ -21,20 +21,20 @@
             <v-toolbar-title><slot name="title">Dialog title</slot></v-toolbar-title>
             <v-spacer/>
             <v-btn v-if="!rbConnected" flat="flat" @click.native="apiRefresh()">Refresh</v-btn>
-            <v-btn v-if="rbConnected" flat="flat" @click.native="apiSave(apiSvc.api)">Save</v-btn>
+            <v-btn v-if="rbConnected" flat="flat" @click.native="apiSave(apiSvc.apiModel)">Save</v-btn>
         </v-toolbar>
-        <v-card-text>
+        <v-card-text class="api-dialog">
             <slot>
                 Dialog content goes here (use &lt;v-card-text&gt;)
                 <v-text-field name="name_sampleInput" id="id_sampleInput"
-                    v-model='apiSvc.api.sampleInput' 
+                    v-model='apiSvc.apiModel.sampleInput' 
                     label="Type something" ></v-text-field>
             </slot>
         </v-card-text>
-        <v-card-text v-for="ae in apiSvc.apiErrors" raised hover class="error-card" :key='ae'>
+        <v-card-text v-for="ae in apiSvc.apiErrors" raised hover class="api-error" :key='ae'>
             &#x2639; {{ae}}
         </v-card-text>
-        <v-card-text v-if="!rbConnected" raised hover class="error-card">
+        <v-card-text v-if="!rbConnected" raised hover class="api-error">
             &#x2639; Connection lost. Refresh when server is available.
         </v-card-text>
       </v-card>
@@ -47,7 +47,7 @@ const Vue = require("vue").default;
 class ExampleService {
     constructor() {
         this.apiDialog = true;
-        this.api = {
+        this.apiModel = {
             sampleInput: 1234,
         };
     }
@@ -59,8 +59,8 @@ class ExampleService {
         console.log("apiCancel");
         this.apiDialog = false;
     }
-    apiSave(api) {
-        console.log("apiSave", api);
+    apiSave(apiModel) {
+        console.log("apiSave", apiModel);
         this.apiDialog = false;
     }
     get rbConnected() {
@@ -76,7 +76,7 @@ export default {
             default: () => (new class {
                 constructor() {
                     this.apiDialog = true;
-                    this.api = {
+                    this.apiModel = {
                         sampleInput: 1234,
                     };
                 }
@@ -87,10 +87,10 @@ export default {
                 apiCancel() {
                     console.log("apiCancel");
                     this.apiDialog = false;
-                    Vue.set(this.api, "sampleInput", 1234);
+                    Vue.set(this.apiModel, "sampleInput", 1234);
                 }
-                apiSave(api) {
-                    console.log("apiSave", api);
+                apiSave(apiModel) {
+                    console.log("apiSave", apiModel);
                     this.apiDialog = false;
                 }
                 get rbConnected() {
@@ -104,8 +104,8 @@ export default {
         apiRefresh() {
             return this.apiSvc.apiRefresh();
         },
-        apiSave(api) {
-            return this.apiSvc.apiSave(api);
+        apiSave(apiModel) {
+            return this.apiSvc.apiSave(apiModel);
         },
         apiCancel() {
             return this.apiSvc.apiCancel();
@@ -128,11 +128,20 @@ export default {
 
 </script>
 <style> 
-.error-card {
+.api-error {
     color: white;
     background-color: #b71c1c;
     border-top: 1pt solid #fff;
     font-size: 110%;
+}
+.api-dialog {
+}
+.api-dialog .input-group {
+    background-color: #fff;
+    margin-bottom: 0;
+}
+.api-dialog .layout+.layout {
+    margin-top: 9px;
 }
 </style>
 

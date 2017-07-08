@@ -60,7 +60,7 @@
             var model = this.rbss.getModel();
             model.rbhash = this.rbh.hash(model);
             return {
-                api: model,
+                apiModel: model,
             }
         }
 
@@ -71,8 +71,8 @@
             }
             var model = rbss.getModel();
             var hash = this.rbh.hash(model);
-            var api = req.body.api;
-            if (api == null || api.rbhash == null) {
+            var apiModel = req.body.apiModel;
+            if (apiModel == null || apiModel.rbhash == null) {
                 var err = new Error("Bad request:" + JSON.stringify(req.body));
                 res.locals.status = 400;
                 res.locals.data = {
@@ -80,7 +80,7 @@
                 }
                 throw err;
             }
-            if (api.rbhash !== hash) {
+            if (apiModel.rbhash !== hash) {
                 var err = new Error("Save ignored--service data has changed.");
                 res.locals.status = 409;
                 var model = this.rbss.getModel();
@@ -88,16 +88,16 @@
                 res.locals.data = {
                     error: err.message,
                     data: {
-                        api: model,
+                        apiModel: model,
                     }
                 }
                 throw err;
             }
-            rbss.setModel(api);
+            rbss.setModel(apiModel);
             var model = rbss.getModel();
             model.rbhash = this.rbh.hash(model);
             return {
-                api: model
+                apiModel: model
             }
         }
 

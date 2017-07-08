@@ -28,15 +28,15 @@
     </div>
     <rb-api-dialog :apiSvc='this'>
         <span slot="title">Server Settings</span>
-        <v-layout class="mb-2">
-            <v-flex xs3 class="body-2">Messages received: </v-flex>
+        <v-layout>
+            <v-flex xs3 class="body-2">Messages received</v-flex>
             <v-flex>{{pushCount}} </v-flex>
         </v-layout>
         <v-layout>
-            <v-flex xs3 class="body-2">Push interval: </v-flex>
+            <v-flex xs3 class="body-2">Push interval</v-flex>
             <v-flex>
                 <v-text-field name="name_pushStateMillis" id="id_pushStateMillis"
-                    v-model='api.pushStateMillis' :rules="[apiRules.required, apiRules.gt0]"
+                    v-model='apiModel.pushStateMillis' :rules="[apiRules.required, apiRules.gt0]"
                     label="Milliseconds" >
                 </v-text-field>
             </v-flex>

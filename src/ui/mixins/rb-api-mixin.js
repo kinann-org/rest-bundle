@@ -16,17 +16,17 @@ module.exports = {
         },
         apiOpen() {
             var model = this.restBundleModel();
-            this.api = Object.assign(this.api, model.api);
+            this.apiModel = Object.assign(this.apiModel, model.apiModel);
             this.apiDialog = true;
             this.apiErrors = [];
         },
-        apiSave(api) {
+        apiSave(apiModel) {
             this.apiErrors = [];
             var url = this.restOrigin() + "/" + this.service + "/" + this.model;
-            this.$http.put(url, { api })
+            this.$http.put(url, { apiModel })
             .then(res => {
                 this.rbCommit(res.data);
-                this.api = res.data.api;
+                this.apiModel = res.data.apiModel;
                 this.apiDialog = false;
             })
             .catch(err => {
@@ -36,7 +36,7 @@ module.exports = {
         apiLoad() {
             this.rbDispatch("apiLoad")
             .then(res => {
-                this.updateObject(this.api, res.api);
+                this.updateObject(this.apiModel, res.apiModel);
             })
             .catch(err => console.error(err));
         },
@@ -45,7 +45,7 @@ module.exports = {
         return {
             apiDialog: false,
             apiErrors: [],
-            api: { },
+            apiModel: { },
         }
     },
 }

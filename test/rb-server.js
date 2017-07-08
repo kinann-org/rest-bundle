@@ -21,28 +21,32 @@
             res.headers["content-type"].should.match(/json/);
             res.headers["content-type"].should.match(/utf-8/);
             should.deepEqual(res.body, {
-                pushStateMillis: 1000,  // model property (client-mutable)
-                rbhash: '6891f21022da4de64bb6fe800831898c', // base hash
+                apiModel: {
+                    pushStateMillis: 1000,  // model property (client-mutable)
+                    rbhash: '6891f21022da4de64bb6fe800831898c', // base hash
+                }
             });
         }).end((err,res) => {if (err) throw err; else done(); });
     })
-    it("PUT /server/web-socket updates web socket model", function(done) {
+    it("TESTPUT /server/web-socket updates web socket model", function(done) {
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
                     res.statusCode.should.equal(200);
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
-                var update = Object.assign({}, res.body, {
-                    pushStateMillis: 2000,
-                }); // current state
+                var update = Object.assign({}, res.body);
+                update.apiModel.pushStateMillis.should.equal(1000);
+                update.apiModel.pushStateMillis = 2000;
                 supertest(app).put("/RbServer/web-socket").send(update).expect((res) => {
                     res.statusCode.should.equal(200);
                     res.headers["content-type"].should.match(/json/);
                     res.headers["content-type"].should.match(/utf-8/);
                     should.deepEqual(res.body, {
-                        pushStateMillis: 2000,  // model property (client-mutable)
-                        rbhash: rbh.hash(update),
+                        apiModel: {
+                            pushStateMillis: 2000,  // model property (client-mutable)
+                            rbhash: rbh.hash(update.apiModel),
+                        }
                     });
                 }).end((err,res) => {if (err) throw err; else done(); });
             } catch (err) {
@@ -52,9 +56,8 @@
         }();
         async.next();
     })
-    it("TESTPUT /server/web-socket rejects conflicting update", function(done) {
+    it("PUT /server/web-socket rejects conflicting update", function(done) {
         var async = function * () {
-            winston.level = 'info';
             try {
                 var app = require("../scripts/server.js");
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
@@ -63,7 +66,7 @@
                 var rbhash = res.body.rbhash;
                 var modelCurrent = res.body;
                 var conflictingUpdate = Object.assign({}, modelCurrent, {
-                    api: {
+                    apiModel: {
                         pushStateMillis: 1234,
                         rbhash: 'some-other-hash',
                     }
@@ -72,7 +75,7 @@
                     res.statusCode.should.equal(409);
                     res.headers["content-type"].should.match(/json/);
                     res.headers["content-type"].should.match(/utf-8/);
-                    res.body.error.should.match(/some-other-hash/); // conflicting hash
+                    res.body.error.should.match(/service data has changed/); // conflicting hash
                     res.body.error.should.match(new RegExp(modelCurrent.rbhash)); // expected hash
                     should.deepEqual(res.body.data, modelCurrent);
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
