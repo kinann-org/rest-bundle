@@ -233,10 +233,10 @@
 
         loadApiModel(name = this.name) {
             return new Promise((resolve, reject) => {
-                var cp = this.apiModelPath(name);
+                var amp = this.apiModelPath(name);
 
-                if (fs.existsSync(cp)) {
-                    fs.readFile(cp, (err, data) => {
+                if (fs.existsSync(amp)) {
+                    fs.readFile(amp, (err, data) => {
                         if (err) {
                             winston.warn("loadApiModel() ", err, 'E01');
                             reject(err);
@@ -251,7 +251,8 @@
                         }
                     });
                 } else {
-                    resolve({});
+                    var err = new Error("api model file not found:" + amp);
+                    reject(err);
                 }
             });
         }

@@ -7,6 +7,7 @@
     const RbSocketServer = require("./rb-socket-server");
     const RestBundle = require("./rest-bundle");
     const RbHash = require("./rb-hash");
+    const WEB_SOCKET_MODEL = "RbServer.web-socket";
 
     class RbServer extends RestBundle {
         constructor(name, options = {}) {
@@ -44,7 +45,7 @@
                     }
                 },
             });
-        }   
+        }
 
         get handlers() {
             return super.handlers.concat([
@@ -53,52 +54,78 @@
             ]);
         }
 
+        getApiModel() {
+            var that = this;
+            return new Promise((resolve, reject) => {
+                var async = function * () {
+                    try {
+                        if (!that.rbss) {
+                            throw new Error("no web socket");
+                        }
+                        var model = that.apiModel;
+                        if (model == null) {
+                            model = yield that.loadApiModel(WEB_SOCKET_MODEL)
+                                .then(r=>async.next(r)).catch(e=>async.next(null));
+                            if (model == null) {
+                                model = that.rbss.getModel();
+                            } else {
+                                that.rbss.setModel(model); // update memory model 
+                            }
+                        }
+                        model.rbHash = that.rbh.hash(model);
+                        resolve({
+                            apiModel: model,
+                        });
+                    } catch (err) {
+                        winston.error(err.message, err.stack);
+                        reject(err);
+                    }
+                }();
+                async.next();
+            });
+        }
+
         getWebSocket(req, res, next) {
-            if (!this.rbss) {
-                throw new Error("no web socket");
-            }
-            var model = this.rbss.getModel();
-            model.rbhash = this.rbh.hash(model);
-            return {
-                apiModel: model,
-            }
+            return this.getApiModel();
         }
 
         putWebSocket(req, res, next) {
-            var rbss = this.rbss;
-            if (!rbss) {
-                throw new Error("no web socket");
-            }
-            var model = rbss.getModel();
-            var hash = this.rbh.hash(model);
-            var apiModel = req.body.apiModel;
-            if (apiModel == null || apiModel.rbhash == null) {
-                var err = new Error("Bad request:" + JSON.stringify(req.body));
-                res.locals.status = 400;
-                res.locals.data = {
-                    error: err.message,
-                }
-                throw err;
-            }
-            if (apiModel.rbhash !== hash) {
-                var err = new Error("Save ignored--service data has changed.");
-                res.locals.status = 409;
-                var model = this.rbss.getModel();
-                model.rbhash = this.rbh.hash(model);
-                res.locals.data = {
-                    error: err.message,
-                    data: {
-                        apiModel: model,
+            var that = this;
+            return new Promise((resolve, reject) => {
+                var async = function *() {
+                    try {
+                        var curModel = yield that.getApiModel()
+                            .then(r=>async.next(r)).catch(e=>async.throw(e));
+                        var putModel = req.body;
+                        if (putModel == null || putModel.apiModel.rbHash == null) {
+                            var err = new Error("Bad request:" + JSON.stringify(req.body));
+                            res.locals.status = 400;
+                        } else if (putModel.apiModel.rbHash !== curModel.apiModel.rbHash) {
+                            var err = new Error("Save ignored--service data has changed: "+
+                                curModel.apiModel.rbHash);
+                            res.locals.status = 409;
+                        } 
+                        if (err) { // expected error
+                            winston.info(err.message);
+                            res.locals.data = {
+                                error: err.message,
+                                data: curModel,
+                            }
+                            reject(err);
+                        } else {
+                            putModel.apiModel.rbHash = that.rbh.hash(putModel.apiModel);
+                            that.rbss.setModel(putModel.apiModel);
+                            yield that.saveApiModel(putModel.apiModel, WEB_SOCKET_MODEL)
+                                .then(r=>async.next(r)).catch(e=>async.throw(e));
+                            resolve(putModel);
+                        }
+                    } catch (err) { // unexpected error
+                        winston.error(err.message, err.stack);
+                        reject(err);
                     }
-                }
-                throw err;
-            }
-            rbss.setModel(apiModel);
-            var model = rbss.getModel();
-            model.rbhash = this.rbh.hash(model);
-            return {
-                apiModel: model
-            }
+                }();
+                async.next();
+            });
         }
 
         getState() {
@@ -145,6 +172,12 @@
                     })
                 }, {});
                 this.rbss = new RbSocketServer(restBundles, this.httpServer);
+                this.loadApiModel(WEB_SOCKET_MODEL)
+                    .then(result => {
+                        this.apiModel = result;
+                        this.rbss.setModel(result);
+                    })
+                    .catch(e=>{throw(e);});
             } catch (err) {
                 winston.error(err);
                 throw err;

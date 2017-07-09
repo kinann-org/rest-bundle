@@ -57,9 +57,9 @@
     it("hashCached(object) returns existing hash code if present", function() {
         var rbh = new RbHash();
         var hfoo = rbh.hashCached('foo');
-        should.equal(rbh.hashCached({rbhash:hfoo}), hfoo);
-        should.equal(rbh.hashCached({rbhash:hfoo,anything:'do-not-care'}), hfoo);
-        should.equal(rbh.hashCached([{rbhash:hfoo,anything:'do-not-care'}]), rbh.hash(hfoo));
-        should.equal(rbh.hashCached({rbhash:'some-hash', a:1}), 'some-hash');
+        should.equal(rbh.hashCached({rbHash:hfoo}), hfoo);
+        should.equal(rbh.hashCached({rbHash:hfoo,anything:'do-not-care'}), hfoo);
+        should.equal(rbh.hashCached([{rbHash:hfoo,anything:'do-not-care'}]), rbh.hash(hfoo));
+        should.equal(rbh.hashCached({rbHash:'some-hash', a:1}), 'some-hash');
     });
 })

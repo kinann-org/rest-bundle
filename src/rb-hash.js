@@ -217,12 +217,12 @@
             } else if (typeof value === 'function') {
                 return this.hash(value.toString());
             } else if (typeof value === 'object') {
-                if (cached && value.rbhash) {
-                    return value.rbhash;
+                if (cached && value.rbHash) {
+                    return value.rbHash;
                 }
                 var keys = Object.keys(value).sort();
                 var acc = keys.reduce((a,k) => {
-                    return k === 'rbhash' ? a : (a+k+':'+value[k]+',')
+                    return k === 'rbHash' ? a : (a+k+':'+value[k]+',')
                 }, "");
                 return this.hash(acc);
             }
