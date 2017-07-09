@@ -14,13 +14,22 @@
     function testRb(app) {
         return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
     }
+    function setTestModel(value) {
+        var testModel = {
+            pushStateMillis: value,
+        }
+        testModel.rbHash = rbh.hash(testModel);
+        if (!fs.existsSync("api-model")) {
+            fs.mkdirSync("api-model");
+        }
+        var json = JSON.stringify(testModel);
+        fs.writeFileSync("api-model/RbServer.web-socket.json", json);
+    }
 
     it("GET /server/web-socket returns server singleton web socket model", function(done) {
         var app = require("../scripts/server.js");
         var path = "api-model/RbServer.web-socket.json";
-        if (fs.existsSync(path)) {
-            fs.unlinkSync(path);
-        }
+        setTestModel(1000);
         supertest(app).get("/RbServer/web-socket").expect((res) => {
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
@@ -37,14 +46,7 @@
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");
-                var testModel = {
-                    pushStateMillis: 1234,
-                }
-                testModel.rbHash = rbh.hash(testModel);
-                if (!fs.existsSync("api-model")) {
-                    yield fs.mkdir("api-model", e=>e?async.throw(e):async.next(null));
-                }
-                fs.writeFile("api-model/RbServer.web-socket.json", JSON.stringify(testModel));
+                setTestModel(1234);
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
                     res.statusCode.should.equal(200);
                     res.headers["content-type"].should.match(/json/);
@@ -64,25 +66,18 @@
         }();
         async.next();
     })
-    it("TESTPUT /server/web-socket updates web socket model", function(done) {
+    it("PUT /server/web-socket updates web socket model", function(done) {
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");
                 var path = "api-model/RbServer.web-socket.json";
-                if (fs.existsSync(path)) {
-                    yield fs.unlink(path, e=>e?async.throw(e):async.next(null));
-                }
-                var testModel = {
-                    pushStateMillis: 1000,
-                }
-                testModel.rbHash = rbh.hash(testModel);
-                app.locals.rbServer.rbss.setModel(testModel);
+                setTestModel(1001);
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
                     res.statusCode.should.equal(200);
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 var update = Object.assign({}, res.body);
                 update.apiModel.should.properties({
-                    pushStateMillis: 1000,
+                    pushStateMillis: 1001,
                     rbHash: rbh.hash(update.apiModel),
                 });
                 update.apiModel.pushStateMillis = 2000;
@@ -98,7 +93,9 @@
                         apiModel: expectedModel,
                     });
                     should.ok(fs.existsSync(path));
-                    var json = JSON.parse(fs.readFileSync(path));
+                    var fstr = fs.readFileSync(path).toString();
+                    should.ok(fstr.length > 0);
+                    var json = JSON.parse(fstr);
                     should.deepEqual(json, expectedModel);
                 }).end((err,res) => {if (err) throw err; else done(); });
             } catch (err) {
@@ -108,7 +105,7 @@
         }();
         async.next();
     })
-    it("TESTPUT /server/web-socket rejects conflicting update", function(done) {
+    it("PUT /server/web-socket rejects conflicting update", function(done) {
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");

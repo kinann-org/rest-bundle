@@ -251,8 +251,7 @@
                         }
                     });
                 } else {
-                    var err = new Error("api model file not found:" + amp);
-                    reject(err);
+                    resolve(null);
                 }
             });
         }

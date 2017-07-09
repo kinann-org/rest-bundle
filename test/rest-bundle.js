@@ -137,10 +137,8 @@ const supertest = require("supertest");
             try {
                 var rb = new RestBundle('Binky');
                 var result = yield rb.loadApiModel("NoApiModel")
-                    .then(r=> async.throw(new Error("TEST FAILED")))
-                    .catch(e=> async.next(e));
-                result.message.should.match(/not found/);
-                result.message.should.match(/NoApiModel/);
+                    .then(r=> async.next(r)).catch(e=> async.throw(e));
+                should.equal(result, null);
                 done();
             } catch (err) {
                 should.fail(err);

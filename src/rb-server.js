@@ -62,15 +62,12 @@
                         if (!that.rbss) {
                             throw new Error("no web socket");
                         }
-                        var model = that.apiModel;
+                        var model = yield that.loadApiModel(WEB_SOCKET_MODEL)
+                            .then(r=>async.next(r)).catch(e=>async.next(null));
                         if (model == null) {
-                            model = yield that.loadApiModel(WEB_SOCKET_MODEL)
-                                .then(r=>async.next(r)).catch(e=>async.next(null));
-                            if (model == null) {
-                                model = that.rbss.getModel();
-                            } else {
-                                that.rbss.setModel(model); // update memory model 
-                            }
+                            model = that.rbss.getModel();
+                        } else {
+                            that.rbss.setModel(model); // update memory model 
                         }
                         model.rbHash = that.rbh.hash(model);
                         resolve({
@@ -174,8 +171,9 @@
                 this.rbss = new RbSocketServer(restBundles, this.httpServer);
                 this.loadApiModel(WEB_SOCKET_MODEL)
                     .then(result => {
-                        this.apiModel = result;
-                        this.rbss.setModel(result);
+                        if (result) {
+                            this.rbss.setModel(result);
+                        }
                     })
                     .catch(e=>{throw(e);});
             } catch (err) {
