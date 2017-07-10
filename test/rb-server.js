@@ -66,7 +66,7 @@
         }();
         async.next();
     })
-    it("PUT /server/web-socket updates web socket model", function(done) {
+    it("TESTPUT /server/web-socket updates web socket model", function(done) {
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");
@@ -105,7 +105,7 @@
         }();
         async.next();
     })
-    it("PUT /server/web-socket rejects conflicting update", function(done) {
+    it("TESTPUT /server/web-socket rejects conflicting update", function(done) {
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");

@@ -290,6 +290,48 @@
             });
         }
 
+        putApiModel(req, res, next, fileName) {
+            var that = this;
+            return new Promise((resolve, reject) => {
+                var async = function *() {
+                    try {
+                        if (fileName == null) {
+                            throw new Error("fileName expected");
+                        }
+                        var curModel = yield that.getApiModel()
+                            .then(r=>async.next(r)).catch(e=>async.throw(e));
+                        var putModel = req.body;
+                        if (putModel == null || putModel.apiModel.rbHash == null) {
+                            var err = new Error("Bad request:" + JSON.stringify(putModel));
+                            res.locals.status = 400;
+                        } else if (putModel.apiModel.rbHash !== curModel.apiModel.rbHash) {
+                            var err = new Error("Save ignored--service data has changed: "+
+                                curModel.apiModel.rbHash);
+                            res.locals.status = 409;
+                        } 
+                        if (err) { // expected error
+                            winston.info(err.message);
+                            res.locals.data = {
+                                error: err.message,
+                                data: curModel,
+                            }
+                            reject(err);
+                        } else {
+                            putModel.apiModel.rbHash = that.rbh.hash(putModel.apiModel);
+                            that.rbss.setModel(putModel.apiModel);
+                            yield that.saveApiModel(putModel.apiModel, fileName)
+                                .then(r=>async.next(r)).catch(e=>async.throw(e));
+                            resolve(putModel);
+                        }
+                    } catch (err) { // unexpected error
+                        winston.error(err.message, err.stack);
+                        reject(err);
+                    }
+                }();
+                async.next();
+            });
+        }
+
     } // class RestBundle
 
 
