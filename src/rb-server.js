@@ -53,28 +53,27 @@
         }
 
         getApiModel() {
-            var that = this;
             return new Promise((resolve, reject) => {
                 var async = function * () {
                     try {
-                        if (!that.rbss) {
+                        if (!this.rbss) {
                             throw new Error("no web socket");
                         }
-                        var model = yield that.loadApiModel(WEB_SOCKET_MODEL)
+                        var model = yield this.loadApiModel(WEB_SOCKET_MODEL)
                             .then(r=>async.next(r)).catch(e=>async.next(null));
                         if (model == null) {
-                            model = that.rbss.getModel();
+                            model = this.rbss.getModel();
                         } else {
-                            that.rbss.setModel(model); // update memory model 
+                            this.rbss.setModel(model); // update memory model 
                         }
                         resolve({
-                            apiModel: that.apiHash(model),
+                            apiModel: this.apiHash(model),
                         });
                     } catch (err) {
                         winston.error(err.message, err.stack);
                         reject(err);
                     }
-                }();
+                }.call(this);
                 async.next();
             });
         }

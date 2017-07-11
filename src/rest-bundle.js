@@ -28,13 +28,12 @@
         }
 
         resourceMethod(method, name, handler, mime) {
-            var that = this; // Javascript nonsense
             if (handler == null) {
                 throw new Error("resourceMethod(" + method + ", " + name + ", ?handler?, ...) handler is required");
             }
 
-            function thatHandler(req, res, next) {
-                return handler.call(that, req, res, next);
+            var thatHandler = (req, res, next) => {
+                return handler.call(this, req, res, next);
             }
             return new ResourceMethod(method, name, thatHandler, mime);
         }
@@ -264,11 +263,10 @@
         }
 
         saveApiModel(apiModel, name = this.name) {
-            var that = this;
             return new Promise((resolve, reject) => {
-                try {
-                    let async = function*() {
-                        var amp = that.apiModelPath(name);
+                let async = function*() {
+                    try {
+                        var amp = this.apiModelPath(name);
                         var dir = path.dirname(amp);
 
                         if (!fs.existsSync(dir)) {
@@ -289,23 +287,22 @@
                             }
                         });
                         resolve(apiModel);
-                    }();
-                    async.next();
-                } catch (err) {
-                    reject(err);
-                }
+                    } catch (err) {
+                        reject(err);
+                    }
+                }.call(this);
+                async.next();
             });
         }
 
         putApiModel(req, res, next, fileName) {
-            var that = this;
             return new Promise((resolve, reject) => {
                 var async = function *() {
                     try {
                         if (fileName == null) {
                             throw new Error("fileName expected");
                         }
-                        var curModel = yield that.getApiModel()
+                        var curModel = yield this.getApiModel()
                             .then(r=>async.next(r)).catch(e=>async.throw(e));
                         var putModel = req.body;
                         if (putModel == null || putModel.apiModel.rbHash == null) {
@@ -324,9 +321,9 @@
                             }
                             reject(err);
                         } else {
-                            that.apiHash(putModel.apiModel);
-                            that.rbss.setModel(putModel.apiModel);
-                            yield that.saveApiModel(putModel.apiModel, fileName)
+                            this.apiHash(putModel.apiModel);
+                            this.rbss.setModel(putModel.apiModel);
+                            yield this.saveApiModel(putModel.apiModel, fileName)
                                 .then(r=>async.next(r)).catch(e=>async.throw(e));
                             resolve(putModel);
                         }
@@ -334,7 +331,7 @@
                         winston.error(err.message, err.stack);
                         reject(err);
                     }
-                }();
+                }.call(this);
                 async.next();
             });
         }

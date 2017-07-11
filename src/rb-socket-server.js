@@ -13,10 +13,9 @@
             }
             this.restBundles = restBundles;
             this.restBundles.forEach(rb => {
-                var that = this;
-                rb.pushState = function() {
+                rb.pushState = () => {
                     winston.debug("direct pushState");
-                    return that.pushState();
+                    return this.pushState();
                 }
             });
             this.listener = listener;
