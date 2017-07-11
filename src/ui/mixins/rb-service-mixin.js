@@ -98,10 +98,6 @@ module.exports = {
             }
             return this.$store.dispatch(["restBundle", service, model, action].join("/"), payload);
         },
-        restBundleDispatch(action) {
-            console.log("restBundleDispatch is deprecated. Use rbDispatch");
-            return rbDispatch(action);
-        },
         restBundleService(service = this && this.service) {
             var that = this;
             var restBundle = this.$store.state.restBundle;

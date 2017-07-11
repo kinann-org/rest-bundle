@@ -1,10 +1,12 @@
 (function(exports) {
     const ResourceMethod = require("./resource-method");
+    const RbHash = require("./rb-hash");
     const path = require("path");
     const fs = require("fs");
     const express = require("express");
     const bodyParser = require("body-parser");
     const winston = require("winston");
+    const _rbHash = new RbHash();
 
     class RestBundle {
         constructor(name, options = {}) {
@@ -227,6 +229,11 @@
             return this;
         }
 
+        apiHash(model) {
+            model.rbHash = _rbHash.hash(model);
+            return model;
+        }
+
         apiModelPath(name = this.name) {
             return path.normalize(path.join(__dirname, "../api-model", name + ".json"));
         }
@@ -317,7 +324,7 @@
                             }
                             reject(err);
                         } else {
-                            putModel.apiModel.rbHash = that.rbh.hash(putModel.apiModel);
+                            that.apiHash(putModel.apiModel);
                             that.rbss.setModel(putModel.apiModel);
                             yield that.saveApiModel(putModel.apiModel, fileName)
                                 .then(r=>async.next(r)).catch(e=>async.throw(e));

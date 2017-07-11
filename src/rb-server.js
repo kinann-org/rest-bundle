@@ -6,13 +6,11 @@
     const winston = require("winston");
     const RbSocketServer = require("./rb-socket-server");
     const RestBundle = require("./rest-bundle");
-    const RbHash = require("./rb-hash");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
 
     class RbServer extends RestBundle {
         constructor(name, options = {}) {
             super("RbServer", RbServer.initOptions(options));
-            this.rbh = new RbHash();
         }
         
         static initOptions(options) {
@@ -69,9 +67,8 @@
                         } else {
                             that.rbss.setModel(model); // update memory model 
                         }
-                        model.rbHash = that.rbh.hash(model);
                         resolve({
-                            apiModel: model,
+                            apiModel: that.apiHash(model),
                         });
                     } catch (err) {
                         winston.error(err.message, err.stack);

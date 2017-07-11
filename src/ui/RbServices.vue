@@ -59,7 +59,7 @@ export default {
         updateIdentities() {
             var results = this.services.map(service =>  {
                 this.loading++;
-                return this.$store.dispatch(["restBundle", service, "identity", "getComponentModel"].join("/"))
+                return this.$store.dispatch(["restBundle", service, "identity", "apiLoad"].join("/"))
                 .then(res => setTimeout(() => this.loading--, 500))
                 .catch(err => setTimeout(() => this.loading--, 500));
             });
