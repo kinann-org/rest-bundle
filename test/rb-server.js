@@ -76,7 +76,7 @@
                     res.statusCode.should.equal(200);
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 var update = Object.assign({}, res.body);
-                update.apiModel.should.properties({
+                should.deepEqual(update.apiModel, {
                     pushStateMillis: 1001,
                     rbHash: rbh.hash(update.apiModel),
                 });

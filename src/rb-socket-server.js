@@ -79,6 +79,7 @@
                     }, this.pushStateMillis);
                 }
             }
+            return model;
         }
 
         getState() {

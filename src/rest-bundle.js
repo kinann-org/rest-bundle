@@ -279,7 +279,7 @@
                             });
                         }
                         var json = JSON.stringify(apiModel);
-                        fs.writeFile(amp, json, (err) => {
+                        yield fs.writeFile(amp, json, (err) => {
                             if (err) {
                                 async.throw(err);
                             } else {
