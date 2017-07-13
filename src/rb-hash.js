@@ -222,7 +222,7 @@
                 }
                 var keys = Object.keys(value).sort();
                 var acc = keys.reduce((a,k) => {
-                    return k === 'rbHash' ? a : (a+k+':'+value[k]+',')
+                    return k === 'rbHash' ? a : (a+k+':'+this.hash(value[k])+',')
                 }, "");
                 return this.hash(acc);
             }

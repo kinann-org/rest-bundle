@@ -50,9 +50,21 @@
     });
     it("hash(object) calculates or calculates hash code", function() {
         var rbh = new RbHash();
-        should.equal(rbh.hash({a:1}), rbh.hash('a:1,'));
-        should.equal(rbh.hash({a:1,b:2}), rbh.hash('a:1,b:2,'));
-        should.equal(rbh.hash({b:2,a:1}), rbh.hash('a:1,b:2,')); // keys are ordered
+        should.equal(rbh.hash({a:1}), rbh.hash('a:'+rbh.hash(1)+','));
+        should.equal(rbh.hash({a:1,b:2}), rbh.hash('a:'+rbh.hash(1)+',b:'+rbh.hash(2)+','));
+        should.equal(rbh.hash({b:2,a:1}), rbh.hash('a:'+rbh.hash(1)+',b:'+rbh.hash(2)+',')); // keys are ordered
+        var drives = {
+            "drives":[
+                {"type":"BeltDrive","maxPos":100},
+                {"type":"BeltDrive"},
+                {"type":"ScrewDrive"},
+            ],
+            "rbHash":"2d21a6576194aeb1de7aea4d6726624d"
+        };
+        var hash100 = rbh.hash(drives);
+        drives.drives[0].maxPos++;
+        var hash101 = rbh.hash(drives);
+        should(hash100).not.equal(hash101);
     });
     it("hashCached(object) returns existing hash code if present", function() {
         var rbh = new RbHash();

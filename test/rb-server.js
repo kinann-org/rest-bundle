@@ -34,12 +34,13 @@
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
             res.headers["content-type"].should.match(/utf-8/);
-            should.deepEqual(res.body, {
+            var expected = {
                 apiModel: {
                     pushStateMillis: 1000,  // model property (client-mutable)
-                    rbHash: '6891f21022da4de64bb6fe800831898c', // base hash
                 }
-            });
+            };
+            expected.apiModel.rbHash = rbh.hash(expected.apiModel);
+            should.deepEqual(res.body, expected);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("GET /server/web-socket loads web socket api model from file", function(done) {
