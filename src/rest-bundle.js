@@ -316,7 +316,7 @@
                                 apiModel: r,
                             })).catch(e=>async.throw(e));
                         var putModel = req.body;
-                        if (putModel == null || putModel.apiModel.rbHash == null) {
+                        if (putModel == null || putModel.apiModel == null || putModel.apiModel.rbHash == null) {
                             var err = new Error("Bad request:" + JSON.stringify(putModel));
                             res.locals.status = 400;
                         } else if (putModel.apiModel.rbHash !== curModel.apiModel.rbHash) {
