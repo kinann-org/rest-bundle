@@ -38,6 +38,10 @@
         var rbh = new RbHash();
         should.equal(rbh.hash('undefined'), rbh.hash(undefined));
     });
+    it("hash(boolean) calculates hash code", function() {
+        var rbh = new RbHash();
+        should.equal(rbh.hash(true), rbh.hash('true'));
+    });
     it("hash(function) calculates hash code", function() {
         var rbh = new RbHash();
         function f(x) { return x*x; }

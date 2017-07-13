@@ -210,6 +210,10 @@
             } else if (typeof value === 'number') {
                 value = value + '';
                 return this.hash(value);
+            } else if (value === false) {
+                return this.hash('false');
+            } else if (value === true) {
+                return this.hash('true');
             } else if (value === null) {
                 return this.hash('null');
             } else if (value === undefined) {
