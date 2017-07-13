@@ -25,6 +25,7 @@
             this.$onRequestSuccess = options.onRequestSuccess || RestBundle.onRequestSuccess;
             this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
             this.taskBag = []; // unordered task collection with duplicates
+            this.apiModelDir = options.apiModelDir || path.join(process.cwd(), "api-model");
         }
 
         resourceMethod(method, name, handler, mime) {
@@ -234,7 +235,7 @@
         }
 
         apiModelPath(name = this.name) {
-            return path.normalize(path.join(__dirname, "../api-model", name + ".json"));
+            return path.normalize(path.join(this.apiModelDir, name + ".json"));
         }
 
         loadApiModel(name = this.name) {
