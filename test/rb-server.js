@@ -93,6 +93,7 @@
                     should.ok(fstr.length > 0);
                     var json = JSON.parse(fstr);
                     should.deepEqual(json, expectedModel);
+                    app.locals.rbServer.rbss.pushStateMillis.should.equal(2000);
                 }).end((err,res) => {if (err) throw err; else done(); });
             } catch (err) {
                 winston.error(err.message, err.stack);

@@ -68,6 +68,19 @@
             });
         }
 
+        saveApiModel(model, fileName) {
+            return new Promise((resolve, reject) => {
+                super.saveApiModel(model, fileName)
+                .then(r => {
+                    if (fileName === WEB_SOCKET_MODEL) {
+                        this.rbss.setModel(model);
+                    }
+                    resolve(r);
+                })
+                .catch(e => reject(e));
+            });
+        }
+
         getWebSocket(req, res, next) {
             return this.getApiModel(req, res, next, WEB_SOCKET_MODEL);
         }

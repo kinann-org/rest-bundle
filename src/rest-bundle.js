@@ -336,7 +336,6 @@
                             reject(err);
                         } else {
                             this.apiHash(putModel);
-                            this.rbss.setModel(putModel);
                             yield this.saveApiModel(putModel, fileName)
                                 .then(r=>async.next(r)).catch(e=>async.throw(e));
                             resolve({
