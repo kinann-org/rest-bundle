@@ -136,6 +136,32 @@
         }();
         async.next();
     })
+    it("PUT /server/web-socket rejects bad request", function(done) {
+        var async = function * () {
+            try {
+                var app = require("../scripts/server.js");
+                fs.unlinkSync("api-model/RbServer.web-socket.json");
+                var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
+                    res.statusCode.should.equal(200);
+                }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
+                var rbHash = res.body.rbHash;
+                var modelCurrent = res.body;
+                var res = yield supertest(app).put("/RbServer/web-socket").send("bad request").expect((res) => {
+                    res.statusCode.should.equal(400);
+                    res.headers["content-type"].should.match(/json/);
+                    res.headers["content-type"].should.match(/utf-8/);
+                    res.body.error.should.match(/Bad request/); // conflicting hash
+                    res.body.error.should.match(new RegExp(modelCurrent.rbHash)); // expected hash
+                    should.deepEqual(res.body.data, modelCurrent);
+                }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
+                done();
+            } catch (err) {
+                winston.error(err);
+                throw(err);
+            }
+        }();
+        async.next();
+    })
     it("Last TEST closes test suite for watch", function() {
         var app = require("../scripts/server.js");
         app.locals.rbServer.close();

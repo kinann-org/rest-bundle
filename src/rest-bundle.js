@@ -312,31 +312,35 @@
                             throw new Error("fileName expected");
                         }
                         var curModel = yield this.loadApiModel(fileName)
-                            .then(r=>async.next({
-                                apiModel: r,
-                            })).catch(e=>async.throw(e));
-                        var putModel = req.body;
-                        if (putModel == null || putModel.apiModel == null || putModel.apiModel.rbHash == null) {
-                            var err = new Error("Bad request:" + JSON.stringify(putModel));
+                            .then(r=>async.next(r)).catch(e=>async.throw(e));
+                        var putModel = req.body && req.body.apiModel;
+                        if (putModel == null || putModel.rbHash == null) {
+                            var err = new Error("Bad request:" + JSON.stringify(req.body));
                             res.locals.status = 400;
-                        } else if (putModel.apiModel.rbHash !== curModel.apiModel.rbHash) {
+                        } else if (putModel.rbHash !== curModel.rbHash) {
                             var err = new Error("Save ignored--service data has changed: "+
-                                curModel.apiModel.rbHash);
+                                curModel.rbHash);
                             res.locals.status = 409;
+                        } else {
+                            var err = null;
                         } 
                         if (err) { // expected error
                             winston.info(err.message);
                             res.locals.data = {
                                 error: err.message,
-                                data: curModel,
+                                data: {
+                                    apiModel: this.apiHash(curModel),
+                                },
                             }
                             reject(err);
                         } else {
-                            this.apiHash(putModel.apiModel);
-                            this.rbss.setModel(putModel.apiModel);
-                            yield this.saveApiModel(putModel.apiModel, fileName)
+                            this.apiHash(putModel);
+                            this.rbss.setModel(putModel);
+                            yield this.saveApiModel(putModel, fileName)
                                 .then(r=>async.next(r)).catch(e=>async.throw(e));
-                            resolve(putModel);
+                            resolve({
+                                apiModel: this.apiHash(putModel),
+                            });
                         }
                     } catch (err) { // unexpected error
                         winston.error(err.message, err.stack);
