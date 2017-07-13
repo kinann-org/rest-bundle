@@ -295,6 +295,15 @@
             });
         }
 
+        getApiModel(req, res, next, name) {
+            return new Promise((resolve, reject) => {
+                this.loadApiModel(name).then(model => resolve({
+                    apiModel: this.apiHash(model),
+                }))
+                .catch(e=>reject(e));
+            });
+        }
+
         putApiModel(req, res, next, fileName) {
             return new Promise((resolve, reject) => {
                 var async = function *() {
@@ -302,8 +311,10 @@
                         if (fileName == null) {
                             throw new Error("fileName expected");
                         }
-                        var curModel = yield this.getApiModel()
-                            .then(r=>async.next(r)).catch(e=>async.throw(e));
+                        var curModel = yield this.loadApiModel(fileName)
+                            .then(r=>async.next({
+                                apiModel: r,
+                            })).catch(e=>async.throw(e));
                         var putModel = req.body;
                         if (putModel == null || putModel.apiModel.rbHash == null) {
                             var err = new Error("Bad request:" + JSON.stringify(putModel));

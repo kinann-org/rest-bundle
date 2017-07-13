@@ -52,37 +52,7 @@
             ]);
         }
 
-        defaultModel() {
-            if (!this.rbss) {
-                throw new Error("no web socket");
-            }
-            return this.rbss.getModel();
-        }
-
-        getApiModel() {
-            return new Promise((resolve, reject) => {
-                var async = function * () {
-                    try {
-                        var model = yield this.loadApiModel(WEB_SOCKET_MODEL)
-                            .then(r=>async.next(r)).catch(e=>async.next(null));
-                        if (model == null) {
-                            model = this.defaultModel();
-                        } else {
-                            this.rbss.setModel(model); // update memory model 
-                        }
-                        resolve({
-                            apiModel: this.apiHash(model),
-                        });
-                    } catch (err) {
-                        winston.error(err.message, err.stack);
-                        reject(err);
-                    }
-                }.call(this);
-                async.next();
-            });
-        }
-
-        loadApiModel() {
+        loadApiModel(name) { // override
             return new Promise((resolve, reject) => {
                 super.loadApiModel(WEB_SOCKET_MODEL)
                 .then(model => {
@@ -99,12 +69,7 @@
         }
 
         getWebSocket(req, res, next) {
-            return new Promise((resolve, reject) => {
-                this.loadApiModel().then(model => resolve({
-                    apiModel: this.apiHash(model),
-                }))
-                .catch(e=>reject(e));
-            });
+            return this.getApiModel(req, res, next, WEB_SOCKET_MODEL);
         }
 
         putWebSocket(req, res, next) {
