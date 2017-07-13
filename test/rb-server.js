@@ -9,6 +9,7 @@
     const express = require("express");
     const WebSocket = require("ws");
     const RbHash = require("../index.js").RbHash;
+    const API_MODEL_FNAME = "api-model/RbServer.web-socket.json";
     var rbh = new RbHash();
     winston.level = "warn";
     function testRb(app) {
@@ -23,12 +24,11 @@
             fs.mkdirSync("api-model");
         }
         var json = JSON.stringify(testModel);
-        fs.writeFileSync("api-model/RbServer.web-socket.json", json);
+        fs.writeFileSync(API_MODEL_FNAME, json);
     }
 
     it("GET /server/web-socket returns server singleton web socket model", function(done) {
         var app = require("../scripts/server.js");
-        var path = "api-model/RbServer.web-socket.json";
         setTestModel(1000);
         supertest(app).get("/RbServer/web-socket").expect((res) => {
             res.statusCode.should.equal(200);
@@ -70,16 +70,12 @@
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");
-                var path = "api-model/RbServer.web-socket.json";
                 setTestModel(1001);
+                fs.existsSync(API_MODEL_FNAME) && fs.unlinkSync(API_MODEL_FNAME);
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
                     res.statusCode.should.equal(200);
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 var update = Object.assign({}, res.body);
-                should.deepEqual(update.apiModel, {
-                    pushStateMillis: 1001,
-                    rbHash: rbh.hash(update.apiModel),
-                });
                 update.apiModel.pushStateMillis = 2000;
                 supertest(app).put("/RbServer/web-socket").send(update).expect((res) => {
                     res.statusCode.should.equal(200);
@@ -92,8 +88,8 @@
                     should.deepEqual(res.body, {
                         apiModel: expectedModel,
                     });
-                    should.ok(fs.existsSync(path));
-                    var fstr = fs.readFileSync(path).toString();
+                    should.ok(fs.existsSync(API_MODEL_FNAME));
+                    var fstr = fs.readFileSync(API_MODEL_FNAME).toString();
                     should.ok(fstr.length > 0);
                     var json = JSON.parse(fstr);
                     should.deepEqual(json, expectedModel);
@@ -109,6 +105,7 @@
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");
+                fs.existsSync(API_MODEL_FNAME) && fs.unlinkSync(API_MODEL_FNAME);
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
                     res.statusCode.should.equal(200);
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
@@ -140,7 +137,7 @@
         var async = function * () {
             try {
                 var app = require("../scripts/server.js");
-                fs.unlinkSync("api-model/RbServer.web-socket.json");
+                fs.existsSync(API_MODEL_FNAME) && fs.unlinkSync(API_MODEL_FNAME);
                 var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
                     res.statusCode.should.equal(200);
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});

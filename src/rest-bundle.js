@@ -313,6 +313,7 @@
                         }
                         var curModel = yield this.loadApiModel(fileName)
                             .then(r=>async.next(r)).catch(e=>async.throw(e));
+                        this.apiHash(curModel); // might be unhashed
                         var putModel = req.body && req.body.apiModel;
                         if (putModel == null || putModel.rbHash == null) {
                             var err = new Error("Bad request:" + JSON.stringify(req.body));
@@ -329,7 +330,7 @@
                             res.locals.data = {
                                 error: err.message,
                                 data: {
-                                    apiModel: this.apiHash(curModel),
+                                    apiModel: curModel,
                                 },
                             }
                             reject(err);
@@ -339,7 +340,7 @@
                             yield this.saveApiModel(putModel, fileName)
                                 .then(r=>async.next(r)).catch(e=>async.throw(e));
                             resolve({
-                                apiModel: this.apiHash(putModel),
+                                apiModel: this.apiHash(putModel), // update hash
                             });
                         }
                     } catch (err) { // unexpected error
