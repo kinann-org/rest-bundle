@@ -5,7 +5,7 @@ import Vuetify from 'vuetify';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
-import rbvue from '../../vue';
+import rbvue from '../../index-vue';
 import Dev from './Dev.vue';
 import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
@@ -13,7 +13,7 @@ import Service from './Service.vue';
 require('./stylus/main.styl')
 
 Vue.use(VueAxios, axios);
-Vue.use(Vuex);;
+Vue.use(Vuex);
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(rbvue);

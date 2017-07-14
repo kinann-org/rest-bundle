@@ -63,7 +63,7 @@ import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
 import RbWebSocket from './RbWebSocket.vue';
-import rbvue from "../../vue";
+import rbvue from "../../index-vue";
 
 export default {
     name: 'dev',

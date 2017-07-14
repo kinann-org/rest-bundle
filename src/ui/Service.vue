@@ -26,7 +26,7 @@
 </template>
 <script>
 
-import rbvue from "../../vue.js";
+import rbvue from "../../index-vue.js";
 
 export default {
     name: "service",

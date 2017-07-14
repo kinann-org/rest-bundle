@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import Vuetify from 'vuetify';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import rbvue from '../../vue.js';
+import rbvue from '../../index-vue';
 import Service from './Service.vue';
 require('./stylus/main.styl')
 

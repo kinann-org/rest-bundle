@@ -18,11 +18,13 @@ var components = {
     RbWebSocket,
 }
 
+const RbApiMixin = require( "./src/ui/mixins/rb-api-mixin.js" );
 const RbServiceMixin = require( "./src/ui/mixins/rb-service-mixin.js" );
 const RbAboutMixin = require( "./src/ui/mixins/rb-about-mixin.js" );
 var mixins = {
     RbAboutMixin,
     RbServiceMixin,
+    RbApiMixin,
 }
 
 function toKebabCase(id) {
