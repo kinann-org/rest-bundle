@@ -67,42 +67,6 @@
         }();
         async.next();
     })
-    it("PUT /server/web-socket updates web socket model", function(done) {
-        var async = function * () {
-            try {
-                var app = require("../scripts/server.js");
-                setTestModel(1001);
-                fs.existsSync(API_MODEL_FNAME) && fs.unlinkSync(API_MODEL_FNAME);
-                var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
-                    res.statusCode.should.equal(200);
-                }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
-                var update = Object.assign({}, res.body);
-                update.apiModel.pushStateMillis = 2000;
-                supertest(app).put("/RbServer/web-socket").send(update).expect((res) => {
-                    res.statusCode.should.equal(200);
-                    res.headers["content-type"].should.match(/json/);
-                    res.headers["content-type"].should.match(/utf-8/);
-                    var expectedModel = {
-                        pushStateMillis: 2000,  // model property (client-mutable)
-                        rbHash: rbh.hash(update.apiModel),
-                    }
-                    should.deepEqual(res.body, {
-                        apiModel: expectedModel,
-                    });
-                    should.ok(fs.existsSync(API_MODEL_FNAME));
-                    var fstr = fs.readFileSync(API_MODEL_FNAME).toString();
-                    should.ok(fstr.length > 0);
-                    var json = JSON.parse(fstr);
-                    should.deepEqual(json, expectedModel);
-                    app.locals.rbServer.rbss.pushStateMillis.should.equal(2000);
-                }).end((err,res) => {if (err) throw err; else done(); });
-            } catch (err) {
-                winston.error(err.message, err.stack);
-                throw(err);
-            }
-        }();
-        async.next();
-    })
     it("PUT /server/web-socket rejects conflicting update", function(done) {
         var async = function * () {
             try {
@@ -156,6 +120,42 @@
                 done();
             } catch (err) {
                 winston.error(err);
+                throw(err);
+            }
+        }();
+        async.next();
+    })
+    it("PUT /server/web-socket updates web socket model", function(done) {
+        var async = function * () {
+            try {
+                var app = require("../scripts/server.js");
+                setTestModel(1001);
+                fs.existsSync(API_MODEL_FNAME) && fs.unlinkSync(API_MODEL_FNAME);
+                var res = yield supertest(app).get("/RbServer/web-socket").expect((res) => {
+                    res.statusCode.should.equal(200);
+                }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
+                var update = Object.assign({}, res.body);
+                update.apiModel.pushStateMillis = 2000;
+                supertest(app).put("/RbServer/web-socket").send(update).expect((res) => {
+                    res.statusCode.should.equal(200);
+                    res.headers["content-type"].should.match(/json/);
+                    res.headers["content-type"].should.match(/utf-8/);
+                    var expectedModel = {
+                        pushStateMillis: 2000,  // model property (client-mutable)
+                        rbHash: rbh.hash(update.apiModel),
+                    }
+                    should.deepEqual(res.body, {
+                        apiModel: expectedModel,
+                    });
+                    should.ok(fs.existsSync(API_MODEL_FNAME));
+                    var fstr = fs.readFileSync(API_MODEL_FNAME).toString();
+                    should.ok(fstr.length > 0);
+                    var json = JSON.parse(fstr);
+                    should.deepEqual(json, expectedModel);
+                    app.locals.rbServer.rbss.pushStateMillis.should.equal(2000);
+                }).end((err,res) => {if (err) throw err; else done(); });
+            } catch (err) {
+                winston.error(err.message, err.stack);
                 throw(err);
             }
         }();
