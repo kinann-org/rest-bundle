@@ -16,6 +16,7 @@ var components = {
     RbState,
     RbTreeView,
     RbWebSocket,
+    RbApiDialog,
 }
 
 const RbApiMixin = require( "./src/ui/mixins/rb-api-mixin.js" );
