@@ -8,14 +8,16 @@
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="apiSvc" value="required" slot="prop">Vue component with rb-api-mixin.</rb-about-item>
+        <rb-about-item name="apiToggle" value='"showDialog"' slot="prop">
+            Name of <var>apiSvc</var> property that toggles dialog visibility. </rb-about-item>
         <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to apiSvc.apiModel fields</rb-about-item>
     </rb-about>
     <div v-if="about">
-        <v-btn @click.native.stop='apiSvc.apiDialog = true'
+        <v-btn @click.native.stop='apiSvc[apiToggle] = true'
             primary
             > Example </v-btn>
     </div>
-    <v-dialog v-model="apiSvc.apiDialog" lazy persistent absolute width="90%">
+    <v-dialog v-model="apiSvc[apiToggle]" lazy persistent absolute width="90%">
       <v-card >
         <v-toolbar dark flat class="secondary">
             <v-btn icon small hover dark @click.native.stop='apiCancel()' >
@@ -29,7 +31,9 @@
         <v-card-text class="api-dialog">
             <slot>
                 Dialog content goes here (e.g., <code>&lt;v-layout&gt;</code>)
-                <v-text-field v-if='apiSvc.apiModel.sampleInput != null' name="name_sampleInput" id="id_sampleInput"
+                <v-alert error :value='apiSvc.apiModel == null'><var>apiSvc</var> has no <var>apiModel</var></v-alert>
+                <v-text-field v-if='apiSvc && apiSvc.apiModel && apiSvc.apiModel.sampleInput != null' 
+                    name="name_sampleInput" id="id_sampleInput"
                     v-model='apiSvc.apiModel.sampleInput' 
                     label="Type something" ></v-text-field>
             </slot>
@@ -58,12 +62,12 @@ class ExampleService {
     }
     apiCancel() {
         console.log("apiCancel");
-        this.apiDialog = false;
+        this.showDialog = false;
         Vue.set(this.apiModel, "sampleInput", 1234);
     }
     apiSave(apiModel) {
         console.log("apiSave", apiModel);
-        this.apiDialog = false;
+        this.showDialog = false;
     }
     get rbConnected() {
         return true;
@@ -76,6 +80,9 @@ export default {
     props: {
         apiSvc: {
             default: () => exampleSvc,
+        },
+        apiToggle: {
+            default: 'showDialog',
         },
     },
     methods: {
@@ -99,7 +106,6 @@ export default {
     },
     data() {
         return {
-            apiDialog: false,
         }
     },
 }
