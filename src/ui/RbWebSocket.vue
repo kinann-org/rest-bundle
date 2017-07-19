@@ -10,21 +10,21 @@
     </rb-about>
     <div class='rbws-example' v-if="about">
         <v-btn v-if="rbConnected" :class="rbwsBtnClass" icon large hover 
-            @click.native.stop="apiOpen()">
+            @click.stop="apiOpen()">
             <v-icon :class="rbwsBtnClass" small>settings_ethernet</v-icon>
         </v-btn>
         <v-btn v-if="!rbConnected"
             class="red darken-4 white--text headline" icon large hover 
-            @click.native.stop="apiOpen()">&#x26a0;</v-btn>
+            @click.stop="apiOpen()">&#x26a0;</v-btn>
     </div>
     <div class="rbws-container" v-if="!about">
         <v-btn v-if="rbConnected" :class="rbwsBtnClass" icon large hover 
-            @click.native.stop="apiOpen()">
+            @click.stop="apiOpen()">
             <v-icon :class="rbwsBtnClass" small>settings_ethernet</v-icon>
         </v-btn>
         <v-btn v-if="!rbConnected"
             class="red darken-4 white--text headline" icon large hover 
-            @click.native.stop="apiOpen()">&#x26a0;</v-btn>
+            @click.stop="apiOpen()">&#x26a0;</v-btn>
     </div>
     <rb-api-dialog :apiSvc='this'>
         <span slot="title">Server Settings</span>

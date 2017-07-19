@@ -13,20 +13,20 @@
         <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to apiSvc.apiModel fields</rb-about-item>
     </rb-about>
     <div v-if="about">
-        <v-btn @click.native.stop='apiSvc[apiToggle] = true'
+        <v-btn @click.stop='apiSvc[apiToggle] = true'
             primary
             > Example </v-btn>
     </div>
     <v-dialog v-model="apiSvc[apiToggle]" lazy persistent absolute width="90%">
       <v-card >
         <v-toolbar dark flat class="secondary">
-            <v-btn icon small hover dark @click.native.stop='apiCancel()' >
+            <v-btn icon small hover dark @click.stop='apiCancel()' >
                 <v-icon>close</v-icon>
             </v-btn>
             <v-toolbar-title><slot name="title">Dialog title</slot></v-toolbar-title>
             <v-spacer/>
-            <v-btn v-if="!rbConnected" flat="flat" @click.native="apiRefresh()">Refresh</v-btn>
-            <v-btn v-if="rbConnected" flat="flat" @click.native="apiSave(apiSvc.apiModel)">Save</v-btn>
+            <v-btn v-if="!rbConnected" flat="flat" @click="apiRefresh()">Refresh</v-btn>
+            <v-btn v-if="rbConnected" flat="flat" @click="apiSave(apiSvc.apiModel)">Save</v-btn>
         </v-toolbar>
         <v-card-text class="api-dialog">
             <slot>

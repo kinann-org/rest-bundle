@@ -7,8 +7,7 @@ module.exports = {
         require("./rb-service-mixin.js"),
     ],
     methods: {
-        apiRefresh(toggle='apiShowDialog') {
-            this[toggle] = false;
+        apiRefresh() {
             window.location.reload();
         },
         apiCancel(toggle='apiShowDialog') {

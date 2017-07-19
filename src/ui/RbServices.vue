@@ -19,7 +19,7 @@
     <div>
         <h6>Service Identities
             <v-btn icon dark small flat class="btn--dark-flat-focused" :loading="loading!==0"
-                 @click.native="updateIdentities()"
+                 @click="updateIdentities()"
                  :disabled="loading!==0" ><v-icon>refresh</v-icon></v-btn>
         </h6>
         <p>
@@ -30,7 +30,7 @@
 
         <h6>Client State
             <v-btn icon dark small flat class="btn--dark-flat-focused" :loading="loading!==0"
-                 @click.native="updateState()"
+                 @click="updateState()"
                  :disabled="loading!==0" ><v-icon>refresh</v-icon></v-btn>
         </h6>
         <rb-state></rb-state>

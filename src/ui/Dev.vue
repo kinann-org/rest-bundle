@@ -3,7 +3,7 @@
 <v-app id="dev-app">
    <v-navigation-drawer persistent light v-model="drawer" light>
       <v-list dense>
-        <v-list-tile exact router :href="item.href"
+        <v-list-tile exact :to="item.href"
                 v-for="item in sidebarMain" :key="item">
             <v-list-tile-action>
                 <v-icon >{{item.icon}}</v-icon>
@@ -29,7 +29,7 @@
             </v-list-tile>
             <v-list-tile 
                 v-for="item in sidebarComponents" :key="item"
-                exact router :href="item.href">
+                exact :to="item.href">
                 <v-list-tile-content>
                     <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                 </v-list-tile-content>
@@ -41,7 +41,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed flat class="black" >
-        <v-toolbar-side-icon light class="black white--text" @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-side-icon light class="black white--text" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-toolbar-title class="grey--text text--lighten-1">
             <div style="display:flex; flex-flow:column; ">
                 <span class="mr-2" >{{package.name}} {{package.version}}</span>
