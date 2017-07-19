@@ -2,10 +2,13 @@
 
 <div >
     <rb-about v-if="about" :name="componentName">
-        <p> Displays dialog for changing api model.
+        <p> Displays dialog for changing all or part of the <var>apiModel</var> of a RestBundle Vue component 
+            having the <code>rb-api-svc</code> mixin. When the user clicks <strong>Save</strong>,
+            the updated <var>apiModel</var> is sent to the server. 
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="apiSvc" value="required" slot="prop">Vue component with rb-api-mixin.</rb-about-item>
+        <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to apiSvc.apiModel fields</rb-about-item>
     </rb-about>
     <div v-if="about">
         <v-btn @click.native.stop='apiSvc.apiDialog = true'
@@ -25,8 +28,8 @@
         </v-toolbar>
         <v-card-text class="api-dialog">
             <slot>
-                Dialog content goes here (use &lt;v-card-text&gt;)
-                <v-text-field name="name_sampleInput" id="id_sampleInput"
+                Dialog content goes here (e.g., <code>&lt;v-layout&gt;</code>)
+                <v-text-field v-if='apiSvc.apiModel.sampleInput != null' name="name_sampleInput" id="id_sampleInput"
                     v-model='apiSvc.apiModel.sampleInput' 
                     label="Type something" ></v-text-field>
             </slot>
@@ -46,10 +49,8 @@
 const Vue = require("vue").default;
 class ExampleService {
     constructor() {
-        this.apiDialog = true;
-        this.apiModel = {
-            sampleInput: 1234,
-        };
+        this.apiModel = {};
+        this.apiCancel();
     }
     apiRefresh() {
         console.log("apiRefresh");
@@ -58,6 +59,7 @@ class ExampleService {
     apiCancel() {
         console.log("apiCancel");
         this.apiDialog = false;
+        Vue.set(this.apiModel, "sampleInput", 1234);
     }
     apiSave(apiModel) {
         console.log("apiSave", apiModel);
@@ -73,31 +75,7 @@ export default {
     name: "RbApiDialog",
     props: {
         apiSvc: {
-            default: () => (new class {
-                constructor() {
-                    this.apiDialog = true;
-                    this.apiModel = {
-                        sampleInput: 1234,
-                    };
-                }
-                apiRefresh() {
-                    console.log("apiRefresh");
-                    window.location.reload();
-                }
-                apiCancel() {
-                    console.log("apiCancel");
-                    this.apiDialog = false;
-                    Vue.set(this.apiModel, "sampleInput", 1234);
-                }
-                apiSave(apiModel) {
-                    console.log("apiSave", apiModel);
-                    this.apiDialog = false;
-                }
-                get rbConnected() {
-                    return true;
-                }
-
-            }),
+            default: () => exampleSvc,
         },
     },
     methods: {
