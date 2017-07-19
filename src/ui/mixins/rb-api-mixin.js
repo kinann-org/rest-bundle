@@ -7,27 +7,27 @@ module.exports = {
         require("./rb-service-mixin.js"),
     ],
     methods: {
-        apiRefresh() {
-            this.apiDialog = false;
+        apiRefresh(toggle='apiShowDialog') {
+            this[toggle] = false;
             window.location.reload();
         },
-        apiCancel() {
-            this.apiDialog = false;
+        apiCancel(toggle='apiShowDialog') {
+            this[toggle] = false;
         },
-        apiOpen() {
+        apiOpen(toggle='apiShowDialog') {
             var model = this.restBundleModel();
             this.apiModel = Object.assign(this.apiModel, model.apiModel);
-            this.apiDialog = true;
+            this[toggle] = true;
             this.apiErrors = [];
         },
-        apiSave(apiModel) {
+        apiSave(apiModel, toggle='apiShowDialog') {
             this.apiErrors = [];
             var url = this.restOrigin() + "/" + this.service + "/" + this.model;
             this.$http.put(url, { apiModel })
             .then(res => {
                 this.rbCommit(res.data);
                 this.apiModel = res.data.apiModel;
-                this.apiDialog = false;
+                this[toggle] = false;
             })
             .catch(err => {
                 this.apiErrors.push(err);
@@ -43,7 +43,7 @@ module.exports = {
     },
     data() {
         return {
-            apiDialog: false,
+            apiShowDialog: false,
             apiErrors: [],
             apiModel: { },
         }

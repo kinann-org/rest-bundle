@@ -8,7 +8,7 @@
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="apiSvc" value="required" slot="prop">Vue component with rb-api-mixin.</rb-about-item>
-        <rb-about-item name="apiToggle" value='"showDialog"' slot="prop">
+        <rb-about-item name="apiToggle" value='"apiShowDialog"' slot="prop">
             Name of <var>apiSvc</var> property that toggles dialog visibility. </rb-about-item>
         <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to apiSvc.apiModel fields</rb-about-item>
     </rb-about>
@@ -62,12 +62,12 @@ class ExampleService {
     }
     apiCancel() {
         console.log("apiCancel");
-        this.showDialog = false;
+        this.apiShowDialog = false;
         Vue.set(this.apiModel, "sampleInput", 1234);
     }
     apiSave(apiModel) {
         console.log("apiSave", apiModel);
-        this.showDialog = false;
+        this.apiShowDialog = false;
     }
     get rbConnected() {
         return true;
@@ -82,7 +82,7 @@ export default {
             default: () => exampleSvc,
         },
         apiToggle: {
-            default: 'showDialog',
+            default: 'apiShowDialog',
         },
     },
     methods: {
@@ -90,10 +90,10 @@ export default {
             return this.apiSvc.apiRefresh();
         },
         apiSave(apiModel) {
-            return this.apiSvc.apiSave(apiModel);
+            return this.apiSvc.apiSave(apiModel,this.apiToggle);
         },
         apiCancel() {
-            return this.apiSvc.apiCancel();
+            return this.apiSvc.apiCancel(this.apiToggle);
         },
     },
     mixins: [ 
