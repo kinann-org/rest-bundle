@@ -52,15 +52,9 @@ import RbApiDialog from './RbApiDialog.vue';
 export default {
     name: "RbWebSocket",
     props: {
-        model: {
-            type: String,
-            default: "web-socket",
-            validator: (value) => value === "web-socket", // immutable
-        },
-        service: {
-            type: String,
+        service: { // override mixin with immutable property
             default: "RbServer",
-            validator: (value) => value === "RbServer", // immutable
+            validator: (value) => value === "RbServer", 
         },
     },
     mixins: [ 
@@ -83,6 +77,9 @@ export default {
         },
     },
     computed: {
+        model() {
+            return "web-socket";
+        },
         rbwsBtnClass() {
             var c = '';
             if (this.rbConnected) {

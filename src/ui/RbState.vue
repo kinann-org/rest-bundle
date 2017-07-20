@@ -45,15 +45,9 @@ export default {
         },
     },
     props: {
-        model: {
-            type: String,
-            default: "web-socket",
-            validator: (value) => value === "web-socket", // immutable
-        },
-        service: {
-            type: String,
+        service: { // override mixin with immutable property
             default: "RbServer",
-            validator: (value) => value === "RbServer", // immutable
+            validator: (value) => value === "RbServer", 
         },
     },
     data() {
@@ -63,6 +57,9 @@ export default {
         }
     },
     computed: {
+        model() {
+            return "web-socket"; // vs. read-only property
+        },
         restBundleServices() {
             return this.$store.state.restBundleServices;
         },

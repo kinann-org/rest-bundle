@@ -7,7 +7,6 @@
             the checkmark icon will pulse for connected services.
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
-        <rb-about-item name="model" value="identity" slot="prop">RestBundle state name</rb-about-item>
         <rb-about-item name="service" slot="prop">RestBundle name</rb-about-item>
     </rb-about>
     <v-expansion-panel >
@@ -78,17 +77,15 @@
     export default {
         name: "RbIdentity",
         props: {
-            model: {
-                required: false,
-                type: String,
-                default: "identity",
-            }
         },
         mixins: [ 
             require("./mixins/rb-about-mixin.js"),
             require("./mixins/rb-service-mixin.js"),
         ],
         computed: {
+            model() {
+                return "identity";
+            },
             package() { 
                 return this.rbModel.package;
             },
