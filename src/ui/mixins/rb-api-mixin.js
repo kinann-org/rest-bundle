@@ -13,7 +13,7 @@ module.exports = {
         apiCancel(toggle='apiShowDialog') {
             this[toggle] = false;
         },
-        apiOpen(toggle='apiShowDialog') {
+        apiEdit(toggle='apiShowDialog') {
             var model = this.restBundleModel();
             this.apiModel = Object.assign(this.apiModel, model.apiModel);
             this[toggle] = true;
