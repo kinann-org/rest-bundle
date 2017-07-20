@@ -20,7 +20,6 @@ module.exports = {
             this.apiErrors = [];
         },
         apiSave(apiModel, toggle='apiShowDialog') {
-            this.apiErrors = [];
             var url = this.restOrigin() + "/" + this.service + "/" + this.model;
             this.$http.put(url, { apiModel })
             .then(res => {
@@ -29,7 +28,7 @@ module.exports = {
                 this[toggle] = false;
             })
             .catch(err => {
-                console.error(error.message, error.stack);
+                console.error(err.stack);
                 this.apiErrors.push(err);
             });
         },
