@@ -63,8 +63,8 @@ module.exports = {
                 });
             });
         },
-        rbCommit(data, mutation='update', service=this.service, apiModelName=this.apiModelName) {
-            this.$store.commit(['restBundle', service, apiModelName, mutation].join('/'), data);
+        rbCommit(data, mutation='update', service=this.service, apiName=this.apiName) {
+            this.$store.commit(['restBundle', service, apiName, mutation].join('/'), data);
         },
         restBundleModel(initialState) {
             // The model is the union of:
@@ -72,30 +72,30 @@ module.exports = {
             // 2) client-mutable fields
             var that = this;
             var rbService = that.restBundleService();
-            if (rbService[that.apiModelName] == null) {
+            if (rbService[that.apiName] == null) {
                 var mutations = that.mutations({
                     update: updateObject,
                 });
                 var actions = that.actions({
                     apiLoad(context, payload) {
-                        var url = that.restOrigin() + "/" + that.service + "/" + that.apiModelName;
+                        var url = that.restOrigin() + "/" + that.service + "/" + that.apiName;
                         return that.updateComponentStore(context, url);
                     },
                 });
-                that.$store.registerModule(["restBundle", that.service, that.apiModelName], {
+                that.$store.registerModule(["restBundle", that.service, that.apiName], {
                     namespaced: true,
                     state: initialState || {},
                     actions,
                     mutations,
                 });
             }
-            return rbService[that.apiModelName];
+            return rbService[that.apiName];
         }, // restBundleModel
-        rbDispatch(action, payload, apiModelName = this.apiModelName, service = this.service) {
+        rbDispatch(action, payload, apiName = this.apiName, service = this.service) {
             if (action == null) {
                 throw new Error("rbDispatch() action is required");
             }
-            return this.$store.dispatch(["restBundle", service, apiModelName, action].join("/"), payload);
+            return this.$store.dispatch(["restBundle", service, apiName, action].join("/"), payload);
         },
         restBundleService(service = this && this.service) {
             var that = this;

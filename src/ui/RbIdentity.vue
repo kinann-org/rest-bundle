@@ -51,7 +51,7 @@
                 </v-layout>
                 <v-layout row >
                     <v-flex xs2><b>Vuex:</b></v-flex>
-                    <v-flex xs9> $store.state.restBundle.{{service}}.{{apiModelName}} </v-flex>
+                    <v-flex xs9> $store.state.restBundle.{{service}}.{{apiName}} </v-flex>
                 </v-layout>
                 <v-layout row >
                     <v-flex xs2><b>Service&nbsp;Home:</b></v-flex>

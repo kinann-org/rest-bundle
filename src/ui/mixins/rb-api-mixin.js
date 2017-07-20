@@ -20,7 +20,7 @@ var self = module.exports = {
             this.apiErrors = [];
         },
         apiSave(apiModel, toggle='apiShowDialog') {
-            var url = this.restOrigin() + "/" + this.service + "/" + this.apiModelName;
+            var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
             this.$http.put(url, { apiModel })
             .then(res => {
                 this.rbCommit(res.data);
@@ -48,10 +48,10 @@ var self = module.exports = {
         }
     },
 };
-self.createMixin = (apiModelName) => {
+self.createMixin = (apiName) => {
     var obj = Object.assign({}, self);
     obj.computed = obj.computed || {};
-    obj.computed.apiModelName = () => apiModelName;
+    obj.computed.apiName = () => apiName;
     return obj;
 };
 
