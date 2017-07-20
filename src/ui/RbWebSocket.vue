@@ -59,7 +59,7 @@ export default {
     },
     mixins: [ 
         require("./mixins/rb-about-mixin.js"),
-        require("./mixins/rb-api-mixin.js"),
+        require("./mixins/rb-api-mixin.js").createMixin("web-socket"),
     ],
     methods: {
         wsOnMessage(event) {
@@ -77,9 +77,6 @@ export default {
         },
     },
     computed: {
-        model() {
-            return "web-socket";
-        },
         rbwsBtnClass() {
             var c = '';
             if (this.rbConnected) {

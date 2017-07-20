@@ -37,7 +37,7 @@ var RbTreeView = require('./RbTreeView.vue');
 export default {
     mixins: [ 
         require("./mixins/rb-about-mixin.js"),
-        require("./mixins/rb-service-mixin.js"),
+        require("./mixins/rb-api-mixin.js").createMixin("web-socket"),
     ],
     methods: {
         rootState() {
@@ -57,9 +57,6 @@ export default {
         }
     },
     computed: {
-        model() {
-            return "web-socket"; // vs. read-only property
-        },
         restBundleServices() {
             return this.$store.state.restBundleServices;
         },

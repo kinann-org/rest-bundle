@@ -2,7 +2,7 @@
 const Vue = require("vue").default;
 const axios = require("axios");
 
-module.exports = {
+var self = module.exports = {
     mixins: [ 
         require("./rb-service-mixin.js"),
     ],
@@ -47,5 +47,11 @@ module.exports = {
             apiModel: { },
         }
     },
-}
+};
+self.createMixin = (apiModelName) => {
+    var obj = Object.assign({}, self);
+    obj.computed = obj.computed || {};
+    obj.computed.apiModelName = () => apiModelName;
+    return obj;
+};
 

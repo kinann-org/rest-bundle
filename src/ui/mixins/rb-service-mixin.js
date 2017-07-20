@@ -23,7 +23,6 @@ module.exports = {
     },
     created() {
         this.restBundleModel({
-            model: this.model,
         });
     },
     methods: {
@@ -64,8 +63,8 @@ module.exports = {
                 });
             });
         },
-        rbCommit(data, mutation='update', service=this.service, model=this.model) {
-            this.$store.commit(['restBundle', service, model, mutation].join('/'), data);
+        rbCommit(data, mutation='update', service=this.service, apiModelName=this.apiModelName) {
+            this.$store.commit(['restBundle', service, apiModelName, mutation].join('/'), data);
         },
         restBundleModel(initialState) {
             // The model is the union of:
@@ -73,30 +72,30 @@ module.exports = {
             // 2) client-mutable fields
             var that = this;
             var rbService = that.restBundleService();
-            if (rbService[that.model] == null) {
+            if (rbService[that.apiModelName] == null) {
                 var mutations = that.mutations({
                     update: updateObject,
                 });
                 var actions = that.actions({
                     apiLoad(context, payload) {
-                        var url = that.restOrigin() + "/" + that.service + "/" + that.model;
+                        var url = that.restOrigin() + "/" + that.service + "/" + that.apiModelName;
                         return that.updateComponentStore(context, url);
                     },
                 });
-                that.$store.registerModule(["restBundle", that.service, that.model], {
+                that.$store.registerModule(["restBundle", that.service, that.apiModelName], {
                     namespaced: true,
                     state: initialState || {},
                     actions,
                     mutations,
                 });
             }
-            return rbService[that.model];
+            return rbService[that.apiModelName];
         }, // restBundleModel
-        rbDispatch(action, payload, model = this.model, service = this.service) {
+        rbDispatch(action, payload, apiModelName = this.apiModelName, service = this.service) {
             if (action == null) {
                 throw new Error("rbDispatch() action is required");
             }
-            return this.$store.dispatch(["restBundle", service, model, action].join("/"), payload);
+            return this.$store.dispatch(["restBundle", service, apiModelName, action].join("/"), payload);
         },
         restBundleService(service = this && this.service) {
             var that = this;
@@ -172,4 +171,4 @@ module.exports = {
             return this.restBundleModel();
         },
     },
-}
+};

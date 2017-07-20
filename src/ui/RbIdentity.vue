@@ -51,7 +51,7 @@
                 </v-layout>
                 <v-layout row >
                     <v-flex xs2><b>Vuex:</b></v-flex>
-                    <v-flex xs9> $store.state.restBundle.{{service}}.{{model}} </v-flex>
+                    <v-flex xs9> $store.state.restBundle.{{service}}.{{apiModelName}} </v-flex>
                 </v-layout>
                 <v-layout row >
                     <v-flex xs2><b>Service&nbsp;Home:</b></v-flex>
@@ -80,12 +80,12 @@
         },
         mixins: [ 
             require("./mixins/rb-about-mixin.js"),
-            require("./mixins/rb-service-mixin.js"),
+            require("./mixins/rb-api-mixin.js").createMixin("identity"),
         ],
+        created() {
+            this.restBundleModel();
+        },
         computed: {
-            model() {
-                return "identity";
-            },
             package() { 
                 return this.rbModel.package;
             },
@@ -94,11 +94,6 @@
             },
         },
         data() {
-            this.restBundleModel({
-                name: this.service,
-                package: null,
-                version: null,
-            });
             return {
                 showDetail: false,
             }
