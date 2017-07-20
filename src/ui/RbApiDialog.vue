@@ -38,7 +38,7 @@
                     label="Type something" ></v-text-field>
             </slot>
         </v-card-text>
-        <v-card-text v-for="ae in apiSvc.apiErrors" raised hover class="api-error" :key='ae'>
+        <v-card-text v-for="(ae,i) in apiSvc.apiErrors" raised hover class="api-error" :key='i'>
             &#x2639; {{ae}}
         </v-card-text>
         <v-card-text v-if="!rbConnected" raised hover class="api-error">
