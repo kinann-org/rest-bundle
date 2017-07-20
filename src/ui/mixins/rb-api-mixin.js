@@ -29,6 +29,7 @@ module.exports = {
                 this[toggle] = false;
             })
             .catch(err => {
+                console.error(error.message, error.stack);
                 this.apiErrors.push(err);
             });
         },

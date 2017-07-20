@@ -39,7 +39,7 @@
             </slot>
         </v-card-text>
         <v-card-text v-for="(ae,i) in apiSvc.apiErrors" raised hover class="api-error" :key='i'>
-            &#x2639; {{ae}}
+            &#x2639; {{ae.message}}: {{ae.response.data.error}}
         </v-card-text>
         <v-card-text v-if="!rbConnected" raised hover class="api-error">
             &#x2639; Connection lost. Refresh when server is available.
