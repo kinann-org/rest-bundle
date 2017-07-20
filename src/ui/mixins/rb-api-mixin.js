@@ -20,7 +20,7 @@ var self = module.exports = {
             this.apiErrors = [];
         },
         apiSave(apiModel, toggle='apiShowDialog') {
-            var url = this.restOrigin() + "/" + this.service + "/" + this.model;
+            var url = this.restOrigin() + "/" + this.service + "/" + this.apiModelName;
             this.$http.put(url, { apiModel })
             .then(res => {
                 this.rbCommit(res.data);
