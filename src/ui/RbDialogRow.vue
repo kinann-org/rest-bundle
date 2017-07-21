@@ -5,7 +5,7 @@
         <p> Dialog row for <code>rb-api-dialog</code>
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
-        <rb-about-item name="label" value="(label?)" slot="prop">Row label</rb-about-item>
+        <rb-about-item name="label" value='"Label"' slot="prop">Row label</rb-about-item>
         <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to <var>apiSvc.apiModel</var> fields</rb-about-item>
         <rb-about-item name="label" value="(optional)" slot="slot">For structured labels</rb-about-item>
         <rb-about-item name="v-layout" value="(optional)" slot="slot"><code>v-flex</code> enclosed dialog field(s) for multi-field rows</rb-about-item>
@@ -14,13 +14,15 @@
         <v-flex xs3 class="rb-dialog-row-label">
             <v-subheader ><slot name="label">{{label}}</slot></v-subheader>
         </v-flex>
-        <v-flex >
-            <slot>
-                <div v-if="about" class="rb-dialog-row-text">Individual dialog fields go inside default slot</div>
-            </slot>
+        <v-flex v-if="$slots.default">
+            <slot></slot>
         </v-flex>
         <slot name="v-layout">
-            <div v-if="about" class="rb-dialog-row-text">Multiple dialog fields go inside <var>v-layout</var> slot</div>
+            <v-flex v-if="about" class="rb-dialog-row-text " xs6>
+                Individual dialog fields go into the <var>default</var> slot.
+                Use the <var>v-layout</var> slot for more complicated layouts having
+                multiple fields in a row, etc.
+            </v-flex>
         </slot>
     </v-layout>
 </div>
@@ -33,7 +35,7 @@ export default {
     name: "RbDialogRow",
     props: {
         label: {
-            default: "(label?)",
+            default: "Label",
         },
     },
     methods: {
