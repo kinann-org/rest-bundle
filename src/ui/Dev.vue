@@ -4,7 +4,7 @@
    <v-navigation-drawer persistent light v-model="drawer" light>
       <v-list dense>
         <v-list-tile exact :to="item.href"
-                v-for="item in sidebarMain" :key="item">
+                v-for="(item,i) in sidebarMain" :key="i">
             <v-list-tile-action>
                 <v-icon >{{item.icon}}</v-icon>
             </v-list-tile-action>
@@ -28,7 +28,7 @@
               </v-list-tile-action>
             </v-list-tile>
             <v-list-tile 
-                v-for="item in sidebarComponents" :key="item"
+                v-for="(item,i) in sidebarComponents" :key="i"
                 exact :to="item.href">
                 <v-list-tile-content>
                     <v-list-tile-title>{{ item.title }}</v-list-tile-title>
