@@ -6,17 +6,19 @@ import RbAboutItem from "./src/ui/RbAboutItem.vue";
 import RbTreeView from "./src/ui/RbTreeView.vue";
 import RbWebSocket from "./src/ui/RbWebSocket.vue";
 import RbApiDialog from "./src/ui/RbApiDialog.vue";
+import RbDialogRow from "./src/ui/RbDialogRow.vue";
 
 var components = {
     RbAbout,
     RbAboutItem,
     RbApiDialog,
+    RbDialogRow,
     RbIdentity,
     RbServices,
     RbState,
     RbTreeView,
     RbWebSocket,
-    RbApiDialog,
+
 }
 
 const RbApiMixin = require( "./src/ui/mixins/rb-api-mixin.js" );

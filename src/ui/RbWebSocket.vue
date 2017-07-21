@@ -27,27 +27,23 @@
             @click.stop="apiEdit()">&#x26a0;</v-btn>
     </div>
     <rb-api-dialog :apiSvc='this'>
-        <span slot="title">Server Settings</span>
-        <v-layout>
-            <v-flex xs3 class="body-2">Messages received</v-flex>
-            <v-flex>{{pushCount}} </v-flex>
-        </v-layout>
-        <v-layout>
-            <v-flex xs3 class="body-2">Push interval</v-flex>
-            <v-flex>
-                <v-text-field name="name_pushStateMillis" id="id_pushStateMillis"
-                    v-model='apiModel.pushStateMillis' :rules="[apiRules.required, apiRules.gt0]"
-                    label="Milliseconds" >
-                </v-text-field>
-            </v-flex>
-        </v-layout>
+        <span slot="title">RestBundle Server Settings</span>
+        <rb-dialog-row >
+            <div v-tooltip:right='{html:"Web socket messages received"}' slot="label">
+                Received</div>
+            <div class="rb-dialog-row-text">{{pushCount}}</div>
+        </rb-dialog-row>
+        <rb-dialog-row label="Push interval">
+            <v-text-field label="Milliseconds" v-model='apiModel.pushStateMillis' 
+                :rules="[apiRules.required, apiRules.gt0]">
+            </v-text-field>
+        </rb-dialog-row>
     </rb-api-dialog>
 </div>
 
 </template>
 <script>
 const Vue = require("vue").default;
-import RbApiDialog from './RbApiDialog.vue';
 
 export default {
     name: "RbWebSocket",
@@ -120,7 +116,6 @@ export default {
         this.apiLoad();
     },
     components: {
-        RbApiDialog,
     }
 }
 
