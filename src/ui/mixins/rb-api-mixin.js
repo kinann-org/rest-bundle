@@ -19,9 +19,9 @@ var self = module.exports = {
             this[toggle] = true;
             this.apiErrors = [];
         },
-        apiSave(apiModel, toggle='apiShowDialog') {
+        apiSave(toggle='apiShowDialog') {
             var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
-            this.$http.put(url, { apiModel })
+            this.$http.put(url, { apiModel: this.apiModel })
             .then(res => {
                 this.rbCommit(res.data);
                 this.apiModel = res.data.apiModel;

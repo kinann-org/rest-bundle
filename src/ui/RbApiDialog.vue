@@ -26,7 +26,7 @@
             <v-toolbar-title><slot name="title">Dialog title</slot></v-toolbar-title>
             <v-spacer/>
             <v-btn v-if="!rbConnected" flat="flat" @click="apiRefresh()">Refresh</v-btn>
-            <v-btn v-if="rbConnected" flat="flat" @click="apiSave(apiSvc.apiModel)">Save</v-btn>
+            <v-btn v-if="rbConnected" flat="flat" @click="apiSave()">Save</v-btn>
         </v-toolbar>
         <v-card-text class="api-dialog">
             <slot>
@@ -65,9 +65,9 @@ class ExampleService {
         this.apiShowDialog = false;
         Vue.set(this.apiModel, "sampleInput", 1234);
     }
-    apiSave(apiModel) {
-        console.log("apiSave", apiModel);
-        this.apiShowDialog = false;
+    apiSave(apiToggle) {
+        console.log("apiSave", apiToggle);
+        this[apiToggle] = false;
     }
     get rbConnected() {
         return true;
@@ -89,8 +89,8 @@ export default {
         apiRefresh() {
             return this.apiSvc.apiRefresh();
         },
-        apiSave(apiModel) {
-            return this.apiSvc.apiSave(apiModel,this.apiToggle);
+        apiSave() {
+            return this.apiSvc.apiSave(this.apiToggle);
         },
         apiCancel() {
             return this.apiSvc.apiCancel(this.apiToggle);
