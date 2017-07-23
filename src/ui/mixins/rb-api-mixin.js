@@ -2,6 +2,8 @@
 const Vue = require("vue").default;
 const axios = require("axios");
 
+const emptyApiModel = {error:"apiModelCopy must be initialized by calling this.apiEdit()"};
+
 var self = module.exports = {
     mixins: [ 
         require("./rb-service-mixin.js"),
@@ -10,43 +12,46 @@ var self = module.exports = {
         apiRefresh() {
             window.location.reload();
         },
-        apiCancel(toggle='apiShowDialog') {
+        apiCancel(toggle='apiDefaultDialog') {
             this[toggle] = false;
+            this.apiModelCopy = emptyApiModel;
         },
-        apiEdit(toggle='apiShowDialog') {
+        apiEdit(toggle='apiDefaultDialog') {
             var rbm = this.restBundleModel();
-            this.apiDialogModel = Object.assign(this.apiDialogModel, rbm.apiModel);
             this[toggle] = true;
             this.apiErrors = [];
+            return this.apiModelCopy = Object.assign({}, rbm.apiModel);
         },
-        apiSave(toggle='apiShowDialog') {
+        apiSave(toggle='apiDefaultDialog') {
             var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
-            this.$http.put(url, { apiModel: this.apiDialogModel })
+            return this.$http.put(url, { apiModel: this.apiModelCopy })
             .then(res => {
                 this.rbCommit(res.data);
                 this[toggle] = false;
+                this.apiModelCopy = emptyApiModel;
             })
             .catch(err => {
                 console.error(err.stack);
                 this.apiErrors.push(err);
+                this.apiModelCopy = emptyApiModel;
             });
         },
         apiLoad() {
-            this.rbDispatch("apiLoad")
-            .then(res => {
-                if (this.apiDialogModel) {
-                    console.log("apiLoad updated apiDialogModel");
-                    this.updateObject(this.apiDialogModel, res.apiModel);
-                }
-            })
+            return this.rbDispatch("apiLoad")
+            //.then(res => {
+                //if (this.apiModelCopy) {
+                    //console.log("DEPRECATED apiLoad updated apiModelCopy");
+                    ////this.updateObject(this.apiModelCopy, res.apiModel);
+                //}
+            //})
             .catch(err => console.error(err));
         },
     },
     data() {
         return {
-            apiShowDialog: false,
+            apiDefaultDialog: false,
             apiErrors: [],
-            apiDialogModel: {},
+            apiModelCopy: emptyApiModel,
         }
     },
 };

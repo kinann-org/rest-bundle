@@ -10,12 +10,12 @@
         <rb-about-item name="value" slot="prop">Default property value. Omit for required properties</rb-about-item>
     </rb-about>
     <v-layout>
-        <v-flex xs3><code>{{name}}</code></v-flex>
+        <v-flex xs2><code>{{name}}</code></v-flex>
         <v-flex xs3>
             <span v-if="value">{{value}}</span>
             <span v-else><i>required</i></span>
         </v-flex>
-        <v-flex xs8><slot>Property description</slot></v-flex>
+        <v-flex xs7><slot>Property description</slot></v-flex>
     </v-layout>
 </div>
 

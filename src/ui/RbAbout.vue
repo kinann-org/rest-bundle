@@ -16,15 +16,16 @@
         <v-tabs-bar slot="activators" class="white">    
           <v-tabs-item :href='"#about-tab-props"' ripple >Properties</v-tabs-item>
           <v-tabs-item :href='"#about-tab-slots"' ripple v-if="$slots.slot">Slots</v-tabs-item>
+          <v-tabs-item :href='"#about-tab-code"' ripple v-if="$slots.code">Code</v-tabs-item>
           <v-tabs-slider/>
         </v-tabs-bar>
         <v-tabs-content :id='"about-tab-props"'>
           <v-card flat hover>
             <v-card-text>
                 <v-layout slot="prop">
-                    <v-flex xs3><b>Property</b></v-flex>
+                    <v-flex xs2><b>Property</b></v-flex>
                     <v-flex xs3><b>Default</b></v-flex>
-                    <v-flex xs8><b>Description</b></v-flex>
+                    <v-flex xs7><b>Description</b></v-flex>
                 </v-layout>
                 <slot name="prop">Content provided by <a href="/#rb-about-item">RbAboutItem</a> goes here</slot>
             </v-card-text>
@@ -34,11 +35,23 @@
           <v-card flat hover>
             <v-card-text>
                 <v-layout slot="slot">
-                    <v-flex xs3><b>Slots</b></v-flex>
+                    <v-flex xs2><b>Slots</b></v-flex>
                     <v-flex xs3><b>Required</b></v-flex>
-                    <v-flex xs8><b>Description</b></v-flex>
+                    <v-flex xs7><b>Description</b></v-flex>
                 </v-layout>
                 <slot name="slot">Content from "slot" slot goes here</slot>
+            </v-card-text>
+          </v-card>
+        </v-tabs-content>
+        <v-tabs-content :id='"about-tab-code"'>
+          <v-card flat hover>
+            <v-card-text>
+                <v-layout slot="slot">
+                    <v-flex xs2><b>Methods</b></v-flex>
+                    <v-flex xs3><b>Parameters</b></v-flex>
+                    <v-flex xs7><b>Description</b></v-flex>
+                </v-layout>
+                <slot name="code">Content from "code" slot goes here</slot>
             </v-card-text>
           </v-card>
         </v-tabs-content>

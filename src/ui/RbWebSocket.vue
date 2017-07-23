@@ -26,7 +26,7 @@
             class="red darken-4 white--text headline" icon large hover 
             @click.stop="apiEdit()">&#x26a0;</v-btn>
     </div>
-    <rb-api-dialog :apiSvc='this'>
+    <rb-api-dialog :apiSvc='this' v-if="apiModelCopy">
         <span slot="title">RestBundle Server Settings</span>
         <rb-dialog-row >
             <div v-tooltip:right='{html:"Web socket messages received"}' slot="label">
@@ -34,7 +34,7 @@
             <div class="rb-dialog-row-text">{{pushCount}}</div>
         </rb-dialog-row>
         <rb-dialog-row label="Push interval">
-            <v-text-field label="Milliseconds" v-model='apiDialogModel.pushStateMillis' 
+            <v-text-field label="Milliseconds" v-model='apiModelCopy.pushStateMillis' 
                 :rules="[apiRules.required, apiRules.gt0]">
             </v-text-field>
         </rb-dialog-row>
