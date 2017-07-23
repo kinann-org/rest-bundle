@@ -6,7 +6,7 @@
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="label" value='"Label"' slot="prop">Row label</rb-about-item>
-        <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to <var>apiSvc.apiModel</var> fields</rb-about-item>
+        <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to <var>apiSvc.apiDialogModel</var> fields</rb-about-item>
         <rb-about-item name="label" value="(optional)" slot="slot">For structured labels</rb-about-item>
         <rb-about-item name="v-layout" value="(optional)" slot="slot"><code>v-flex</code> enclosed dialog field(s) for multi-field rows</rb-about-item>
     </rb-about>

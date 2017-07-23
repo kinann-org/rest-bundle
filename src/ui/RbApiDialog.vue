@@ -4,13 +4,13 @@
     <rb-about v-if="about" :name="componentName">
         <p> Displays dialog for changing all or part of the <var>apiModel</var> of a RestBundle Vue component 
             having the <code>rb-api-svc</code> mixin. When the user clicks <strong>Save</strong>,
-            the updated <var>apiModel</var> is sent to the server. 
+            the updated <var>apiModel</var> is sent to the server.  Call <var>apiEdit()</var> to open your dialog.
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="apiSvc" value="required" slot="prop">Vue component with rb-api-mixin.</rb-about-item>
         <rb-about-item name="apiToggle" value='"apiShowDialog"' slot="prop">
             Name of <var>apiSvc</var> property that toggles dialog visibility. </rb-about-item>
-        <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to apiSvc.apiModel fields</rb-about-item>
+        <rb-about-item name="default" value="required" slot="slot">Dialog fields bound to apiSvc.apiDialogModel fields</rb-about-item>
     </rb-about>
     <div v-if="about">
         <v-btn @click.stop='apiSvc[apiToggle] = true'
@@ -31,10 +31,10 @@
         <v-card-text class="api-dialog">
             <slot>
                 Dialog content goes here (e.g., <code>&lt;v-layout&gt;</code>)
-                <v-alert error :value='apiSvc.apiModel == null'><var>apiSvc</var> has no <var>apiModel</var></v-alert>
-                <v-text-field v-if='apiSvc && apiSvc.apiModel && apiSvc.apiModel.sampleInput != null' 
+                <v-alert error :value='apiSvc.apiDialogModel == null'><var>apiSvc</var> has no <var>apiDialogModel</var></v-alert>
+                <v-text-field v-if='apiSvc && apiSvc.apiDialogModel && apiSvc.apiDialogModel.sampleInput != null' 
                     name="name_sampleInput" id="id_sampleInput"
-                    v-model='apiSvc.apiModel.sampleInput' 
+                    v-model='apiSvc.apiDialogModel.sampleInput' 
                     label="Type something" ></v-text-field>
             </slot>
         </v-card-text>
@@ -53,7 +53,7 @@
 const Vue = require("vue").default;
 class ExampleService {
     constructor() {
-        this.apiModel = {};
+        this.apiDialogModel = {};
         this.apiCancel();
     }
     apiRefresh() {
@@ -63,7 +63,7 @@ class ExampleService {
     apiCancel() {
         console.log("apiCancel");
         this.apiShowDialog = false;
-        Vue.set(this.apiModel, "sampleInput", 1234);
+        Vue.set(this.apiDialogModel, "sampleInput", 1234);
     }
     apiSave(apiToggle) {
         console.log("apiSave", apiToggle);

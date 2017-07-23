@@ -34,7 +34,7 @@
             <div class="rb-dialog-row-text">{{pushCount}}</div>
         </rb-dialog-row>
         <rb-dialog-row label="Push interval">
-            <v-text-field label="Milliseconds" v-model='apiModel.pushStateMillis' 
+            <v-text-field label="Milliseconds" v-model='apiDialogModel.pushStateMillis' 
                 :rules="[apiRules.required, apiRules.gt0]">
             </v-text-field>
         </rb-dialog-row>

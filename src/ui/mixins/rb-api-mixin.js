@@ -14,17 +14,16 @@ var self = module.exports = {
             this[toggle] = false;
         },
         apiEdit(toggle='apiShowDialog') {
-            var model = this.restBundleModel();
-            this.apiModel = Object.assign(this.apiModel, model.apiModel);
+            var rbm = this.restBundleModel();
+            this.apiDialogModel = Object.assign(this.apiDialogModel, rbm.apiModel);
             this[toggle] = true;
             this.apiErrors = [];
         },
         apiSave(toggle='apiShowDialog') {
             var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
-            this.$http.put(url, { apiModel: this.apiModel })
+            this.$http.put(url, { apiModel: this.apiDialogModel })
             .then(res => {
                 this.rbCommit(res.data);
-                this.apiModel = res.data.apiModel;
                 this[toggle] = false;
             })
             .catch(err => {
@@ -35,7 +34,10 @@ var self = module.exports = {
         apiLoad() {
             this.rbDispatch("apiLoad")
             .then(res => {
-                this.updateObject(this.apiModel, res.apiModel);
+                if (this.apiDialogModel) {
+                    console.log("apiLoad updated apiDialogModel");
+                    this.updateObject(this.apiDialogModel, res.apiModel);
+                }
             })
             .catch(err => console.error(err));
         },
@@ -44,7 +46,7 @@ var self = module.exports = {
         return {
             apiShowDialog: false,
             apiErrors: [],
-            apiModel: { },
+            apiDialogModel: {},
         }
     },
 };
