@@ -13,18 +13,12 @@
             @click.stop="apiEdit()">
             <v-icon :class="rbwsBtnClass" small>settings_ethernet</v-icon>
         </v-btn>
-        <v-btn v-if="!rbConnected"
-            class="red darken-4 white--text headline" icon large hover 
-            @click.stop="apiEdit()">&#x26a0;</v-btn>
     </div>
     <div class="rbws-container" v-if="!about">
         <v-btn v-if="rbConnected" :class="rbwsBtnClass" icon large hover 
             @click.stop="apiEdit()">
             <v-icon :class="rbwsBtnClass" small>settings_ethernet</v-icon>
         </v-btn>
-        <v-btn v-if="!rbConnected"
-            class="red darken-4 white--text headline" icon large hover 
-            @click.stop="apiEdit()">&#x26a0;</v-btn>
     </div>
     <rb-api-dialog :apiSvc='this' v-if="apiModelCopy">
         <span slot="title">RestBundle Server Settings</span>
@@ -39,6 +33,24 @@
             </v-text-field>
         </rb-dialog-row>
     </rb-api-dialog>
+    <v-dialog v-model="showRefresh" lazy persistent absolute  width='60%'>
+        <v-card>
+            <v-toolbar dark class="error">
+                <v-toolbar-title >
+                    Lost server connection
+                </v-toolbar-title>
+            </v-toolbar>
+            <v-card-text class="subheading">
+                Click <strong>Refresh</strong> when server is available.
+            </v-card-text>
+            <v-toolbar>
+                <v-spacer/>
+                <v-btn flat error
+                    hover
+                    @click.stop="apiRefresh()">Refresh</v-btn>
+            </v-toolbar>
+        </v-card>
+    </v-dialog>
 </div>
 
 </template>
@@ -82,6 +94,9 @@ export default {
                 c += 'red white--text';
             }
             return c;
+        },
+        showRefresh() {
+            return this.rbConnected === false;
         },
     },
     data() {
