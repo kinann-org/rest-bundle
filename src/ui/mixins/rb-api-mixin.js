@@ -20,7 +20,7 @@ var self = module.exports = {
             var rbm = this.restBundleModel();
             this[toggle] = true;
             this.apiErrors = [];
-            return this.apiModelCopy = Object.assign({}, rbm.apiModel);
+            return this.apiModelCopy = JSON.parse(JSON.stringify(rbm.apiModel));
         },
         apiSave(toggle='apiDefaultDialog') {
             var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
