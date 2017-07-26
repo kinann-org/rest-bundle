@@ -37,7 +37,7 @@
         <v-card>
             <v-toolbar dark class="error">
                 <v-toolbar-title >
-                    Lost server connection
+                    &#x1F622; Lost server connection
                 </v-toolbar-title>
             </v-toolbar>
             <v-card-text class="subheading">
