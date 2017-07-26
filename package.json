@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.20.2",
+  "version": "0.20.3",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -64,20 +64,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/firepick/rest-bundle.git"
+    "url": "git+https://github.com/kinann-org/rest-bundle.git"
   },
   "bin": {},
   "keywords": [
     "REST",
     "resource bundle",
     "express",
-    "FirePick",
-    "firenodejs"
+    "kinann-org"
   ],
   "author": "Karl Lew",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/firepick/rest-bundle/issues"
+    "url": "https://github.com/kinann-org/rest-bundle/issues"
   },
-  "homepage": "https://github.com/firepick/rest-bundle"
+  "homepage": "https://github.com/kinann-org/rest-bundle"
 }
