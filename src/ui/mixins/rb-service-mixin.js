@@ -64,6 +64,9 @@ module.exports = {
             });
         },
         rbCommit(data, mutation='update', service=this.service, apiName=this.apiName) {
+            if (!apiName) {
+                apiName = "rbCommit-no-apiName";
+            }
             this.$store.commit(['restBundle', service, apiName, mutation].join('/'), data);
         },
         restBundleModel(initialState) {
@@ -72,28 +75,35 @@ module.exports = {
             // 2) client-mutable fields
             var that = this;
             var rbService = that.restBundleService();
-            if (rbService[that.apiName] == null) {
+            var apiName = that.apiName;
+            if (!apiName) {
+                apiName = "restBundleModel-no-apiName";
+            }
+            if (rbService[apiName] == null) {
                 var mutations = that.mutations({
                     update: updateObject,
                 });
                 var actions = that.actions({
                     apiLoad(context, payload) {
-                        var url = that.restOrigin() + "/" + that.service + "/" + that.apiName;
+                        var url = that.restOrigin() + "/" + that.service + "/" + apiName;
                         return that.updateComponentStore(context, url);
                     },
                 });
-                that.$store.registerModule(["restBundle", that.service, that.apiName], {
+                that.$store.registerModule(["restBundle", that.service, apiName], {
                     namespaced: true,
                     state: initialState || {},
                     actions,
                     mutations,
                 });
             }
-            return rbService[that.apiName];
+            return rbService[apiName];
         }, // restBundleModel
         rbDispatch(action, payload, apiName = this.apiName, service = this.service) {
             if (action == null) {
                 throw new Error("rbDispatch() action is required");
+            }
+            if (!apiName) {
+                apiName = "rbDispatch-no-apiName";
             }
             return this.$store.dispatch(["restBundle", service, apiName, action].join("/"), payload);
         },
