@@ -49,9 +49,15 @@
         }
 
         static onRequestSuccess(req, res, data, next, mime) {
-            res.status(res.locals.status);
-            res.type(res.locals.mime);
-            res.send(data);
+            try {
+                res.status(res.locals.status);
+                res.type(res.locals.mime);
+                res.send(data);
+            } catch (err) {
+                winston.error(err.stack);
+                res.status(500);
+                res.send({error:err.message});
+            }
             next && next('route');
         }
 

@@ -48,6 +48,33 @@ const supertest = require("supertest");
         var app = express();
         should.throws(() => tb.bindExpress(app));
     })
+    it("RestBundle returns 500 for bad responses", function(done) {
+        class TestBundle extends RestBundle {
+            constructor(name, options={}) {
+                super(name, options);
+                Object.defineProperty(this, "handlers", {
+                    value: super.handlers.concat([
+                        this.resourceMethod("get", "bad-json", this.getBadJson),
+                    ]),
+                });
+            }
+            getBadJson(req, res, next) { 
+                var badJson = {
+                    name: "circular",
+                }
+                badJson.self = badJson;
+                return badJson;
+            }
+        }
+        var app = express();
+        var tb = new TestBundle("extended").bindExpress(app);
+        supertest(app).get("/extended/bad-json").expect((res) => {
+            res.statusCode.should.equal(500);
+            should.deepEqual(res.body, {
+                error: "Converting circular structure to JSON",
+            });
+        }).end((err,res) => {if (err) throw err; else done(); });
+    })
     it("GET /state returns RestBundle singleton state", function(done) {
         var app = require("../scripts/server.js");
         supertest(app).get("/test/state").expect((res) => {
