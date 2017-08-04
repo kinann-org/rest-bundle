@@ -54,7 +54,7 @@
                 res.type(res.locals.mime);
                 res.send(data);
             } catch (err) {
-                winston.error(err.stack);
+                winston.warn(err.stack);
                 res.status(500);
                 res.send({error:err.message});
             }
@@ -147,11 +147,16 @@
             res.locals.status = 200;
             res.locals.mime = mime;
             var promise = new Promise((resolve, reject) => {
-                var result = handler(req, res);
-                if (result instanceof Promise) {
-                    result.then(data => resolve(data)).catch(err => reject(err));
-                } else {
-                    resolve(result);
+                try {
+                    var result = handler(req, res);
+                    if (result instanceof Promise) {
+                        result.then(data => resolve(data)).catch(err => reject(err));
+                    } else {
+                        resolve(result);
+                    }
+                } catch (err) {
+                    winston.warn(err.stack);
+                    reject(err);
                 }
             });
             promise.then(
@@ -350,7 +355,7 @@
                             });
                         }
                     } catch (err) { // unexpected error
-                        winston.error(err.message, err.stack);
+                        winston.warn(err.message, err.stack);
                         reject(err);
                     }
                 }.call(this);

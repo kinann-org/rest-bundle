@@ -49,6 +49,7 @@ const supertest = require("supertest");
         should.throws(() => tb.bindExpress(app));
     })
     it("RestBundle returns 500 for bad responses", function(done) {
+        winston.warn("The following warning is expected");
         class TestBundle extends RestBundle {
             constructor(name, options={}) {
                 super(name, options);
@@ -114,8 +115,8 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST generates HTTP500 response for thrown exception", function(done) {
+        winston.warn("The following warning is expected");
         var app = require("../scripts/server.js");
-        winston.level = "warn"; // ignore POST warning
         supertest(app).post("/test/identity").send({greeting:"whoa"}).expect((res) => {
             res.statusCode.should.equal(500);
             res.headers["content-type"].should.match(/json/);
