@@ -83,14 +83,14 @@
             require("./mixins/rb-api-mixin.js").createMixin("identity"),
         ],
         created() {
-            this.restBundleModel();
+            this.restBundleResource();
         },
         computed: {
             package() { 
-                return this.rbModel.package;
+                return this.rbResource.package;
             },
             version() { 
-                return this.rbModel.version;
+                return this.rbResource.version;
             },
         },
         data() {

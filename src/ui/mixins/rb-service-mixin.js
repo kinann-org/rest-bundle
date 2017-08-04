@@ -22,7 +22,7 @@ module.exports = {
         }
     },
     created() {
-        this.restBundleModel({
+        this.restBundleResource({
         });
     },
     methods: {
@@ -69,7 +69,10 @@ module.exports = {
             }
             this.$store.commit(['restBundle', service, apiName, mutation].join('/'), data);
         },
-        restBundleModel(initialState) {
+        restBundleModel(initialState) { // deprecated
+            return restBundleResource(initialState);
+        },
+        restBundleResource(initialState) {
             // The model is the union of:
             // 1) pushed read-only state, and 
             // 2) client-mutable fields
@@ -77,7 +80,7 @@ module.exports = {
             var rbService = that.restBundleService();
             var apiName = that.apiName;
             if (!apiName) {
-                apiName = "restBundleModel-no-apiName";
+                apiName = "restBundleResource-no-apiName";
             }
             if (rbService[apiName] == null) {
                 var mutations = that.mutations({
@@ -97,7 +100,7 @@ module.exports = {
                 });
             }
             return rbService[apiName];
-        }, // restBundleModel
+        }, // restBundleResource
         rbDispatch(action, payload, apiName = this.apiName, service = this.service) {
             if (action == null) {
                 throw new Error("rbDispatch() action is required");
@@ -175,10 +178,16 @@ module.exports = {
             return rbws && rbws.pushCount;
         },
         httpStatus() {
-            return this.rbModel.httpStatus;
+            return this.rbResource.httpStatus;
         },
-        rbModel() {
-            return this.restBundleModel();
+        rbModel() { // deprecated
+            return this.restBundleResource();
+        },
+        rbResource() {
+            return this.restBundleResource();
+        },
+        rbService() {
+            return this.restBundleService();
         },
     },
 };

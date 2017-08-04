@@ -17,7 +17,7 @@ var self = module.exports = {
             this.apiModelCopy = emptyApiModel;
         },
         apiEdit(toggle='apiDefaultDialog') {
-            var rbm = this.restBundleModel();
+            var rbm = this.restBundleResource();
             this[toggle] = true;
             this.apiErrors = [];
             return this.apiModelCopy = JSON.parse(JSON.stringify(rbm.apiModel));
