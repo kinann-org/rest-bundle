@@ -69,9 +69,6 @@ module.exports = {
             }
             this.$store.commit(['restBundle', service, apiName, mutation].join('/'), data);
         },
-        restBundleModel(initialState) { // deprecated
-            return restBundleResource(initialState);
-        },
         restBundleResource(initialState) {
             // The model is the union of:
             // 1) pushed read-only state, and 
@@ -179,9 +176,6 @@ module.exports = {
         },
         httpStatus() {
             return this.rbResource.httpStatus;
-        },
-        rbModel() { // deprecated
-            return this.restBundleResource();
         },
         rbResource() {
             return this.restBundleResource();
