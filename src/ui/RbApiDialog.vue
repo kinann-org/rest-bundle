@@ -12,12 +12,16 @@
             directly to change the <var>apiModel</var> programmatically without a dialog
             (e.g., delete an item from the <var>apiModel</var>).
         </p>
+        <p> See also <a href='#/rb-dialog-row'><code>rb-dialog-row</code></a>
+        </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="apiSvc" value="required" slot="prop">Vue component with rb-api-mixin.</rb-about-item>
         <rb-about-item name="apiDialog" value='"apiDefaultDialog"' slot="prop">
             Name of <var>apiSvc</var> property that toggles dialog visibility. </rb-about-item>
         <rb-about-item name="default" value="required" slot="slot">
             Dialog fields bound to <var>apiModelCopy</var> fields</rb-about-item>
+        <rb-about-item name="title" value='(empty title slot)' slot="slot">
+            (empty title slot)</rb-about-item>
         <rb-about-item name="apiEdit" value='dialog="apiDefaultDialog"' slot="code">
             Application invokes <code>apiEdit()</code> (e.g., via button click)
             to open the named <var>RbApiDialog</var>
@@ -44,7 +48,7 @@
             <v-btn icon small hover dark @click.stop='apiCancel()' >
                 <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title><slot name="title">Dialog title</slot></v-toolbar-title>
+            <v-toolbar-title><slot name="title">My Dialog</slot></v-toolbar-title>
             <v-spacer/>
             <v-btn v-if="!rbConnected" flat="flat" @click="apiRefresh()">Refresh</v-btn>
             <v-btn v-if="rbConnected" flat="flat" @click="apiSave()">Save</v-btn>

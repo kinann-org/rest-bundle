@@ -2,7 +2,7 @@
 
 <div >
     <rb-about v-if="about" :name="componentName">
-        <p> Dialog row for <code>rb-api-dialog</code>
+        <p> Labeled dialog row for <a href="#/rb-api-dialog"><code>rb-api-dialog</code></a>
         </p>
         <rb-about-item name="about" value="false" slot="prop">
             Show this descriptive text</rb-about-item>
