@@ -15,14 +15,21 @@
         <p> See also <a href='#/rb-dialog-row'><code>rb-dialog-row</code></a>
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
-        <rb-about-item name="apiSvc" value="required" slot="prop">Vue component with rb-api-mixin.</rb-about-item>
-        <rb-about-item name="apiDialog" value='"apiDefaultDialog"' slot="prop">
+        <rb-about-item name="apiSvc" value="required" slot="prop">
+            Vue component with <var>rb-api-mixin</var>. 
+            Best practice is to create a computed property
+            <var>apiSvc</var> that returns <var>this</var>,
+            and pass this parent property to the child <var>rb-api-dialog</var>:
+            <code>&lt;rb-api-dialog :apiSvc="apiSvc" /&gt;</code>
+        </rb-about-item>
+        <rb-about-item name="apiDialog" value='"apiDialogToggle"' slot="prop">
             Name of <var>apiSvc</var> property that toggles dialog visibility. </rb-about-item>
+        <rb-about-item name="scope" value="apiSvc" slot="prop">Object with <var>apiDialog</var> property.</rb-about-item>
         <rb-about-item name="default" value="required" slot="slot">
             Dialog fields bound to <var>apiModelCopy</var> fields</rb-about-item>
         <rb-about-item name="title" value='(empty title slot)' slot="slot">
             (empty title slot)</rb-about-item>
-        <rb-about-item name="apiEdit" value='dialog="apiDefaultDialog"' slot="code">
+        <rb-about-item name="apiEdit" value='dialog="apiDialogToggle"' slot="code">
             Application invokes <code>apiEdit()</code> (e.g., via button click)
             to open the named <var>RbApiDialog</var>
             and create <var>apiModelCopy</var>.
@@ -87,7 +94,7 @@ class MockApiService {
     }
     apiCancel() {
         console.log("apiCancel");
-        this.apiDefaultDialog = false;
+        this.apiDialogToggle = false;
         Vue.set(this.apiModelCopy, "sampleInput", 1234);
     }
     apiSave(apiDialog) {
@@ -106,8 +113,11 @@ export default {
         apiSvc: {
             default: () => mockSvc,
         },
+        scope: {
+            default: null, // null => apiSvc
+        },
         apiDialog: {
-            default: 'apiDefaultDialog',
+            default: 'apiDialogToggle',
         },
     },
     methods: {

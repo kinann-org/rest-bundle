@@ -12,17 +12,17 @@ var self = module.exports = {
         apiRefresh() {
             window.location.reload();
         },
-        apiCancel(toggle='apiDefaultDialog') {
+        apiCancel(toggle='apiDialogToggle') {
             this[toggle] = false;
             this.apiModelCopy = emptyApiModel;
         },
-        apiEdit(toggle='apiDefaultDialog') {
+        apiEdit(toggle='apiDialogToggle') {
             var rbm = this.restBundleResource();
             this[toggle] = true;
             this.apiErrors = [];
             return this.apiModelCopy = JSON.parse(JSON.stringify(rbm.apiModel));
         },
-        apiSave(toggle='apiDefaultDialog') {
+        apiSave(toggle='apiDialogToggle') {
             var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
             return this.$http.put(url, { apiModel: this.apiModelCopy })
             .then(res => {
@@ -49,7 +49,8 @@ var self = module.exports = {
     },
     data() {
         return {
-            apiDefaultDialog: false,
+            apiSvc: this,
+            apiDialogToggle: false,
             apiErrors: [],
             apiModelCopy: emptyApiModel,
         }
