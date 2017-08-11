@@ -2,8 +2,12 @@
 
 <div >
     <rb-about v-if="about" :name="componentName">
-        <p> Displays web socket connection status. Refreshing page after lost connection
-            will restore connecdtion if server is active. 
+        <p> Displays web socket connection and task status. 
+            The displayed icon blinks with each web socket push.
+            An hourglass is shown if the server has tasks pending and
+            <code>rbTasksPending</code> is true.
+            Refreshing page after lost connection
+            will restore connection if server is active. 
             Clicking icon opens Server Settings dialog.
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
@@ -11,13 +15,15 @@
     <div class='rbws-example' v-if="about">
         <v-btn v-if="rbConnected" :class="rbwsBtnClass" icon large hover 
             @click.stop="apiEdit()">
-            <v-icon :class="rbwsBtnClass" small>settings_ethernet</v-icon>
+            <v-icon v-if="!rbTasksPending" :class="rbwsBtnClass" small>settings_ethernet</v-icon>
+            <v-icon v-if="rbTasksPending" :class="rbwsBtnClass" small>hourglass_empty</v-icon>
         </v-btn>
     </div>
     <div class="rbws-container" v-if="!about">
         <v-btn v-if="rbConnected" :class="rbwsBtnClass" icon large hover 
             @click.stop="apiEdit()">
-            <v-icon :class="rbwsBtnClass" small>settings_ethernet</v-icon>
+            <v-icon v-if="!rbTasksPending" :class="rbwsBtnClass" small>settings_ethernet</v-icon>
+            <v-icon v-if="rbTasksPending" :class="rbwsBtnClass" small>hourglass_empty</v-icon>
         </v-btn>
     </div>
     <rb-api-dialog :apiSvc='this' v-if="apiModelCopy">

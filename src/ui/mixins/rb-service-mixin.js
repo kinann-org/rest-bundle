@@ -151,7 +151,7 @@ module.exports = {
             } else if (httpStatus == "") {
                 return this.pushState % 4 == 1 ?
                     "none" :
-                    (this.rbBusy ? "hourglass_empty" : "check");
+                    (this.rbTasksPending ? "hourglass_empty" : "check");
             } else {
                 return "error";
             }
@@ -159,7 +159,7 @@ module.exports = {
         rbTasks() {
             return this.restBundleService().tasks;
         },
-        rbBusy() {
+        rbTasksPending() {
             var tasks = this.rbTasks;
             return tasks == null || tasks.length > 0;
         },

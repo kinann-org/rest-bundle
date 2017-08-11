@@ -4,7 +4,9 @@
     <rb-about v-if="about" :name="componentName">
         <p> Displays RestBundle service information returned by <code>GET /identity</code>. In addition,
             if the server provides periodic <code>RbSocketServer.pushState()</code>, 
-            the checkmark icon will pulse for connected services.
+            the checkmark icon will pulse for connected services. An hourglass icon will be displayed
+            if the server has pending tasks 
+            (as indicated by the <var>rb-service-mixin</var> computed property <code>rbTasksPending</code>).
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
         <rb-about-item name="service" slot="prop">RestBundle name</rb-about-item>
