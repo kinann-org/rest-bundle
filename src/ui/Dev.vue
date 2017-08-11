@@ -18,10 +18,10 @@
         <v-list-group value="sidebarRestBundle">
             <v-list-tile slot="item">
               <v-list-tile-action>
-                <v-icon dark>info</v-icon>
+                <v-icon dark>help</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>RestBundle Components</v-list-tile-title>
+                <v-list-tile-title>RestBundle</v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-icon dark>keyboard_arrow_down</v-icon>
