@@ -27,20 +27,20 @@
         <rb-about-item name="scope" value="apiSvc" slot="prop">Object with <var>apiDialog</var> property.</rb-about-item>
         <rb-about-item name="default" value="required" slot="slot">
             Dialog fields bound to <var>apiModelCopy</var> fields</rb-about-item>
-        <rb-about-item name="title" value='(empty title slot)' slot="slot">
-            (empty title slot)</rb-about-item>
-        <rb-about-item name="apiEdit" value='dialog="apiDialogToggle"' slot="code">
-            Application invokes <code>apiEdit()</code> (e.g., via button click)
+        <rb-about-item name="title" value='"Edit Settings"' slot="slot">
+            Dialog title</rb-about-item>
+        <rb-about-item name="apiEdit" value='toggle="apiDialogToggle"' slot="code">
+            Application invokes <code>apiEdit(scope)</code> (e.g., via button click)
             to open the named <var>RbApiDialog</var>
             and create <var>apiModelCopy</var>.
             </rb-about-item> 
-        <rb-about-item name="apiSave" value="dialog" slot="code">
+        <rb-about-item name="apiSave" value="toggle" slot="code">
             When user clicks <strong>Save</strong>, <var>RbApiDialog</var> 
-            uses <code>@click="apiSave()"</code> 
+            uses <code>apiSvc.apiSave(apiDialog, scope)"</code> 
             to save updated information on RestBundle server in the <var>api-model</var> folder.
             </rb-about-item>
-        <rb-about-item name="apiCancel" value="dialog" slot="code">
-            When user cancels dialog, <var>RbApiDialog</var> uses <code>@click="apiCancel()"</code> 
+        <rb-about-item name="apiCancel" value="toggle" slot="code">
+            When user cancels dialog, <var>RbApiDialog</var> uses <code>apiSvc.apiCancel(apiDialog,scope)"</code> 
             to close dialog and discard <var>apiModelCopy</var>
             </rb-about-item>
     </rb-about>
@@ -52,13 +52,13 @@
     <v-dialog v-model="apiSvc[apiDialog]" lazy persistent absolute width="90%">
       <v-card >
         <v-toolbar dark flat class="secondary">
-            <v-btn icon small hover dark @click.stop='apiCancel()' >
+            <v-btn icon small hover dark @click.stop='clickCancel()' >
                 <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title><slot name="title">My Dialog</slot></v-toolbar-title>
+            <v-toolbar-title><slot name="title">Edit Settings</slot></v-toolbar-title>
             <v-spacer/>
             <v-btn v-if="!rbConnected" flat="flat" @click="apiRefresh()">Refresh</v-btn>
-            <v-btn v-if="rbConnected" flat="flat" @click="apiSave()">Save</v-btn>
+            <v-btn v-if="rbConnected" flat="flat" @click="clickSave()">Save</v-btn>
         </v-toolbar>
         <v-card-text class="api-dialog">
             <slot>
@@ -97,9 +97,9 @@ class MockApiService {
         this.apiDialogToggle = false;
         Vue.set(this.apiModelCopy, "sampleInput", 1234);
     }
-    apiSave(apiDialog) {
+    apiSave(apiDialog, scope) {
         console.log("apiSave", apiDialog);
-        this[apiDialog] = false;
+        scope[apiDialog] = false;
     }
     get rbConnected() {
         return true;
@@ -124,11 +124,11 @@ export default {
         apiRefresh() {
             return this.apiSvc.apiRefresh();
         },
-        apiSave() {
-            return this.apiSvc.apiSave(this.apiDialog);
+        clickSave() {
+            return this.apiSvc.apiSave(this.apiDialog, this.scope || this.apiSvc);
         },
-        apiCancel() {
-            return this.apiSvc.apiCancel(this.apiDialog);
+        clickCancel() {
+            return this.apiSvc.apiCancel(this.apiDialog, this.scope || this.apiSvc);
         },
     },
     mixins: [ 

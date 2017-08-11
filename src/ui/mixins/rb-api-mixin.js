@@ -12,28 +12,28 @@ var self = module.exports = {
         apiRefresh() {
             window.location.reload();
         },
-        apiCancel(toggle='apiDialogToggle') {
-            this[toggle] = false;
-            this.apiModelCopy = emptyApiModel;
+        apiCancel(toggle='apiDialogToggle', scope=this) {
+            scope[toggle] = false;
+            scope.apiModelCopy = emptyApiModel;
         },
-        apiEdit(toggle='apiDialogToggle') {
+        apiEdit(toggle='apiDialogToggle', scope=this) {
             var rbm = this.restBundleResource();
-            this[toggle] = true;
-            this.apiErrors = [];
+            scope[toggle] = true;
+            scope.apiErrors = [];
             return this.apiModelCopy = JSON.parse(JSON.stringify(rbm.apiModel));
         },
-        apiSave(toggle='apiDialogToggle') {
+        apiSave(toggle='apiDialogToggle', scope=this) {
             var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
             return this.$http.put(url, { apiModel: this.apiModelCopy })
             .then(res => {
                 this.rbCommit(res.data);
-                this[toggle] = false;
-                this.apiModelCopy = emptyApiModel;
+                scope[toggle] = false;
+                scope.apiModelCopy = emptyApiModel;
             })
             .catch(err => {
                 console.error(err.stack);
-                this.apiErrors.push(err);
-                this.apiModelCopy = emptyApiModel;
+                scope.apiErrors.push(err);
+                scope.apiModelCopy = emptyApiModel;
             });
         },
         apiLoad() {
