@@ -20,11 +20,11 @@ var self = module.exports = {
             var rbm = this.restBundleResource();
             scope[toggle] = true;
             scope.apiErrors = [];
-            return this.apiModelCopy = JSON.parse(JSON.stringify(rbm.apiModel));
+            return scope.apiModelCopy = JSON.parse(JSON.stringify(rbm.apiModel));
         },
         apiSave(toggle='apiDialogToggle', scope=this) {
             var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
-            return this.$http.put(url, { apiModel: this.apiModelCopy })
+            return this.$http.put(url, { apiModel: scope.apiModelCopy })
             .then(res => {
                 this.rbCommit(res.data);
                 scope[toggle] = false;
