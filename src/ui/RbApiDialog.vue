@@ -70,9 +70,11 @@
                     label="Type something" ></v-text-field>
             </slot>
         </v-card-text>
-        <v-card-text v-for="(ae,i) in apiSvc.apiErrors" raised hover class="api-error" :key='i'>
-            &#x2639; {{ae.message}}: {{ae.response.data.error}}
-        </v-card-text>
+        <div v-if="apiSvc.api">
+            <v-card-text v-for="(ae,i) in apiSvc.api.errors" raised hover class="api-error" :key='i'>
+                &#x2639; {{ae.message}}: {{ae.response.data.error}}
+            </v-card-text>
+        </div>
         <v-card-text v-if="!rbConnected" raised hover class="api-error">
             &#x2639; Connection lost. Refresh when server is available.
         </v-card-text>
@@ -95,11 +97,11 @@ class MockApiService {
     apiCancel() {
         console.log("apiCancel");
         this.apiDialogToggle = false;
-        Vue.set(this.apiModelCopy, "sampleInput", 1234);
+        Vue.set(this.apiModelCopy, "sampleInput", 'Lorem ipsum est');
     }
-    apiSave(apiDialog, scope) {
-        console.log("apiSave", apiDialog);
-        scope[apiDialog] = false;
+    apiSave() {
+        console.log("apiSave");
+        this.apiDialogToggle = false;
     }
     get rbConnected() {
         return true;

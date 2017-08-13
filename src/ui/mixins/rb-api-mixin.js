@@ -4,55 +4,85 @@ const axios = require("axios");
 
 const emptyApiModel = {error:"apiModelCopy must be initialized by calling this.apiEdit()"};
 
+class RbApi {
+    constructor(apiSvc) {
+        this.apiSvc = apiSvc;
+        this.toggle = false;
+        this.errors = [];
+        this.mutable = emptyApiModel;
+    }
+    refresh() {
+        window.location.reload();
+    }
+    cancel() {
+        this.toggle = false;
+        this.mutable = emptyApiModel;
+    }
+    edit() {
+        var rbm = this.apiSvc.restBundleResource();
+        this.toggle = true;
+        this.errors = [];
+        return this.mutable = JSON.parse(JSON.stringify(rbm.apiModel));
+    }
+    save() {
+        var url = this.apiSvc.restOrigin() + "/" + this.apiSvc.service + "/" + this.apiSvc.apiName;
+        return this.apiSvc.$http.put(url, { apiModel: this.apiSvc.apiModelCopy })
+        .then(res => {
+            this.apiSvc.rbCommit(res.data);
+            this.toggle = false;
+            this.mutable = emptyApiModel;
+            return res;
+        })
+        .catch(err => {
+            console.error(err.stack);
+            this.errors.push(err);
+            this.mutable = emptyApiModel;
+            return err;
+        });
+    }
+    load() {
+        return this.apiSvc.rbDispatch("apiLoad")
+        .catch(err => {
+            console.error(err);
+            return err;
+        });
+    }
+}
+
 var self = module.exports = {
     mixins: [ 
         require("./rb-service-mixin.js"),
     ],
     methods: {
         apiRefresh() {
-            window.location.reload();
+            return this.api.refresh();
         },
-        apiCancel(toggle='apiDialogToggle', scope=this) {
-            scope[toggle] = false;
-            scope.apiModelCopy = emptyApiModel;
+        apiCancel() {
+            return this.api.cancel();
         },
-        apiEdit(toggle='apiDialogToggle', scope=this) {
-            var rbm = this.restBundleResource();
-            scope[toggle] = true;
-            scope.apiErrors = [];
-            return scope.apiModelCopy = JSON.parse(JSON.stringify(rbm.apiModel));
+        apiEdit() {
+            return this.api.edit();
         },
-        apiSave(toggle='apiDialogToggle', scope=this) {
-            var url = this.restOrigin() + "/" + this.service + "/" + this.apiName;
-            return this.$http.put(url, { apiModel: scope.apiModelCopy })
-            .then(res => {
-                this.rbCommit(res.data);
-                scope[toggle] = false;
-                scope.apiModelCopy = emptyApiModel;
-            })
-            .catch(err => {
-                console.error(err.stack);
-                scope.apiErrors.push(err);
-                scope.apiModelCopy = emptyApiModel;
-            });
+        apiSave() {
+            return this.api.save();
         },
         apiLoad() {
-            return this.rbDispatch("apiLoad")
-            //.then(res => {
-                //if (this.apiModelCopy) {
-                    //console.log("DEPRECATED apiLoad updated apiModelCopy");
-                    ////this.updateObject(this.apiModelCopy, res.apiModel);
-                //}
-            //})
-            .catch(err => console.error(err));
+            return this.api.load();
+        },
+    },
+    computed: {
+        apiDialogToggle() {
+            return this.api.toggle;
+        },
+        apiModelCopy() { // deprecated
+            return this.api.mutable;
         },
     },
     data() {
+        var api = new RbApi(this);
         return {
-            apiSvc: this,
-            apiDialogToggle: false,
-            apiErrors: [],
-            apiModelCopy: emptyApiModel,
+            api,
+            apiSvc: this, // scoping
         }
     },
 };
