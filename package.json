@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.21.7",
+  "version": "0.21.8",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -26,7 +26,7 @@
     "vue-loader": "^12.2.2",
     "vue-router": "^2.5.3",
     "vue-template-compiler": "^2.4.2",
-    "vuetify": "^0.14.5",
+    "vuetify": "^0.14.11",
     "vuex": "^2.3.1",
     "winston": "^2.3.1",
     "ws": "3.0.0"
