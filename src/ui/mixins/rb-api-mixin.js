@@ -5,10 +5,11 @@ const axios = require("axios");
 const emptyApiModel = {error:"apiModelCopy must be initialized by calling this.apiEdit()"};
 
 class RbApi {
-    constructor(apiSvc) {
+    constructor(apiName, apiSvc) {
         this.apiSvc = apiSvc;
         this.toggle = false;
         this.errors = [];
+        this.apiName = apiName;
         this.mutable = emptyApiModel;
     }
     refresh() {
@@ -49,7 +50,7 @@ class RbApi {
     }
 }
 
-var self = module.exports = {
+var RbApiMixin = {
     mixins: [ 
         require("./rb-service-mixin.js"),
     ],
@@ -77,19 +78,23 @@ var self = module.exports = {
         apiModelCopy() { // deprecated
             return this.api.mutable;
         },
+        apiName() {
+            return this.api.apiName;
+        },
     },
-    data() {
-        var api = new RbApi(this);
+};
+
+RbApiMixin.createMixin = function(apiName) {
+    var obj = Object.assign({}, RbApiMixin);
+    obj.computed = obj.computed || {};
+    obj.data = function() {
+        var api = new RbApi(apiName, this);
         return {
             api,
             apiSvc: this, // scoping
         }
-    },
-};
-self.createMixin = (apiName) => {
-    var obj = Object.assign({}, self);
-    obj.computed = obj.computed || {};
-    obj.computed.apiName = () => apiName;
+    };
     return obj;
 };
 
+module.exports = RbApiMixin;
