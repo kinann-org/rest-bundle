@@ -1,7 +1,7 @@
 <template>
 
 <v-app id="dev-app">
-   <v-navigation-drawer persistent light v-model="drawer" light>
+   <v-navigation-drawer persistent light v-model="drawer" >
       <v-list dense>
         <v-list-tile exact :to="item.href"
                 v-for="(item,i) in sidebarMain" :key="i">
@@ -18,30 +18,21 @@
         <v-list-group value="sidebarRestBundle">
             <v-list-tile slot="item">
               <v-list-tile-action>
-                <v-icon dark>help</v-icon>
+                <v-icon >help</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>RestBundle</v-list-tile-title>
+                <v-list-tile-title>rest-bundle</v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-icon dark>keyboard_arrow_down</v-icon>
               </v-list-tile-action>
             </v-list-tile>
-            <v-list-tile 
-                v-for="(item,i) in sidebarComponents" :key="i"
-                exact :to="item.href">
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                    <v-icon v-show='$route.path === item.href'>keyboard_arrow_right</v-icon>
-                </v-list-tile-action>
-            </v-list-tile>
+            <rb-sidebar-components :components='rbComponents'/>
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed flat class="black" >
-        <v-toolbar-side-icon light class="black white--text" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-side-icon dark @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-toolbar-title class="grey--text text--lighten-1">
             <div style="display:flex; flex-flow:column; ">
                 <span class="mr-2" >{{package.name}} {{package.version}}</span>
@@ -63,6 +54,7 @@ import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
 import Service from './Service.vue';
 import RbWebSocket from './RbWebSocket.vue';
+import RbSidebarComponents from './RbSidebarComponents.vue';
 import rbvue from "../../index-vue";
 
 export default {
@@ -71,7 +63,6 @@ export default {
         return {
             package: require("../../package.json"),
             drawer: false,
-            sidebarRestBundle:false,
             sidebarMain: [{
                 icon: "info",
                 title: "Introduction",
@@ -85,7 +76,8 @@ export default {
                 title: "Service Home Page",
                 href: "/service",
             }],
-            sidebarComponents: rbvue.methods.aboutSidebar(rbvue.components),
+            sidebarRestBundle:false,
+            rbComponents: rbvue.components,
         }
     },
     methods: {
@@ -101,6 +93,7 @@ export default {
         AllServices,
         Service,
         RbWebSocket,
+        RbSidebarComponents,
     },
 }
 
