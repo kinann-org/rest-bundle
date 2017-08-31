@@ -317,15 +317,17 @@
         }
 
         putApiModel(req, res, next, fileName) {
+            var that = this;
             return new Promise((resolve, reject) => {
                 var async = function *() {
                     try {
                         if (fileName == null) {
                             throw new Error("fileName expected");
                         }
-                        var curModel = yield this.loadApiModel(fileName)
+                        var curModel = yield that.loadApiModel(fileName)
                             .then(r=>async.next(r)).catch(e=>async.throw(e));
-                        this.apiHash(curModel); // might be unhashed
+                        curModel = curModel || {};
+                        that.apiHash(curModel); // might be unhashed
                         var putModel = req.body && req.body.apiModel;
                         if (putModel == null || putModel.rbHash == null) {
                             var err = new Error("Bad request:" + JSON.stringify(req.body));
@@ -347,18 +349,19 @@
                             }
                             reject(err);
                         } else {
-                            this.apiHash(putModel);
-                            yield this.saveApiModel(putModel, fileName)
+                            var updatedModel = Object.assign({}, curModel, putModel);
+                            that.apiHash(updatedModel);
+                            yield that.saveApiModel(updatedModel, fileName)
                                 .then(r=>async.next(r)).catch(e=>async.throw(e));
                             resolve({
-                                apiModel: this.apiHash(putModel), // update hash
+                                apiModel: that.apiHash(updatedModel), // update hash
                             });
                         }
                     } catch (err) { // unexpected error
                         winston.warn(err.message, err.stack);
                         reject(err);
                     }
-                }.call(this);
+                }.call(that);
                 async.next();
             });
         }

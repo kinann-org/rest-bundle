@@ -7,6 +7,9 @@ const supertest = require("supertest");
     const RestBundle = require("../index.js").RestBundle;
     const express = require("express");
     const WebSocket = require("ws");
+    const fs = require('fs');
+    const path = require('path');
+    const RbHash = require('../src/rb-hash');
     winston.level = "warn";
     function testRb(app) {
         return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
@@ -185,6 +188,76 @@ const supertest = require("supertest");
             var result = yield rb.loadApiModel().then(r=>async.next(r)).catch(e=>async.throw(e));
             should.deepEqual(result, apiModel);
             done();
+        }();
+        async.next();
+    });
+    it("putApiModel updates and saves api model", function(done) {
+        var async = function*() {
+            try {
+                const rbh = new RbHash();
+                var rb = new RestBundle('Binky');
+                var fileName = "test-putApiModel";
+                var filePath = path.join(__dirname, '..', 'api-model', fileName+'.json');
+                fs.existsSync(filePath) && fs.unlinkSync(filePath);
+
+                // initialize api model
+                var blankModel = {
+                    rbHash: rbh.hash({}),
+                }
+                var req = {
+                    body: { 
+                        apiModel: {
+                            color: 'purple',
+                            size: 'large',
+                            rbHash: blankModel.rbHash,
+                        },
+                    },
+                }
+                var res = {
+                    locals: {},
+                };
+                var next = function () {};
+                var result = yield rb.putApiModel(req, res, next, fileName)
+                    .then(r=>async.next(r)).catch(e=>async.throw(e));
+                var purpleHash = rbh.hash({
+                    color: 'purple',
+                    size: 'large',
+                });
+                should.deepEqual(result.apiModel, {
+                    color: 'purple',
+                    size: 'large',
+                    rbHash: purpleHash,
+                });
+
+                // change one field of api model
+                var req = {
+                    body: { 
+                        apiModel: {
+                            color: 'red',
+                            rbHash: purpleHash,
+                        },
+                    },
+                }
+                var res = {
+                    locals: {},
+                };
+                var result = yield rb.putApiModel(req, res, next, fileName)
+                    .then(r=>async.next(r)).catch(e=>async.throw(e));
+                var redHash = rbh.hash({
+                    color: 'red',
+                    size: 'large',
+                });
+                should.deepEqual(result.apiModel, {
+                    color: 'red',
+                    size: 'large',
+                    rbHash: redHash,
+                });
+
+                done();
+            } catch (err) {
+                winston.error(err.stack);
+                done(err);
+            }
         }();
         async.next();
     });
