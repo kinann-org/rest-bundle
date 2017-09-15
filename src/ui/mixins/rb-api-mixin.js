@@ -75,6 +75,9 @@ var RbApiMixin = {
         apiDialogToggle() {
             return this.api.toggle;
         },
+        apiModel() {
+            return this.rbResource.apiModel;
+        },
         apiModelCopy() { // deprecated
             return this.api.mutable;
         },
