@@ -137,6 +137,10 @@ module.exports = {
         },
         initializeState() {
         },
+        rbInitialized() {
+            // TODO: Also ensure that apiLoad has happened?
+            return this.$store.dispatch(["restBundle", this.service, "getState"].join("/"));
+        },
     },
     computed: {
         rbConnected() {
@@ -184,10 +188,6 @@ module.exports = {
         },
         rbService() {
             return this.restBundleService();
-        },
-        rbInitialized() {
-            // TODO: Also ensure that apiLoad has happened?
-            return this.$store.dispatch(["restBundle", this.service, "getState"].join("/"));
         },
     },
 };
