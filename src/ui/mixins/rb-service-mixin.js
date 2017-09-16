@@ -187,7 +187,7 @@ module.exports = {
         },
         rbInitialized() {
             // TODO: Also ensure that apiLoad has happened?
-            return this.$store.dispatch(["restBundle", service, "getState"].join("/"));
+            return this.$store.dispatch(["restBundle", this.service, "getState"].join("/"));
         },
     },
 };
