@@ -135,6 +135,8 @@ module.exports = {
             }
             return restBundle[service];
         },
+        initializeState() {
+        },
     },
     computed: {
         rbConnected() {
@@ -182,6 +184,10 @@ module.exports = {
         },
         rbService() {
             return this.restBundleService();
+        },
+        rbInitialized() {
+            // TODO: Also ensure that apiLoad has happened?
+            return this.$store.dispatch(["restBundle", service, "getState"].join("/"));
         },
     },
 };
