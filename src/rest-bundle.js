@@ -18,7 +18,6 @@
             this.uribase = options.uribase || "/" + this.name;
             this.appDir = options.appDir || require.resolve("vue").split("node_modules")[0];
             this.svcDir = options.svcDir || path.join(__dirname, "..");
-            this.appPkg = require(path.join(this.appDir, "package.json"));
             this.srcPkg = options.srcPkg || require("../package.json");
             this.node_modules = path.join(this.appDir, "node_modules");
             this.ui_index = options.ui_index || "/ui/index-service";
