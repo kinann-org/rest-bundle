@@ -49,7 +49,7 @@
             primary
             > Example </v-btn>
     </div>
-    <v-dialog v-model="apiSvc[apiDialog]" lazy persistent absolute width="90%">
+    <v-dialog v-model="apiSvc[apiDialog]" lazy persistent absolute max-width="90%">
       <v-card >
         <v-toolbar dark flat class="secondary">
             <v-btn icon small hover dark @click.stop='clickCancel()' >

@@ -29,8 +29,7 @@
     <rb-api-dialog :api-svc='apiSvc' v-if="apiModelCopy">
         <span slot="title">RestBundle Server Settings</span>
         <rb-dialog-row >
-            <div v-tooltip:right='{html:"Web socket messages received"}' slot="label">
-                Received</div>
+            <div slot="label">Received</div>
             <div class="rb-dialog-row-text">{{pushCount}}</div>
         </rb-dialog-row>
         <rb-dialog-row label="Push interval">
@@ -39,7 +38,7 @@
             </v-text-field>
         </rb-dialog-row>
     </rb-api-dialog>
-    <v-dialog v-model="showRefresh" lazy persistent absolute  width='60%'>
+    <v-dialog v-model="showRefresh" lazy persistent absolute  max-width='60%'>
         <v-card>
             <v-toolbar dark class="error">
                 <v-toolbar-title >
