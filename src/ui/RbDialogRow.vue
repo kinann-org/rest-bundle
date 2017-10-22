@@ -17,7 +17,7 @@
     </rb-about>
     <v-layout row wrap>
         <v-flex xs3 class="rb-dialog-row-label">
-            <v-subheader ><slot name="label">{{label}}</slot></v-subheader>
+            <slot name="label">{{label}}</slot>
         </v-flex>
         <v-flex v-if="$slots.default">
             <slot></slot>
@@ -59,7 +59,8 @@ export default {
 </script>
 <style> 
 .rb-dialog-row-label {
-    margin-top: 0.6em;
+    margin-top: 1.6em;
+    font-weight: 500;
 }
 .rb-dialog-row-text {
     margin-top: 1.6em;
