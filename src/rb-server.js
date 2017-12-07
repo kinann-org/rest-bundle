@@ -24,7 +24,7 @@
         static logDefault() {
             winston.remove(winston.transports.Console);
             winston.add(winston.transports.Console, {
-                timestamp: () => new Date().toLocaleTimeString([], { hour12: false, }),
+                timestamp: () => new Date().toLocaleString([], { hour12: false, }),
                 formatter: (options) => {
                     var result =  options.timestamp() +' '+ 
                         options.level.toUpperCase() +' '+ 
