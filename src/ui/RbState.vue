@@ -14,19 +14,15 @@
         </p>
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
     </rb-about>
-    <v-expansion-panel class="grey lighten-2 " >
-      <v-expansion-panel-content>
-        <div slot="header" class="title " >
-            <div class="rb-panel-icon" >
-                <v-icon xsmall class="" >visibilityk</v-icon>
-            </div>
-            <div class="rb-panel-header">RestBundle Client State</div>
-        </div>
-        <v-card class="grey lighten-4"><v-card-text>
-        <rb-tree-view root-key="this.$store.state.restBundle" initial-depth="1" class="mt-1 ml-1" :data="rootState"></rb-tree-view>
-        </v-card-text> </v-card>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
+    <v-card class="grey lighten-4">
+        <v-card-text>
+            <div class="title">RestBundle Client State</div>
+            <rb-tree-view root-key="this.$store.state.restBundle" 
+                initial-depth="1" 
+                class="mt-1 ml-1" 
+                :data="rootState"></rb-tree-view>
+        </v-card-text> 
+    </v-card>
 </div>
 
 </template>
