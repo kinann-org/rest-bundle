@@ -50,6 +50,39 @@ RestBundle relies on [Vue.js](https://vuejs.org/) for modular web components.
 
 ## State Model
 RestBundle uses [Vuex](https://vuex.vuejs.org/en/) as its application store.
-The RestBundle state hierarchy is:
+The RestBundle state hierarchy comprises one or more services having one or more API's, each
+of which has its own apiModel:
 
-`state.restBundle.`<i>service</i>.<i>apiName</i>
+`state.restBundle.`<i>service</i>`.`<i>apiName</i>`.`<i>apiModel</i>
+
+Vue components that serve as the primary view of a RestBundle api must define a 'service' property
+and include the `rb-api-mixin`. 
+
+```
+    mixins: [ 
+        require("./mixins/rb-about-mixin.js"),
+        require("./mixins/rb-api-mixin.js").createMixin("web-socket"),
+    ],
+    props: {
+        service: "RbServer",
+    },
+    beforeMount(): {
+        this.apiLoad().then(apiModel=>...).catch(e=>...);
+    },
+```
+
+Other RestBundle Vue components can become informed of the loading of another
+apiModel using the promise returned by `onApiModelLoaded(apiName,service)`:
+
+```
+    mixins: [ 
+        require("./mixins/rb-about-mixin.js"),
+        require("./mixins/rb-api-mixin.js").createMixin("some-other-api"),
+    ],
+    props: {
+        service: "RbServer",
+    },
+    beforeMount(): {
+        this.onApiModelLoaded("web-socket", "RbServer").then(apiModel=>...).catch(e=>...);
+    },
+```
