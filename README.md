@@ -52,4 +52,4 @@ RestBundle relies on [Vue.js](https://vuejs.org/) for modular web components.
 RestBundle uses [Vuex](https://vuex.vuejs.org/en/) as its application store.
 The RestBundle state hierarchy is:
 
-`state.restBundle.<i>service</i>.<i>apiName</i>`
+`state.restBundle.`<i>service</i>.<i>apiName</i>
