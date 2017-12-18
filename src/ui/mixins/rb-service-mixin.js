@@ -69,6 +69,22 @@ module.exports = {
             }
             this.$store.commit(['restBundle', service, apiName, mutation].join('/'), data);
         },
+        onApiModelLoaded(apiName, service=this.service) {
+            var state = this.$store.state;
+            var rbSvc = state.restBundle[service];
+            if (rbSvc[apiName] && rbSvc[apiName].apiModel) {
+                return Promise.resolve(rbSvc[apiName].apiModel)
+            }
+            return new Promise((resolve,reject) => {
+                var unwatch = this.$store.watch(()=>{
+                    return rbSvc[apiName].apiModel;
+                }, (apiModel)=> {
+                    console.log(`onApiModelLoaded() apiModel:restBundle/${service}/${apiName}`, apiModel);
+                    unwatch();
+                    resolve(apiModel);
+                });
+            });
+        },
         restBundleResource(initialState) {
             // The model is the union of:
             // 1) pushed read-only state, and 
