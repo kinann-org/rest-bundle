@@ -67,8 +67,25 @@ var RbApiMixin = {
         apiSave() {
             return this.api.save();
         },
+        onApiModelLoaded(service=this.service, apiName=this.apiName) {
+            var state = this.$store.state;
+            var rbSvc = state.restBundle[service];
+            if (rbSvc[apiName] && rbSvc[apiName].apiModel) {
+                return Promise.resolve(rbSvc[apiName].apiModel)
+            }
+            return new Promise((resolve,reject) => {
+                var unwatch = this.$store.watch(()=>{
+                    return rbSvc[apiName].apiModel;
+                }, (apiModel)=> {
+                    console.log(`onApiModelLoaded(restBundle/${service}/${apiName})`);
+                    resolve(apiModel);
+                });
+            });
+        },
         apiLoad() {
-            return this.api.load();
+            this.onApiModelLoaded();
+            var p =  this.api.load();
+            return p;
         },
     },
     computed: {

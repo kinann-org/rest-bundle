@@ -261,6 +261,21 @@ const supertest = require("supertest");
         }();
         async.next();
     });
+    it("TESTTESTPromise test", function(done) {
+        var x = 0;
+        var p = new Promise((resolve,reject) => {
+            setTimeout(() => {
+                resolve("resolved");
+            }, 1);
+        });
+        p.then(r=> (x+=1));
+        p.then(r=> (x+=10));
+        p.then(r=> (x+=100));
+        setTimeout(() => {
+            x.should.equal(111);
+            done();
+        },2);
+    });
     it("Last TEST closes test suite for watch", function() {
         var app = require("../scripts/server.js");
         app.locals.rbServer.close();

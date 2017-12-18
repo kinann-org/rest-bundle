@@ -47,3 +47,9 @@ RestBundle relies on [Vue.js](https://vuejs.org/) for modular web components.
 1. `npm run dev`
 1. http://localhost:4000/greeting/ui
 
+
+## State Model
+RestBundle uses [Vuex](https://vuex.vuejs.org/en/) as its application store.
+The RestBundle state hierarchy is:
+
+`state.restBundle.<var>service</var>.<var>apiName</var>`
