@@ -70,14 +70,16 @@ module.exports = {
             this.$store.commit(['restBundle', service, apiName, mutation].join('/'), data);
         },
         onApiModelLoaded(apiName, service=this.service) {
-            var state = this.$store.state;
+            var store = this.$store;
+            var state = store.state;
             var rbSvc = state.restBundle[service];
-            if (rbSvc[apiName] && rbSvc[apiName].apiModel) {
-                return Promise.resolve(rbSvc[apiName].apiModel)
+            var getApiModel = () => rbSvc && rbSvc.hasOwnProperty(apiName) && rbSvc[apiName].apiModel || null;
+            if (getApiModel()) {
+                return Promise.resolve(getApiModel());
             }
             return new Promise((resolve,reject) => {
-                var unwatch = this.$store.watch(()=>{
-                    return rbSvc[apiName].apiModel;
+                var unwatch = store.watch(()=>{
+                    return getApiModel();
                 }, (apiModel)=> {
                     console.log(`onApiModelLoaded() apiModel:restBundle/${service}/${apiName}`, apiModel);
                     unwatch();
