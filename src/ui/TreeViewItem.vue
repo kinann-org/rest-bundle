@@ -7,7 +7,8 @@
         <span class="tree-view-item-hint" v-show="!isOpen() && data.children.length === 1">{{data.children.length}} property</span>
         <span class="tree-view-item-hint" v-show="!isOpen() && data.children.length !== 1">{{data.children.length}} properties</span>
       </div>
-      <tree-view-item :key="getKey(data)" :max-depth="maxDepth" :current-depth="currentDepth+1" v-show="isOpen()" v-for="child in data.children" :data="child"></tree-view-item>
+      <tree-view-item :key="getKey(data,i)" :max-depth="maxDepth" :current-depth="currentDepth+1" v-show="isOpen()" 
+        v-for="(child,i) in data.children" :data="child"></tree-view-item>
     </div>
     <div v-if="isArray(data)" class="tree-view-item-leaf">
       <div class="tree-view-item-node" @click.stop="toggleOpen()">
@@ -15,7 +16,8 @@
         <span class="tree-view-item-hint" v-show="!isOpen() && data.children.length === 1">{{data.children.length}} item</span>
         <span class="tree-view-item-hint" v-show="!isOpen() && data.children.length !== 1">{{data.children.length}} items</span>
       </div>
-      <tree-view-item :key="getKey(data)" :max-depth="maxDepth" :current-depth="currentDepth+1" v-show="isOpen()" v-for="child in data.children" :data="child"></tree-view-item>
+      <tree-view-item :key="getKey(data,i)" :max-depth="maxDepth" :current-depth="currentDepth+1" v-show="isOpen()" 
+        v-for="(child,i) in data.children" :data="child"></tree-view-item>
     </div>
     <div class="tree-view-item-leaf" v-if="isValue(data)">
       <span class="tree-view-item-key">{{getKey(data)}}</span>
@@ -50,12 +52,12 @@
       isValue: function(value){
         return value.type === 'value';
       },
-      getKey: function(value){
+      getKey: function(value,i){
+        var key = i == null ?  value.key : `${value.key} (${i})`;
         if (_.isInteger(value.key)) {
-            return value.key+":";
+            return key+":";
         } else {
-            return value.key + ":";
-            //return "\""+ value.key + "\":";
+            return key + ":";
         }
       },
       getValue: function(value){

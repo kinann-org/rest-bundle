@@ -15,9 +15,8 @@
         <rb-about-item name="about" value="false" slot="prop">Show this descriptive text</rb-about-item>
     </rb-about>
     <v-card class="grey lighten-4">
-        <v-card-text>
-            <div class="title">RestBundle Client State</div>
-            <rb-tree-view root-key="this.$store.state.restBundle" 
+        <v-card-text v-if="rootState()" >
+            <rb-tree-view root-key="RestBundle Client State"
                 initial-depth="1" 
                 class="mt-1 ml-1" 
                 :data="rootState"></rb-tree-view>
@@ -28,8 +27,6 @@
 </template>
 <script>
 
-var RbTreeView = require('./RbTreeView.vue');
-
 export default {
     mixins: [ 
         require("./mixins/rb-about-mixin.js"),
@@ -37,7 +34,8 @@ export default {
     ],
     methods: {
         rootState() {
-            return this.$store.state.restBundle;
+            var result = this.$store.state.restBundle;
+            return result;
         },
     },
     props: {
@@ -58,7 +56,6 @@ export default {
         },
     },
     components: {
-        RbTreeView,
     },
 }
 

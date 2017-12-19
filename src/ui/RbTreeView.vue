@@ -10,7 +10,8 @@
         <rb-about-item name="initialDepth" value="2" slot="prop">Depth of initally opened nodes</rb-about-item>
     </rb-about>
     <div class="rb-tree-view-wrapper">
-        <tree-view-item class="tree-view-item-root" :data="parsedData" :max-depth="allOptions.maxDepth" :current-depth="0"></tree-view-item>
+        <tree-view-item class="tree-view-item-root" :data="parsedData" 
+            :max-depth="allOptions.maxDepth" :current-depth="0"></tree-view-item>
     </div>
 </div>
 </template>

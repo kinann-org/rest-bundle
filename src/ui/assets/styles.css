@@ -10,12 +10,12 @@
     border-bottom-left-radius: 0.4em !important;
     border-bottom-right-radius: 0.4em !important;
 }
-.rb-panel-header {
+.xrb-panel-header {
     position:absolute; 
     top:0.7em;
     left:2.5em;
 }
-.rb-panel-icon {
+.xrb-panel-icon {
     position:absolute;
     top:0.55em;
     left:0.5em;

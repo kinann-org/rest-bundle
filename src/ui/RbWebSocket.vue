@@ -26,7 +26,7 @@
             <v-icon v-if="rbTasksPending" :class="rbwsBtnClass" small>hourglass_empty</v-icon>
         </v-btn>
     </div>
-    <rb-api-dialog :api-svc='apiSvc' v-if="apiModelCopy">
+    <rb-api-dialog :api-svc='apiSvc' v-if="apiModelCopy" >
         <span slot="title">RestBundle Server Settings</span>
         <rb-dialog-row >
             <div slot="label">Received</div>

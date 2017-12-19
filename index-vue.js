@@ -4,6 +4,7 @@ import RbServices from "./src/ui/RbServices.vue";
 import RbAbout from "./src/ui/RbAbout.vue";
 import RbAboutItem from "./src/ui/RbAboutItem.vue";
 import RbTreeView from "./src/ui/RbTreeView.vue";
+import TreeViewItem from "./src/ui/TreeViewItem.vue";
 import RbWebSocket from "./src/ui/RbWebSocket.vue";
 import RbApiDialog from "./src/ui/RbApiDialog.vue";
 import RbDialogRow from "./src/ui/RbDialogRow.vue";
@@ -18,6 +19,7 @@ var components = {
     RbState,
     RbTreeView,
     RbWebSocket,
+    TreeViewItem,
 
 }
 

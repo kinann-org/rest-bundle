@@ -46,7 +46,7 @@
     </rb-about>
     <div v-if="about">
         <v-btn @click.stop='apiSvc[apiDialog] = true'
-            primary
+            color="primary"
             > Example </v-btn>
     </div>
     <v-dialog v-model="apiSvc[apiDialog]" lazy persistent absolute max-width="90%">

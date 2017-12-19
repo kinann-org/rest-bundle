@@ -45,7 +45,9 @@ const store = new Vuex.Store({
     // your application store
 });
 
-new Vue({
+import RbTreeView from './RbTreeView.vue';
+
+const app = new Vue({
     el: '#dev',
     router,
     store,
@@ -54,5 +56,6 @@ new Vue({
         Introduction,
         AllServices,
         Service,
+        RbTreeView,
     },
-})
+}).$mount('#app');

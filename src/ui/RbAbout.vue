@@ -9,7 +9,7 @@
         <rb-about-item name="prop" slot="slot"><code>rb-about-item</code> content that describes properties</rb-about-item>
         <rb-about-item name="slot" value="--" slot="slot"><code>rb-about-item</code> content that describes slots</rb-about-item>
     </rb-about>
-    <h4>{{name}} <code>&lt;{{toKebabCase(name)}}&gt;</code></h4>
+    <h2>{{name}} <code>&lt;{{toKebabCase(name)}}&gt;</code></h2>
     <slot>The default slot for <code>rb-about</code> displays content here</slot>
 
     <v-tabs grow scroll-bars v-model="active" light >
