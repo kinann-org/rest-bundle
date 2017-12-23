@@ -141,7 +141,7 @@
                     })
                     .catch(e=>{throw(e);});
             } catch (err) {
-                winston.error(err);
+                winston.error('rb-server:', err.stack);
                 throw err;
             }
             return this;

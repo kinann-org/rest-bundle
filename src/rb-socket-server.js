@@ -103,7 +103,7 @@
                 try {
                     this.pushData("state", this.getAllState());
                 } catch (err) {
-                    winston.error(err);
+                    winston.error('rb-socket-server', err.stack);
                     reject(err);
                 }
             });
