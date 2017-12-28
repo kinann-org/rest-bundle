@@ -97,6 +97,14 @@ const supertest = require("supertest");
                 name: "test",
                 package: pkg.name,
             });
+            res.body.should.properties([
+                "version",
+                "hostname",
+                "uptime",
+                "loadavg",
+                "totalmem",
+                "freemem",
+            ]);
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })

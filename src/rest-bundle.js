@@ -2,6 +2,7 @@
     const ResourceMethod = require("./resource-method");
     const RbHash = require("./rb-hash");
     const path = require("path");
+    const os = require('os');
     const fs = require("fs");
     const express = require("express");
     const bodyParser = require("body-parser");
@@ -129,6 +130,11 @@
                 name: this.name,
                 package: this.srcPkg.name,
                 version: this.srcPkg.version,
+                hostname: os.hostname(),
+                uptime: os.uptime(),
+                loadavg: os.loadavg(),
+                totalmem: os.totalmem(),
+                freemem: os.freemem(),
             }
         }
 
