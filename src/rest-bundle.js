@@ -246,6 +246,7 @@
         }
 
         apiHash(model) {
+            delete model.rbHash;
             model.rbHash = _rbHash.hash(model);
             return model;
         }
