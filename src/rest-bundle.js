@@ -14,7 +14,7 @@
             if (name == null) {
                 throw new Error("bundle name is required");
             }
-            winston.info('new', this.constructor.name+'("'+ name + '"...)');
+            winston.info(`RestBundle.ctor(${name})');
             this.name = name;
             this.uribase = options.uribase || "/" + this.name;
             this.appDir = options.appDir || require.resolve("vue").split("node_modules")[0];
@@ -72,7 +72,7 @@
         }
 
         pushState() {
-            winston.warn("pushState() ignored (no web socket)");
+            winston.warn("RestBundle.pushState() ignored (no web socket)");
         }
 
         taskPromise(name, cbPromise) {
@@ -260,21 +260,24 @@
                 var amp = this.apiModelPath(name);
 
                 if (fs.existsSync(amp)) {
+                    winston.info(`RestBundle.loadApiModel() loading:${amp}`);
                     fs.readFile(amp, (err, data) => {
                         if (err) {
-                            winston.warn("loadApiModel() ", err, 'E01');
+                            winston.warn("RestBundle.loadApiModel() ", err, 'E01');
                             reject(err);
                         } else {
                             try {
                                 var obj = JSON.parse(data);
+                                winston.info(`RestBundle.loadApiModel() loaded rbHash:${obj.rbHash}`);
                                 resolve(obj);
                             } catch (err) {
-                                winston.warn("loadApiModel() ", err.message, 'E02');
+                                winston.warn("RestBundle.loadApiModel() ", err.message, 'E02');
                                 reject(err);
                             }
                         }
                     });
                 } else {
+                    winston.info(`RestBundle.loadApiModel() path not found:${amp} `);
                     resolve(null);
                 }
             });
@@ -301,6 +304,7 @@
                             if (err) {
                                 async.throw(err);
                             } else {
+                                winston.info(`RestBundle.saveApiModel() ${json.length} characters written to ${amp}`);
                                 async.next(true);
                             }
                         });
@@ -346,7 +350,7 @@
                             var err = null;
                         } 
                         if (err) { // expected error
-                            winston.info(err.message);
+                            winston.info(err.stack);
                             res.locals.data = {
                                 error: err.message,
                                 data: {
@@ -364,7 +368,7 @@
                             });
                         }
                     } catch (err) { // unexpected error
-                        winston.warn(err.message, err.stack);
+                        winston.warn(err.stack);
                         reject(err);
                     }
                 }.call(that);
