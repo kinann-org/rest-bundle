@@ -260,18 +260,18 @@
                 var amp = this.apiModelPath(name);
 
                 if (fs.existsSync(amp)) {
-                    winston.info(`RestBundle.loadApiModel() loading:${amp}`);
                     fs.readFile(amp, (err, data) => {
                         if (err) {
-                            winston.warn("RestBundle.loadApiModel() ", err, 'E01');
+                            winston.warn("RestBundle.loadApiModel() file:${amp}", err, 'E01');
                             reject(err);
                         } else {
                             try {
                                 var obj = JSON.parse(data);
-                                winston.info(`RestBundle.loadApiModel() loaded rbHash:${obj.rbHash}`);
+                                var rbHash = obj.rbHash;
+                                winston.info(`RestBundle.loadApiModel() file:${amp} rbHash:${rbHash}`);
                                 resolve(obj);
                             } catch (err) {
-                                winston.warn("RestBundle.loadApiModel() ", err.message, 'E02');
+                                winston.warn("RestBundle.loadApiModel() file:${amp}", err.message, 'E02');
                                 reject(err);
                             }
                         }
