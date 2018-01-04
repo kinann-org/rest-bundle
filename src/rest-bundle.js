@@ -262,22 +262,22 @@
                 if (fs.existsSync(amp)) {
                     fs.readFile(amp, (err, data) => {
                         if (err) {
-                            winston.warn("RestBundle.loadApiModel() file:${amp}", err, 'E01');
+                            winston.warn(`RestBundle-${this.name}.loadApiModel() file:${amp}`, err, 'E01');
                             reject(err);
                         } else {
                             try {
                                 var obj = JSON.parse(data);
                                 var rbHash = obj.rbHash;
-                                winston.info(`RestBundle.loadApiModel() file:${amp} rbHash:${rbHash}`);
+                                winston.info(`RestBundle-${this.name}.loadApiModel() file:${amp} rbHash:${rbHash}`);
                                 resolve(obj);
                             } catch (err) {
-                                winston.warn("RestBundle.loadApiModel() file:${amp}", err.message, 'E02');
+                                winston.warn(`RestBundle-${this.name}.loadApiModel() file:${amp}`, err.message, 'E02');
                                 reject(err);
                             }
                         }
                     });
                 } else {
-                    winston.info(`RestBundle.loadApiModel() path not found:${amp} `);
+                    winston.info(`RestBundle-${this.name}.loadApiModel() unavailable:${amp} `);
                     resolve(null);
                 }
             });
