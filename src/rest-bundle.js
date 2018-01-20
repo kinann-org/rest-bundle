@@ -11,13 +11,33 @@
     const v8 = require('v8');
 
     function heapStat() {
+        var precision=1;
         v8.getHeapSpaceStatistics().forEach(b => {
-            var mb = b.space_used_size / (10e6);
-            winston.info(`v8.getHeapSpaceStatistics() ${b.space_name} used:${mb.toFixed(1)}MB`);
+            var sz = b.space_size / (10e6);
+            var used = b.space_used_size / (10e6);
+            var available = b.space_available_size / (10e6);
+            var physical = b.physical_space_size / (10e6);
+            winston.info(`v8.getHeapSpaceStatistics() ${b.space_name} MB`,
+                `size:${sz.toFixed(precision)}`,
+                `used:${used.toFixed(precision)}`,
+                `available:${available.toFixed(precision)}`,
+                `physical:${physical.toFixed(precision)}`,
+            '');
         });
+        var heap = v8.getHeapStatistics();
+        var heaptot = heap.total_heap_size / 10e6;
+        var heapavail = heap.total_available_size / 10e6;
+        var heapused = heap.used_heap_size / 10e6;
+        var heaplimit = heap.heap_size_limit / 10e6;
+        winston.info(`v8.getHeapStatistics() MB`,
+            `total:${heaptot.toFixed(precision)}`,
+            `used:${heapused.toFixed(precision)}`,
+            `available:${heapavail.toFixed(precision)}`,
+            `limit:${heaplimit.toFixed(precision)}`,
+        '');
     }
 
-    setTimeout(heapStat, 2000);
+    setTimeout(heapStat, 1000);
     setInterval(heapStat, 3600*1000);
 
     class RestBundle {
