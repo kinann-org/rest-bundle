@@ -10,6 +10,16 @@
     const _rbHash = new RbHash();
     const v8 = require('v8');
 
+    function heapStat() {
+        v8.getHeapSpaceStatistics().forEach(b => {
+            var mb = b.space_used_size / (10e6);
+            winston.info(`v8.getHeapSpaceStatistics() ${b.space_name} used:${mb.toFixed(1)}MB`);
+        });
+    }
+
+    setTimeout(heapStat, 2000);
+    setInterval(heapStat, 3600*1000);
+
     class RestBundle {
         constructor(name, options = {}) {
             if (name == null) {
@@ -27,10 +37,6 @@
             this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
             this.taskBag = []; // unordered task collection with duplicates
             this.apiModelDir = options.apiModelDir || path.join(process.cwd(), "api-model");
-            v8.getHeapSpaceStatistics().forEach(b => {
-                var mb = b.space_used_size / (10e6);
-                winston.info(`RestBundle(${this.name}) ${b.space_name} used:${mb.toFixed(1)}MB`);
-            });
         }
 
         resourceMethod(method, name, handler, mime) {
