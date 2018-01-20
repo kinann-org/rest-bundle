@@ -5,6 +5,7 @@ const supertest = require("supertest");
     const winston = require("winston");
     const pkg = require("../package.json");
     const RestBundle = require("../index.js").RestBundle;
+    const supertest = require('supertest');
     const express = require("express");
     const WebSocket = require("ws");
     const fs = require('fs');
@@ -283,6 +284,28 @@ const supertest = require("supertest");
             x.should.equal(111);
             done();
         },2);
+    });
+    it("GET /app/stats/heap returns v8.getHeapSpaceStatistics", function(done) {
+        var async = function* () {
+            try {
+                var app = express();
+                var rb = new RestBundle("test").bindExpress(app);
+                var response = yield supertest(app).get("/test/app/stats/heap").expect((res) => {
+                    res.statusCode.should.equal(200);
+                    var stats = res.body;
+                    should(stats instanceof Array);
+                    should(stats.length).equal(5);
+                    res.body.forEach(b => {
+                        var mb = b.space_used_size / (10e6);
+                        winston.info(`heap used ${mb.toFixed(1)}MB ${b.space_name}`);
+                    });
+                }).end((e,r) => e ? async.throw(e) : async.next(r));
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }();
+        async.next();
     });
     it("Last TEST closes test suite for watch", function() {
         var app = require("../scripts/server.js");

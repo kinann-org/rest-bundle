@@ -8,6 +8,7 @@
     const bodyParser = require("body-parser");
     const winston = require("winston");
     const _rbHash = new RbHash();
+    const v8 = require('v8');
 
     class RestBundle {
         constructor(name, options = {}) {
@@ -26,6 +27,10 @@
             this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
             this.taskBag = []; // unordered task collection with duplicates
             this.apiModelDir = options.apiModelDir || path.join(process.cwd(), "api-model");
+            v8.getHeapSpaceStatistics().forEach(b => {
+                var mb = b.space_used_size / (10e6);
+                winston.info(`RestBundle(${this.name}) ${b.space_name} used:${mb.toFixed(1)}MB`);
+            });
         }
 
         resourceMethod(method, name, handler, mime) {
@@ -43,6 +48,7 @@
             return [
                 this.resourceMethod("get", "identity", this.getIdentity),
                 this.resourceMethod("get", "state", this.getState),
+                this.resourceMethod("get", "app/stats/:stat", this.getAppStats),
                 this.resourceMethod("post", "identity", this.postIdentity),
                 this.resourceMethod("post", "echo", this.postEcho),
             ];
@@ -117,6 +123,21 @@
             }
             this.taskBag.splice(iName, 1);
             this.pushState();
+        }
+
+        getAppStats(req, res, next) {
+            var stat = req.params.stat || "heap";
+            return new Promise((resolve, reject) => {
+                try {
+                    if (stat === 'heap') {
+                        resolve(v8.getHeapSpaceStatistics());
+                    } else {
+                        resolve(v8.getHeapSpaceStatistics());
+                    }
+                } catch (e) {
+                    winston.error(e.stack);
+                }
+            });
         }
 
         getState(req, res, next) {
