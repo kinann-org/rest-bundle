@@ -12,6 +12,7 @@
 
     function heapStat() {
         var precision=1;
+        winston.info('memoryUsage()', process.memoryUsage());
         v8.getHeapSpaceStatistics().forEach(b => {
             var sz = b.space_size / (10e6);
             var used = b.space_used_size / (10e6);
