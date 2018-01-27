@@ -111,7 +111,7 @@
         taskPromise(name, cbPromise) {
             return new Promise((resolve, reject) => {
                 var onError = (err, n, level) => {
-                    winston[level]("taskPromise#" + n + ":", err);
+                    winston[level]("taskPromise#" + n + ":", err.stack);
                     this.taskEnd(name);
                     reject(err);
                 }
@@ -162,7 +162,8 @@
                         resolve(v8.getHeapSpaceStatistics());
                     }
                 } catch (e) {
-                    winston.error(e.stack);
+                    winston.warn(e.stack);
+                    reject(e);
                 }
             });
         }
@@ -203,7 +204,10 @@
                 try {
                     var result = handler(req, res);
                     if (result instanceof Promise) {
-                        result.then(data => resolve(data)).catch(err => reject(err));
+                        result.then(data => resolve(data)).catch(err => {
+                            winston.warn(err.stack);
+                            reject(err);
+                        });
                     } else {
                         resolve(result);
                     }
@@ -358,6 +362,7 @@
                         });
                         resolve(apiModel);
                     } catch (err) {
+                        winston.warn(err.stack);
                         reject(err);
                     }
                 }.call(this);
@@ -370,7 +375,10 @@
                 this.loadApiModel(name).then(model => resolve({
                     apiModel: this.apiHash(model),
                 }))
-                .catch(e=>reject(e));
+                .catch(e=>{
+                    winston.warn(e.stack);
+                    reject(e);
+                });
             });
         }
 
