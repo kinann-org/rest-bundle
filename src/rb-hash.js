@@ -224,6 +224,9 @@
                 if (cached && value.rbHash) {
                     return value.rbHash;
                 }
+                if ((typeof value.toJSON) === 'function') {
+                    value = JSON.parse(JSON.stringify(value));
+                }
                 var keys = Object.keys(value).sort();
                 var acc = keys.reduce((a,k) => {
                     return k === 'rbHash' ? a : (a+k+':'+this.hash(value[k])+',')

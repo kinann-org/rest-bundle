@@ -1,5 +1,7 @@
 (typeof describe === 'function') && describe("RestBundle", function() {
     const should = require("should");
+    const fs = require('fs');
+    const path = require('path');
     const RbHash = exports.RbHash || require('../index').RbHash;
 
     it("hash(string) calculates hash code", function() {
@@ -77,5 +79,29 @@
         should.equal(rbh.hashCached({rbHash:hfoo,anything:'do-not-care'}), hfoo);
         should.equal(rbh.hashCached([{rbHash:hfoo,anything:'do-not-care'}]), rbh.hash(hfoo));
         should.equal(rbh.hashCached({rbHash:'some-hash', a:1}), 'some-hash');
+    });
+    it("TESTTESThash(object) handles objects with non-serializable properties", function() {
+        class TestClass {
+            constructor() {
+                this.color = 'red';             // serialized
+                this.random = Math.random();    // not-serialized
+            }
+            toJSON() { 
+                return {
+                    color: this.color,
+                };
+            }
+        }
+        var obj = (() => { 
+           var o = {};
+           o.color = 'red';
+           return o;
+        })();
+        should(typeof obj.toJSON).equal('undefined');
+        should(typeof new TestClass().toJSON).equal('function');
+        var rbh = new RbHash();
+        var hash1 = rbh.hash(new TestClass());
+        var hash2 = rbh.hash(new TestClass());
+        should(hash1).equal(hash2);
     });
 })
