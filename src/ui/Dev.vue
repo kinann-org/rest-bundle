@@ -47,7 +47,7 @@
             <router-view></router-view>
         </v-container>
     </v-content>
-    <rb-alerts service="test"/>
+    <rb-alerts/>
 </v-app>
 
 </template>  

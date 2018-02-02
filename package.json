@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.29.0",
+  "version": "0.29.1",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
