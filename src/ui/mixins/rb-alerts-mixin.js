@@ -5,14 +5,15 @@ module.exports = {
         alert(text, type) {
             var alerts = this.$store.state.alerts.filter(a=>a.visible);
             var now = new Date();
-            alerts.push({
+            var alert = {
                 type,
                 date: `${now.toLocaleTimeString()}.${("00"+now.getMilliseconds()).slice(-3)}`,
                 text,
                 visible: true,
-            });
-            console.log('alerts', alerts);
+            };
+            alerts.push(alert);
             Vue.set(this.$store.state,'alerts', alerts);
+            console.log(`${type}: ${text});
         },
         alertSuccess(text) {
             this.alert(text, 'success');
