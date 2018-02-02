@@ -15,6 +15,9 @@ function updateObject(state, payload = {}) {
 }
 
 module.exports = {
+    mixins: [ 
+        require("./rb-alerts-mixin.js"),
+    ],
     props: {
         service: {
             type: String,

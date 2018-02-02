@@ -320,7 +320,8 @@
                             try {
                                 var obj = JSON.parse(data);
                                 var rbHash = obj.rbHash;
-                                winston.info(`RestBundle-${this.name}.loadApiModel() file:${amp} rbHash:${rbHash}`);
+                                winston.debug(`RestBundle-${this.name}.loadApiModel() file:${amp}`);
+                                winston.info(`RestBundle-${this.name}.loadApiModel() rbHash:${rbHash}`);
                                 resolve(obj);
                             } catch (err) {
                                 winston.warn(`RestBundle-${this.name}.loadApiModel() file:${amp}`, err.message, 'E02');

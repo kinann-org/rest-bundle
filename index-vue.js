@@ -2,6 +2,7 @@ import RbIdentity from "./src/ui/RbIdentity.vue";
 import RbState from "./src/ui/RbState.vue";
 import RbServices from "./src/ui/RbServices.vue";
 import RbAbout from "./src/ui/RbAbout.vue";
+import RbAlerts from "./src/ui/RbAlerts.vue";
 import RbAboutItem from "./src/ui/RbAboutItem.vue";
 import RbTreeView from "./src/ui/RbTreeView.vue";
 import TreeViewItem from "./src/ui/TreeViewItem.vue";
@@ -12,6 +13,7 @@ import RbDialogRow from "./src/ui/RbDialogRow.vue";
 var components = {
     RbAbout,
     RbAboutItem,
+    RbAlerts,
     RbApiDialog,
     RbDialogRow,
     RbIdentity,

@@ -42,11 +42,12 @@
         <v-spacer/>
         <rb-web-socket/>
     </v-toolbar>
-    <v-content >
+    <v-content app>
         <v-container fluid >
             <router-view></router-view>
         </v-container>
     </v-content>
+    <rb-alerts service="test"/>
 </v-app>
 
 </template>  
@@ -54,6 +55,7 @@
 
 import Introduction from './Introduction.vue';
 import AllServices from './AllServices.vue';
+import RbAlerts from './RbAlerts.vue';
 import Service from './Service.vue';
 import RbWebSocket from './RbWebSocket.vue';
 import RbSidebarComponents from './RbSidebarComponents.vue';
@@ -92,6 +94,7 @@ export default {
     },
     components: {
         Introduction,
+        RbAlerts,
         AllServices,
         Service,
         RbWebSocket,
