@@ -13,7 +13,7 @@ module.exports = {
             };
             alerts.push(alert);
             Vue.set(this.$store.state,'alerts', alerts);
-            console.log(`${type}: ${text});
+            console.log(`${type}: ${text}`);
         },
         alertSuccess(text) {
             this.alert(text, 'success');
