@@ -129,7 +129,9 @@ export default {
                 });
             }
         } catch (err) {
-            console.log("Could not open web socket", err);
+            var msg = "Could not open web socket";
+            this.alertError(msg);
+            console.log(msg, err);
         }
     },
     beforeMount() {

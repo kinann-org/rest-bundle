@@ -37,8 +37,9 @@ class RbApi {
             return res;
         })
         .catch(err => {
-            console.error(err.stack);
-            this.errors.push(err);
+            var msg = `Could not Save: ${err.message}`;
+            this.alertError(msg);
+            console.error(msg, err.stack);
             this.mutable = emptyApiModel;
             return err;
         });
@@ -46,7 +47,8 @@ class RbApi {
     load() {
         return this.apiSvc.rbDispatch("apiLoad")
         .catch(err => {
-            console.error(err);
+            var msg = `Could not load: ${err.message}`;
+            console.error(msg, err.stack);
             return err;
         });
     }
