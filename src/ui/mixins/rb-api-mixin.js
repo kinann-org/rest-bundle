@@ -19,10 +19,11 @@ class RbApi {
         this.toggle = false;
         this.mutable = emptyApiModel;
     }
-    edit() {
+    edit(opts={}) {
         var rbm = this.apiSvc.restBundleResource();
         this.toggle = true;
         this.errors = [];
+        this.onSave = opts.onSave;
         return this.mutable = JSON.parse(JSON.stringify(rbm.apiModel));
     }
     save() {
@@ -32,6 +33,7 @@ class RbApi {
             this.apiSvc.rbCommit(res.data);
             this.toggle = false;
             this.mutable = emptyApiModel;
+            this.onSave && this.onSave();
             return res;
         })
         .catch(err => {
@@ -61,8 +63,8 @@ var RbApiMixin = {
         apiCancel() {
             return this.api.cancel();
         },
-        apiEdit() {
-            return this.api.edit();
+        apiEdit(opts={}) {
+            return this.api.edit(opts);
         },
         apiSave() {
             return this.api.save();
