@@ -3,7 +3,8 @@ const Vue = require("vue").default;
 module.exports = {
     methods: {
         alert(text, type) {
-            var alerts = this.$store.state.alerts.filter(a=>a.visible);
+            var oldAlerts = this.$store.state.alerts;
+            var alerts = oldAlerts && oldAlerts.filter(a=>a.visible) || [];
             var now = new Date();
             var alert = {
                 type,

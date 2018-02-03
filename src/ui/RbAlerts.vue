@@ -11,7 +11,7 @@
         <v-btn v-if="about" @click="alertWarning(`you hear an unexpected noise`)"> Warning </v-btn>
         <v-btn v-if="about" @click="alertError(`did something die in here?`)"> Error </v-btn>
     </div>
-    <v-footer fixed v-show="hasAlerts">
+    <v-footer fixed v-if="hasAlerts">
         <v-layout v-show="hasAlerts">
             <v-flex>
                 <v-alert v-for="alert in alerts" :key="alert.date" :color="alertColor(alert)" 
