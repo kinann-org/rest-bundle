@@ -36,7 +36,7 @@ export default {
     computed: {
         hasAlerts() {
             var alerts = this.$store.state.alerts;
-            return alerts && alerts.reduce((acc,a) => a && a.visible,true);
+            return alerts && alerts.reduce((acc,a) => a || a.visible,false);
         },
         alerts() {
             if (!this.$store || !this.$store.state) {
