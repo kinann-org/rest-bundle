@@ -271,7 +271,7 @@
         }
 
         bindExpress(rootApp, restHandlers = this.handlers) {
-            var app = express();
+            var app = this.app = express();
             this.rootApp = rootApp;
             rootApp.use("/node_modules", express.static(this.node_modules));
             app.use(bodyParser.json());
