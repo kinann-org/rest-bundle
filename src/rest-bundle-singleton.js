@@ -2,14 +2,14 @@
     const winston = require("winston");
     const WebSocket = require("ws");
 
-    class RbSocketServer {
+    class RestBundleSingleton {
 
         constructor(restBundles, listener, options = {}) {
             if (!listener) {
-                throw new Error("RbSocketServer(restBundle,listener,options) listener is required");
+                throw new Error("RestBundleSingleton(restBundle,listener,options) listener is required");
             }
             if (!listener.listening) {
-                throw new Error("RbSocketServer requires an active listener");
+                throw new Error("RestBundleSingleton requires an active listener");
             }
             this.restBundles = restBundles;
             this.restBundles.forEach(rb => {
@@ -24,7 +24,7 @@
             });
             this.sockets = new Set();
             var port = listener.address().port;
-            winston.info("RbSocketServer listening on port:", port);
+            winston.info("RestBundleSingleton listening on port:", port);
             this.wss.on('connection', (ws, req) => {
                 const ip = req.connection.remoteAddress;
                 this.sockets.add(ws);
@@ -103,13 +103,13 @@
                 try {
                     this.pushData("state", this.getAllState());
                 } catch (err) {
-                    winston.error('rb-socket-server', err.stack);
+                    winston.error('rest-bundle-singleton', err.stack);
                     reject(err);
                 }
             });
         }
 
-    } // class RbSocketServer
+    } // class RestBundleSingleton
 
-    module.exports = exports.RbSocketServer = RbSocketServer;
+    module.exports = exports.RestBundleSingleton = RestBundleSingleton;
 })(typeof exports === "object" ? exports : (exports = {}));

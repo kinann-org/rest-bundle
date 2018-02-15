@@ -1,10 +1,10 @@
 /**
  * RbServer is the RestBundle for a server singleton
- * that manages shared resources such as rb-socket-server.
+ * that manages shared resources such as rest-bundle-singleton.
  */
 (function(exports) {
     const winston = require("winston");
-    const RbSocketServer = require("./rb-socket-server");
+    const RestBundleSingleton = require("./rest-bundle-singleton");
     const RestBundle = require("./rest-bundle");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
 
@@ -99,7 +99,7 @@
         close() {
             if (this.rootApp) {
                 if (this.rbss) {
-                    winston.info("closing RbSocketServer");
+                    winston.info("closing RestBundleSingleton");
                     this.rbss.close();
                 }
                 if (this.httpServer) {
@@ -132,7 +132,7 @@
                         }
                     })
                 }, {});
-                this.rbss = new RbSocketServer(restBundles, this.httpServer);
+                this.rbss = new RestBundleSingleton(restBundles, this.httpServer);
                 this.loadApiModel(WEB_SOCKET_MODEL)
                     .then(result => {
                         if (result) {
