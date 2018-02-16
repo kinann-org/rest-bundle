@@ -37,6 +37,8 @@
             var expected = {
                 apiModel: {
                     pushStateMillis: 1000,  // model property (client-mutable)
+                    heapInterval: 60,
+                    heapMax: 30*1000*1000,
                 }
             };
             expected.apiModel.rbHash = rbh.hash(expected.apiModel);
@@ -55,6 +57,8 @@
                     should.deepEqual(res.body, {
                         apiModel: {
                             pushStateMillis: 1234, 
+                            heapInterval: 60,
+                            heapMax: 30*1000*1000,
                             rbHash: rbh.hash(res.body.apiModel),
                         }
                     });
@@ -142,6 +146,8 @@
                     res.headers["content-type"].should.match(/utf-8/);
                     var expectedModel = {
                         pushStateMillis: 2000,  // model property (client-mutable)
+                        heapInterval: 60,
+                        heapMax: 30*1000*1000,
                         rbHash: rbh.hash(update.apiModel),
                     }
                     should.deepEqual(res.body, {

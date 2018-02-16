@@ -1,15 +1,15 @@
 /**
  * RbServer is the RestBundle for a server singleton
- * that manages shared resources such as rest-bundle-singleton.
+ * that manages shared resources such as rb-singleton.
  */
 (function(exports) {
     const winston = require("winston");
-    const RestBundleSingleton = require("./rest-bundle-singleton");
+    const RbSingleton = require("./rb-singleton");
     const RestBundle = require("./rest-bundle");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
 
     class RbServer extends RestBundle {
-        constructor(name, options = {}) {
+        constructor(name=WEB_SOCKET_MODEL, options = {}) {
             super("RbServer", RbServer.initOptions(options));
         }
         
@@ -33,7 +33,8 @@
                         if (options.meta) {
                             var keys = Object.keys(options.meta);
                             if (keys.length) {
-                                result +=  ' '+ (options.meta.message != null ? options.meta.message : JSON.stringify(options.meta));
+                                result +=  ' '+ (options.meta.message != null 
+                                    ? options.meta.message : JSON.stringify(options.meta));
                             }
                         }
                         return result;
@@ -52,20 +53,12 @@
             ]);
         }
 
-        loadApiModel(name) { // override
-            return new Promise((resolve, reject) => {
-                super.loadApiModel(WEB_SOCKET_MODEL)
-                .then(model => {
-                    if (!this.rbss) {
-                        reject(new Error("no web socket"));
-                    } else if (model) {
-                        resolve(this.rbss.setModel(model)); // update memory model 
-                    } else {
-                        resolve(this.rbss.getModel());
-                    }
-                })
-                .catch(e=>reject(e));
-            });
+        updateApiModel(apiModel) {
+            if (!this.rbss) {
+                throw new Error("no web socket");
+            }
+
+            return this.rbss.updateModel(apiModel); 
         }
 
         saveApiModel(model, fileName) {
@@ -73,7 +66,7 @@
                 super.saveApiModel(model, fileName)
                 .then(r => {
                     if (fileName === WEB_SOCKET_MODEL) {
-                        this.rbss.setModel(model);
+                        this.rbss.updateModel(model);
                     }
                     resolve(r);
                 })
@@ -99,7 +92,7 @@
         close() {
             if (this.rootApp) {
                 if (this.rbss) {
-                    winston.info("closing RestBundleSingleton");
+                    winston.info("closing RbSingleton");
                     this.rbss.close();
                 }
                 if (this.httpServer) {
@@ -132,11 +125,11 @@
                         }
                     })
                 }, {});
-                this.rbss = new RestBundleSingleton(restBundles, this.httpServer);
+                this.rbss = new RbSingleton(restBundles, this.httpServer);
                 this.loadApiModel(WEB_SOCKET_MODEL)
                     .then(result => {
                         if (result) {
-                            this.rbss.setModel(result);
+                            this.rbss.updateModel(result);
                         }
                     })
                     .catch(e=>{throw(e);});

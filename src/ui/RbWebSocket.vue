@@ -37,6 +37,14 @@
                 :rules="[apiRules.required, apiRules.gt0]">
             </v-text-field>
         </rb-dialog-row>
+        <rb-dialog-row label="Heap monitor">
+            <v-text-field label="Interval (seconds)" v-model='apiModelCopy.heapInterval' 
+                :rules="[apiRules.required, apiRules.gt0]">
+            </v-text-field>
+            <v-text-field label="Maximum heap" v-model='apiModelCopy.heapMax' 
+                :rules="[apiRules.required, apiRules.gt0]">
+            </v-text-field>
+        </rb-dialog-row>
     </rb-api-dialog>
     <v-dialog v-model="showRefresh" lazy persistent absolute  max-width='60%'>
         <v-card>
