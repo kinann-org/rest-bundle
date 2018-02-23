@@ -377,15 +377,15 @@
             });
         }
 
-        putApiModel(req, res, next, fileName) {
+        putApiModel(req, res, next, name) {
             var that = this;
             return new Promise((resolve, reject) => {
                 var async = function *() {
                     try {
-                        if (fileName == null) {
-                            throw new Error("fileName expected");
+                        if (name == null) {
+                            throw new Error("RestBundle.putApiModel() name is required");
                         }
-                        var curModel = yield that.loadApiModel(fileName)
+                        var curModel = yield that.loadApiModel(name)
                             .then(r=>async.next(r)).catch(e=>async.throw(e));
                         curModel = curModel || {};
                         that.apiHash(curModel); // might be unhashed
@@ -412,7 +412,7 @@
                         } else {
                             var updatedModel = Object.assign({}, curModel, putModel);
                             that.apiHash(updatedModel);
-                            yield that.saveApiModel(updatedModel, fileName)
+                            yield that.saveApiModel(updatedModel, name)
                                 .then(r=>async.next(r)).catch(e=>async.throw(e));
                             resolve({
                                 apiModel: that.apiHash(updatedModel), // update hash
