@@ -53,7 +53,6 @@ const supertest = require("supertest");
         should.throws(() => tb.bindExpress(app));
     })
     it("RestBundle returns 500 for bad responses", function(done) {
-        winston.warn("The following warning is expected");
         class TestBundle extends RestBundle {
             constructor(name, options={}) {
                 super(name, options);
@@ -73,7 +72,9 @@ const supertest = require("supertest");
         }
         var app = express();
         var tb = new TestBundle("extended").bindExpress(app);
+        winston.warn("Expected error (BEGIN)");
         supertest(app).get("/extended/bad-json").expect((res) => {
+            winston.warn("Expected error (END)");
             res.statusCode.should.equal(500);
             should.deepEqual(res.body, {
                 error: "Converting circular structure to JSON",
@@ -127,9 +128,10 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST generates HTTP500 response for thrown exception", function(done) {
-        winston.warn("The following warning is expected");
         var app = require("../scripts/server.js");
+        winston.warn("Expected error (BEGIN)");
         supertest(app).post("/test/identity").send({greeting:"whoa"}).expect((res) => {
+            winston.warn("Expected error (END)");
             res.statusCode.should.equal(500);
             res.headers["content-type"].should.match(/json/);
             res.headers["content-type"].should.match(/utf-8/);
@@ -165,17 +167,17 @@ const supertest = require("supertest");
         kebab("abc").should.equal("abc");
         kebab("aBC").should.equal("a-b-c");
     });
-    it("apiModelPath() returns RestBundle api model path", function() {
-        var rb = new RestBundle('Binky');
+    it("TESTTESTapiModelPath() returns RestBundle api model path", function() {
+        var rb = new RestBundle('TestApiModelPath');
         var amp = rb.apiModelPath();
-        should.strictEqual(amp.endsWith('/api-model/Binky.json'), true);
+        should.strictEqual(amp.endsWith('/api-model/TestApiModelPath.json'), true);
         var amp = rb.apiModelPath("MyRestBundle");
         should.strictEqual(amp.endsWith('/api-model/MyRestBundle.json'), true);
     });
-    it("loadApiModel() returns RestBundle apiModel Promise", function(done) {
+    it("TESTTESTloadApiModel() returns RestBundle apiModel Promise", function(done) {
         let async = function*() {
             try {
-                var rb = new RestBundle('Binky');
+                var rb = new RestBundle('TestLoadApiModel');
                 var result = yield rb.loadApiModel("NoApiModel")
                     .then(r=> async.next(r)).catch(e=> async.throw(e));
                 should.equal(result, null);
@@ -186,25 +188,29 @@ const supertest = require("supertest");
         }();
         async.next();
     });
-    it("saveApiModel(apiModel) saves RestBundle api model", function(done) {
+    it("TESTTESTsaveApiModel(apiModel) saves RestBundle api model", function(done) {
         let async = function*() {
-            var rb = new RestBundle('Binky');
-            var apiModel = {
-                color: 'purple',
+            try {
+                var rb = new RestBundle('TestSaveApiModel');
+                var apiModel = {
+                    color: 'purple',
+                }
+                var result = yield rb.saveApiModel(apiModel).then(r=>async.next(r)).catch(e=>async.throw(e));
+                should.strictEqual(result, apiModel);
+                var result = yield rb.loadApiModel().then(r=>async.next(r)).catch(e=>async.throw(e));
+                should.deepEqual(result, apiModel);
+                done();
+            } catch (e) {
+                done(e);
             }
-            var result = yield rb.saveApiModel(apiModel).then(r=>async.next(r)).catch(e=>async.throw(e));
-            should.strictEqual(result, apiModel);
-            var result = yield rb.loadApiModel().then(r=>async.next(r)).catch(e=>async.throw(e));
-            should.deepEqual(result, apiModel);
-            done();
         }();
         async.next();
     });
-    it("putApiModel updates and saves api model", function(done) {
+    it("TESTTESTputApiModel updates and saves api model", function(done) {
         var async = function*() {
             try {
                 const rbh = new RbHash();
-                var rb = new RestBundle('Binky');
+                var rb = new RestBundle('TestPutApiModel');
                 var fileName = "test-putApiModel";
                 var filePath = path.join(__dirname, '..', 'api-model', fileName+'.json');
                 fs.existsSync(filePath) && fs.unlinkSync(filePath);

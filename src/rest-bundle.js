@@ -1,5 +1,6 @@
 (function(exports) {
     const ResourceMethod = require("./resource-method");
+    const EventEmitter = require('events');
     const RbHash = require("./rb-hash");
     const path = require("path");
     const os = require('os');
@@ -12,7 +13,7 @@
 
     class RestBundle {
         constructor(name, options = {}) {
-            if (name == null) {
+            if (typeof name != 'string') {
                 throw new Error("bundle name is required");
             }
             winston.info(`RestBundle.ctor(${name})`);
@@ -22,6 +23,7 @@
             this.svcDir = options.svcDir || path.join(__dirname, "..");
             this.srcPkg = options.srcPkg || require("../package.json");
             this.node_modules = path.join(this.appDir, "node_modules");
+            this.emitter = options.emtitter || new EventEmitter();
             this.ui_index = options.ui_index || "/ui/index-service";
             this.$onRequestSuccess = options.onRequestSuccess || RestBundle.onRequestSuccess;
             this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
@@ -282,59 +284,57 @@
 
         loadApiModel(name = this.name) {
             return new Promise((resolve,reject) => {
+                var modelPath = this.apiModelPath(name);
                 try {
-                    this.loadApiFile(name).then(fileApiModel => {
+                    this.loadApiFile(modelPath).then(fileApiModel => {
                         resolve(this.updateApiModel(fileApiModel));
                     }).catch(e => {
+                        winston.error(`RestBundle.loadApiModel(${name})`, e.stack);
                         reject(e);
                     });
                 } catch (e) {
                     winston.error(`RestBundle.loadApiModel(${name})`, e.stack);
                     reject(e);
                 }
-                return this.loadApiFile(name);
             });
         }
 
         saveApiModel(apiModel, name = this.name) {
-            return this.saveApiFile(apiModel, name);
+            return this.saveApiFile(apiModel, this.apiModelPath(name));
         }
 
-        loadApiFile(name = this.name) {
+        loadApiFile(modelPath=this.apiModelPath(this.name)) {
             return new Promise((resolve, reject) => {
-                var amp = this.apiModelPath(name);
-
-                if (fs.existsSync(amp)) {
-                    fs.readFile(amp, (err, data) => {
+                if (fs.existsSync(modelPath)) {
+                    fs.readFile(modelPath, (err, data) => {
                         if (err) {
-                            winston.warn(`RestBundle-${this.name}.loadApiModel() file:${amp}`, err, 'E01');
+                            winston.warn(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`, err, 'E01');
                             reject(err);
                         } else {
                             try {
                                 var obj = JSON.parse(data);
                                 var rbHash = obj.rbHash;
-                                winston.debug(`RestBundle-${this.name}.loadApiModel() file:${amp}`);
+                                winston.debug(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`);
                                 winston.info(`RestBundle-${this.name}.loadApiModel() rbHash:${rbHash}`);
                                 resolve(obj);
                             } catch (err) {
-                                winston.warn(`RestBundle-${this.name}.loadApiModel() file:${amp}`, err.message, 'E02');
+                                winston.warn(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`, err.message, 'E02');
                                 reject(err);
                             }
                         }
                     });
                 } else {
-                    winston.info(`RestBundle-${this.name}.loadApiModel() unavailable:${amp} `);
+                    winston.info(`RestBundle-${this.name}.loadApiModel() unavailable:${modelPath} `);
                     resolve(null);
                 }
             });
         }
 
-        saveApiFile(apiModel, name = this.name) {
+        saveApiFile(apiModel, modelPath=this.apiModelPath()) {
             return new Promise((resolve, reject) => {
                 let async = function*() {
                     try {
-                        var amp = this.apiModelPath(name);
-                        var dir = path.dirname(amp);
+                        var dir = path.dirname(modelPath);
 
                         if (!fs.existsSync(dir)) {
                             yield fs.mkdir(dir, (err) => {
@@ -346,11 +346,12 @@
                             });
                         }
                         var json = JSON.stringify(apiModel, null, "    ") + "\n";
-                        yield fs.writeFile(amp, json, (err) => {
+                        yield fs.writeFile(modelPath, json, (err) => {
                             if (err) {
                                 async.throw(err);
                             } else {
-                                winston.info(`RestBundle.saveApiModel() ${json.length} characters written to ${amp}`);
+                                winston.info(`RestBundle.saveApiModel()`,
+                                    `${json.length} characters written to ${modelPath}`);
                                 async.next(true);
                             }
                         });

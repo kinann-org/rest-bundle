@@ -87,7 +87,9 @@
                         rbHash: 'some-other-hash',
                     }
                 }); 
+                winston.warn("Expected error (BEGIN)");
                 var res = yield supertest(app).put("/RbServer/web-socket").send(conflictingUpdate).expect((res) => {
+                    winston.warn("Expected error (END)");
                     res.statusCode.should.equal(409);
                     res.headers["content-type"].should.match(/json/);
                     res.headers["content-type"].should.match(/utf-8/);
@@ -113,7 +115,9 @@
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 var rbHash = res.body.rbHash;
                 var modelCurrent = res.body;
+                winston.warn("Expected error (BEGIN)");
                 var res = yield supertest(app).put("/RbServer/web-socket").send("bad request").expect((res) => {
+                    winston.warn("Expected error (END)");
                     res.statusCode.should.equal(400);
                     res.headers["content-type"].should.match(/json/);
                     res.headers["content-type"].should.match(/utf-8/);
