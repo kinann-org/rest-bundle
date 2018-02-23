@@ -276,7 +276,7 @@
         }
 
         apiModelPath(name = this.name) {
-            var fileName = `${srcPkg.name}.${name}.json`;
+            var fileName = `${this.srcPkg.name}.${name}.json`;
             return path.normalize(path.join(this.apiModelDir, fileName));
         }
 

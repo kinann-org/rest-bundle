@@ -167,12 +167,17 @@ const supertest = require("supertest");
         kebab("abc").should.equal("abc");
         kebab("aBC").should.equal("a-b-c");
     });
-    it("apiModelPath() returns RestBundle api model path", function() {
-        var rb = new RestBundle('TestApiModelPath');
+    it("TESTTESTapiModelPath() returns RestBundle api model path", function() {
+        var rb = new RestBundle('TestApiModelPath', {
+            srcPkg: {
+                name: 'testPackage',
+                version: '1.0',
+            }
+        });
         var amp = rb.apiModelPath();
-        should.strictEqual(amp.endsWith('/api-model/rest-bundle.TestApiModelPath.json'), true);
+        should(amp).match(/.*\/api-model\/testPackage.TestApiModelPath.json/);
         var amp = rb.apiModelPath("MyRestBundle");
-        should.strictEqual(amp.endsWith('/api-model/rest-bundle.MyRestBundle.json'), true);
+        should(amp).match(/.*\/api-model\/testPackage.MyRestBundle.json/);
     });
     it("loadApiModel() returns RestBundle apiModel Promise", function(done) {
         let async = function*() {
