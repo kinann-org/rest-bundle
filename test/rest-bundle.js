@@ -167,14 +167,14 @@ const supertest = require("supertest");
         kebab("abc").should.equal("abc");
         kebab("aBC").should.equal("a-b-c");
     });
-    it("TESTTESTapiModelPath() returns RestBundle api model path", function() {
+    it("apiModelPath() returns RestBundle api model path", function() {
         var rb = new RestBundle('TestApiModelPath');
         var amp = rb.apiModelPath();
-        should.strictEqual(amp.endsWith('/api-model/TestApiModelPath.json'), true);
+        should.strictEqual(amp.endsWith('/api-model/rest-bundle.TestApiModelPath.json'), true);
         var amp = rb.apiModelPath("MyRestBundle");
-        should.strictEqual(amp.endsWith('/api-model/MyRestBundle.json'), true);
+        should.strictEqual(amp.endsWith('/api-model/rest-bundle.MyRestBundle.json'), true);
     });
-    it("TESTTESTloadApiModel() returns RestBundle apiModel Promise", function(done) {
+    it("loadApiModel() returns RestBundle apiModel Promise", function(done) {
         let async = function*() {
             try {
                 var rb = new RestBundle('TestLoadApiModel');
@@ -188,7 +188,7 @@ const supertest = require("supertest");
         }();
         async.next();
     });
-    it("TESTTESTsaveApiModel(apiModel) saves RestBundle api model", function(done) {
+    it("saveApiModel(apiModel) saves RestBundle api model", function(done) {
         let async = function*() {
             try {
                 var rb = new RestBundle('TestSaveApiModel');
@@ -210,9 +210,10 @@ const supertest = require("supertest");
         var async = function*() {
             try {
                 const rbh = new RbHash();
-                var rb = new RestBundle('TestPutApiModel');
-                var fileName = "test-putApiModel";
-                var filePath = path.join(__dirname, '..', 'api-model', fileName+'.json');
+                var name = 'TestPutApiModel';
+                var rb = new RestBundle(name);
+                var fileName = `rest-bundle.${name}.json`;
+                var filePath = path.join(__dirname, '..', 'api-model', fileName);
                 fs.existsSync(filePath) && fs.unlinkSync(filePath);
 
                 // initialize api model
@@ -232,7 +233,7 @@ const supertest = require("supertest");
                     locals: {},
                 };
                 var next = function () {};
-                var result = yield rb.putApiModel(req, res, next, fileName)
+                var result = yield rb.putApiModel(req, res, next, name)
                     .then(r=>async.next(r)).catch(e=>async.throw(e));
                 var purpleHash = rbh.hash({
                     color: 'purple',
@@ -256,7 +257,7 @@ const supertest = require("supertest");
                 var res = {
                     locals: {},
                 };
-                var result = yield rb.putApiModel(req, res, next, fileName)
+                var result = yield rb.putApiModel(req, res, next, name)
                     .then(r=>async.next(r)).catch(e=>async.throw(e));
                 var redHash = rbh.hash({
                     color: 'red',
@@ -276,7 +277,7 @@ const supertest = require("supertest");
         }();
         async.next();
     });
-    it("TESTTESTPromise test", function(done) {
+    it("Promise test", function(done) {
         var x = 0;
         var p = new Promise((resolve,reject) => {
             setTimeout(() => {

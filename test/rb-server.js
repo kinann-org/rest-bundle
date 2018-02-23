@@ -9,7 +9,7 @@
     const express = require("express");
     const WebSocket = require("ws");
     const RbHash = require("../index.js").RbHash;
-    const API_MODEL_FNAME = "api-model/RbServer.web-socket.json";
+    const API_MODEL_FNAME = "api-model/rest-bundle.RbServer.web-socket.json";
     var rbh = new RbHash();
     winston.level = "warn";
     function testRb(app) {

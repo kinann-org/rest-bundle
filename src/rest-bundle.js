@@ -2,6 +2,7 @@
     const ResourceMethod = require("./resource-method");
     const EventEmitter = require('events');
     const RbHash = require("./rb-hash");
+    const srcPkg = require("../package.json");
     const path = require("path");
     const os = require('os');
     const fs = require("fs");
@@ -275,7 +276,8 @@
         }
 
         apiModelPath(name = this.name) {
-            return path.normalize(path.join(this.apiModelDir, name + ".json"));
+            var fileName = `${srcPkg.name}.${name}.json`;
+            return path.normalize(path.join(this.apiModelDir, fileName));
         }
 
         updateApiModel(apiModel) {
@@ -394,6 +396,7 @@
                             var err = new Error("Bad request:" + JSON.stringify(req.body));
                             res.locals.status = 400;
                         } else if (putModel.rbHash !== curModel.rbHash) {
+                        console.log(curModel, putModel);
                             var err = new Error("Save ignored--service data has changed: "+
                                 curModel.rbHash);
                             res.locals.status = 409;
