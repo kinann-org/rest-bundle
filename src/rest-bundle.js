@@ -379,14 +379,11 @@
             });
         }
 
-        putApiModel(req, res, next, name) {
+        putApiModel(req, res, next, name=this.name) {
             var that = this;
             return new Promise((resolve, reject) => {
                 var async = function *() {
                     try {
-                        if (name == null) {
-                            throw new Error("RestBundle.putApiModel() name is required");
-                        }
                         var curModel = yield that.loadApiModel(name)
                             .then(r=>async.next(r)).catch(e=>async.throw(e));
                         curModel = curModel || {};
