@@ -5,6 +5,7 @@
     const v8 = require('v8');
 
     const rbEmitter = new EventEmitter();
+    rbEmitter.setMaxListeners(50); // increase this as required, but think about it
 
     class RbSingleton {
 
