@@ -16,7 +16,7 @@ const supertest = require("supertest");
         return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
     }
 
-    it("TESTTESTRestBundle can be extended", function(done) {
+    it("RestBundle can be extended", function(done) {
         var async = function*() {
             try {
                 class TestBundle extends RestBundle {
@@ -81,7 +81,7 @@ const supertest = require("supertest");
                 }
                 var app = express();
                 var tb = new TestBundle("testBadJSON").bindExpress(app);
-                yield tb.loadApiModel().then(r=>async.next(r)).catch(e=>async.throw(e));
+                yield tb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
                 winston.warn("Expected error (BEGIN)");
                 supertest(app).get("/testBadJSON/bad-json").expect((res) => {
                     winston.warn("Expected error (END)");
@@ -327,6 +327,21 @@ const supertest = require("supertest");
                         winston.info(`heap used ${mb.toFixed(1)}MB ${b.space_name}`);
                     });
                 }).end((e,r) => e ? async.throw(e) : async.next(r));
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }();
+        async.next();
+    });
+    it("initialize() loads apiModel", function(done){
+        var async = function*() {
+            try {
+                var rb = new RestBundle("testInitialize", {
+                    apiModelDir: __dirname,
+                });
+                var r = yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
+                should(r.color).equal('red');
                 done();
             } catch (e) {
                 done(e);

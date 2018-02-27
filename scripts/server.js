@@ -30,18 +30,18 @@ var async = function*() {
             var a = argv[i];
             var rbName = i>1 && a[0]!=='-' && a!=='test' && a;
             var rb = new RestBundle(rbName);
-            yield rb.loadApiModel().then(r=>asnc.next(r)).catch(e=>async.throw(e));
+            yield rb.initialize().then(r=>asnc.next(r)).catch(e=>async.throw(e));
             rbName && restBundles.push(rb);
         }
         var rb = new RestBundle('test');
-        yield rb.loadApiModel().then(r=>async.next(r)).catch(e=>async.throw(e));
+        yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
         restBundles.push(rb); // documentation and test
 
         // create http server and web socket
         var ports = [80, 8080].concat(new Array(100).fill(3000).map((p,i)=>p+i));
         var rbServer =  app.locals.rbServer = new RbServer();
         rbServer.listen(app, restBundles, ports); 
-        yield rbServer.loadApiModel(r=>async.next(r)).catch(e=>async.throw(e));
+        yield rbServer.initialize(r=>async.next(r)).catch(e=>async.throw(e));
     } catch(e) {
         winston.error(e.stack);
         throw e;

@@ -32,6 +32,16 @@
             this.apiModelDir = options.apiModelDir || path.join(process.cwd(), "api-model");
         }
 
+        initialize() {
+            return new Promise((resolve,reject) => {
+                this.loadApiModel().then(r=> {
+                    this.initialized = true;
+                resolve(r);}).catch(e=>{
+                    reject(e);
+                });
+            });
+        }
+
         resourceMethod(method, name, handler, mime) {
             if (handler == null) {
                 throw new Error("resourceMethod(" + method + ", " + name + ", ?handler?, ...) handler is required");
