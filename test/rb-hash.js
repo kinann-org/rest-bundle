@@ -80,7 +80,7 @@
         should.equal(rbh.hashCached([{rbHash:hfoo,anything:'do-not-care'}]), rbh.hash(hfoo));
         should.equal(rbh.hashCached({rbHash:'some-hash', a:1}), 'some-hash');
     });
-    it("TESTTESThash(object) handles objects with non-serializable properties", function() {
+    it("hash(object) handles objects with non-serializable properties", function() {
         class TestClass {
             constructor() {
                 this.color = 'red';             // serialized

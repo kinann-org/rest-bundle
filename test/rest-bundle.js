@@ -16,26 +16,33 @@ const supertest = require("supertest");
         return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
     }
 
-    it("RestBundle can be extended", function(done) {
-        class TestBundle extends RestBundle {
-            constructor(name, options={}) {
-                super(name, options);
-                Object.defineProperty(this, "handlers", {
-                    value: super.handlers.concat([
-                        this.resourceMethod("get", "color", this.getColor),
-                    ]),
-                });
+    it("TESTTESTRestBundle can be extended", function(done) {
+        var async = function*() {
+            try {
+                class TestBundle extends RestBundle {
+                    constructor(name, options={}) {
+                        super(name, options);
+                        Object.defineProperty(this, "handlers", {
+                            value: super.handlers.concat([
+                                this.resourceMethod("get", "color", this.getColor),
+                            ]),
+                        });
+                    }
+                    getColor(req, res, next) { return { color: "blue", }; }
+                }
+                var app = express();
+                var tb = new TestBundle("extended").bindExpress(app);
+                supertest(app).get("/extended/color").expect((res) => {
+                    res.statusCode.should.equal(200);
+                    should.deepEqual(res.body, {
+                        color: "blue",
+                    });
+                }).end((err,res) => {if (err) throw err; else done(); });
+            } catch(e) {
+                done(e);
             }
-            getColor(req, res, next) { return { color: "blue", }; }
-        }
-        var app = express();
-        var tb = new TestBundle("extended").bindExpress(app);
-        supertest(app).get("/extended/color").expect((res) => {
-            res.statusCode.should.equal(200);
-            should.deepEqual(res.body, {
-                color: "blue",
-            });
-        }).end((err,res) => {if (err) throw err; else done(); });
+        }();
+        async.next();
     })
     it("RestBundle resources should be unique", function() {
         class TestBundle extends RestBundle {
@@ -53,33 +60,41 @@ const supertest = require("supertest");
         should.throws(() => tb.bindExpress(app));
     })
     it("RestBundle returns 500 for bad responses", function(done) {
-        class TestBundle extends RestBundle {
-            constructor(name, options={}) {
-                super(name, options);
-                Object.defineProperty(this, "handlers", {
-                    value: super.handlers.concat([
-                        this.resourceMethod("get", "bad-json", this.getBadJson),
-                    ]),
-                });
-            }
-            getBadJson(req, res, next) { 
-                var badJson = {
-                    name: "circular",
+        var async = function*() {
+            try {
+                class TestBundle extends RestBundle {
+                    constructor(name, options={}) {
+                        super(name, options);
+                        Object.defineProperty(this, "handlers", {
+                            value: super.handlers.concat([
+                                this.resourceMethod("get", "bad-json", this.getBadJson),
+                            ]),
+                        });
+                    }
+                    getBadJson(req, res, next) { 
+                        var badJson = {
+                            name: "circular",
+                        }
+                        badJson.self = badJson;
+                        return badJson;
+                    }
                 }
-                badJson.self = badJson;
-                return badJson;
+                var app = express();
+                var tb = new TestBundle("testBadJSON").bindExpress(app);
+                yield tb.loadApiModel().then(r=>async.next(r)).catch(e=>async.throw(e));
+                winston.warn("Expected error (BEGIN)");
+                supertest(app).get("/testBadJSON/bad-json").expect((res) => {
+                    winston.warn("Expected error (END)");
+                    res.statusCode.should.equal(500);
+                    should.deepEqual(res.body, {
+                        error: "Converting circular structure to JSON",
+                    });
+                }).end((err,res) => {if (err) throw err; else done(); });
+            } catch(e) {
+                done(e);
             }
-        }
-        var app = express();
-        var tb = new TestBundle("extended").bindExpress(app);
-        winston.warn("Expected error (BEGIN)");
-        supertest(app).get("/extended/bad-json").expect((res) => {
-            winston.warn("Expected error (END)");
-            res.statusCode.should.equal(500);
-            should.deepEqual(res.body, {
-                error: "Converting circular structure to JSON",
-            });
-        }).end((err,res) => {if (err) throw err; else done(); });
+        }();
+        async.next();
     })
     it("GET /state returns RestBundle singleton state", function(done) {
         var app = require("../scripts/server.js");
@@ -167,7 +182,7 @@ const supertest = require("supertest");
         kebab("abc").should.equal("abc");
         kebab("aBC").should.equal("a-b-c");
     });
-    it("TESTTESTapiModelPath() returns RestBundle api model path", function() {
+    it("apiModelPath() returns RestBundle api model path", function() {
         var rb = new RestBundle('TestApiModelPath', {
             srcPkg: {
                 name: 'testPackage',
@@ -211,7 +226,7 @@ const supertest = require("supertest");
         }();
         async.next();
     });
-    it("TESTTESTputApiModel updates and saves api model", function(done) {
+    it("putApiModel updates and saves api model", function(done) {
         var async = function*() {
             try {
                 const rbh = new RbHash();

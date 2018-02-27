@@ -69,9 +69,10 @@
         static onRequestFail(req, res, err, next) {
             var status = res.locals.status !== 200 && res.locals.status || 500;
             res.status(status);
-            res.type(res.locals.mime);
+            res.type(res.locals.mime || 'application/json');
             winston.info(req.method, req.url, "=> HTTP"+status, err.message);
             winston.debug(err);
+            winston.warn('onRequestFail res.locals.data', res.locals.data);
             res.send(res.locals.data || { error: err.message });
             next && next('route');
         }
@@ -169,30 +170,25 @@
             });
         }
 
-        process(req, res, next, handler, mime) {
+        processRequest(req, res, next, handler, mime) {
             res.locals.status = 200;
             res.locals.mime = mime;
-            var promise = new Promise((resolve, reject) => {
-                try {
-                    var result = handler(req, res);
-                    if (result instanceof Promise) {
-                        result.then(data => resolve(data)).catch(err => {
-                            winston.warn(err.stack);
-                            reject(err);
-                        });
-                    } else {
-                        resolve(result);
-                    }
-                } catch (err) {
-                    winston.warn(err.stack);
-                    reject(err);
+            try {
+                var result = handler(req, res);
+                if (result instanceof Promise) {
+                    result.then(data => {
+                        this.$onRequestSuccess(req, res, data, next, mime);
+                    }).catch(err => {
+                        winston.warn(err.stack);
+                        this.$onRequestFail(req, res, err, next)
+                    });
+                } else {
+                    this.$onRequestSuccess(req, res, result, next, mime);
                 }
-            });
-            promise.then(
-                (data) => this.$onRequestSuccess(req, res, data, next, mime),
-                (err) => this.$onRequestFail(req, res, err, next)
-            );
-            return promise;
+            } catch (err) {
+                winston.warn(err.stack);
+                this.$onRequestFail(req, res, err, next);
+            }
         }
 
         bindResource(app, resource) {
@@ -201,19 +197,19 @@
             var path = "/" + resource.name;
             if (method === "GET") {
                 app.get(path, (req, res, next) =>
-                    this.process(req, res, next, resource.handler, mime));
+                    this.processRequest(req, res, next, resource.handler, mime));
             } else if (method === "POST") {
                 app.post(path, (req, res, next) =>
-                    this.process(req, res, next, resource.handler, mime));
+                    this.processRequest(req, res, next, resource.handler, mime));
             } else if (method === "PUT") {
                 app.put(path, (req, res, next) =>
-                    this.process(req, res, next, resource.handler, mime));
+                    this.processRequest(req, res, next, resource.handler, mime));
             } else if (method === "DELETE") {
                 app.delete(path, (req, res, next) =>
-                    this.process(req, res, next, resource.handler, mime));
+                    this.processRequest(req, res, next, resource.handler, mime));
             } else if (method === "HEAD") {
                 app.head(path, (req, res, next) =>
-                    this.process(req, res, next, resource.handler, mime));
+                    this.processRequest(req, res, next, resource.handler, mime));
             } else {
                 throw new Error("Unsupported HTTP method:", method);
             }

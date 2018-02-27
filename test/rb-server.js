@@ -5,7 +5,9 @@
     const winston = require("winston");
     const fs = require("fs");
     const pkg = require("../package.json");
-    const RestBundle = require("../index.js").RestBundle;
+    const {
+        RestBundle,
+    } = require("../index.js");
     const express = require("express");
     const WebSocket = require("ws");
     const RbHash = require("../index.js").RbHash;
@@ -173,6 +175,6 @@
     })
     it("Last TEST closes test suite for watch", function() {
         var app = require("../scripts/server.js");
-        app.locals.rbServer.close();
+        app.locals.rbServer && app.locals.rbServer.close();
     });
 })
