@@ -6,6 +6,7 @@
         RbServer: require("./src/rb-server"),
         ResourceMethod: require("./src/resource-method"),
         RbHash: require("./src/rb-hash"),
+        Scheduler: require("./src/scheduler"),
     };
 
     module.exports = exports.RestBundle = pkg;

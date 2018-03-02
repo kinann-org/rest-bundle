@@ -2,6 +2,8 @@
     const winston = require("winston");
     const WebSocket = require("ws");
     const EventEmitter = require("events");
+    const Scheduler = require('./scheduler');
+    const Task = Scheduler.Task;
     const v8 = require('v8');
 
     const rbEmitter = new EventEmitter();
@@ -23,6 +25,8 @@
                     return this.pushState();
                 }
             });
+            this.scheduler = new Scheduler();
+            this.scheduler.start();
             this.listener = listener;
             this.wss = new WebSocket.Server({
                 server: listener
@@ -94,6 +98,7 @@
 
         close() {
             winston.debug(this.constructor.name, "close()...");
+            this.scheduler.stop();
             clearInterval(this.pushStateId);
             this.wss.close();
             winston.info(this.constructor.name, "close()");
