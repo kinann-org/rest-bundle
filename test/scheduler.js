@@ -77,10 +77,15 @@
     it("start() starts scheduler", function(done) {
         var sched = new Scheduler();
         should(sched.interval).equal(null);
+        should(sched.isActive()).equal(false);
+
         should(sched.start()).equal(sched);
         should(sched.interval).not.equal(null);
+        should(sched.isActive()).equal(true);
+
         should(sched.stop()).equal(sched);
         should(sched.interval).equal(null);
+        should(sched.isActive()).equal(false);
         done();
     });
     it("done(result) marks task as done for given date", function(done) {

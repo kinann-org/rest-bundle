@@ -11,7 +11,7 @@
     class Task {
         constructor(opts={}) {
             this.lastDone = null;
-            this.name = opts.name || `Task_${(Math.round(Math.random()*0x100000)).toString(16)}`;
+            this.name = opts.name || `T${(Math.round(Math.random()*0x100000)).toString(16)}`;
             this.msRecur = opts.msRecur || RECUR_NONE;
             this.dueDate = opts.dueDate && new Date(opts.dueDate) || new Date();
             this.state = opts.state || TASK_SCHEDULED;
@@ -23,6 +23,11 @@
         done(result) {
             this.result = result;
             this.lastDone = new Date();
+            if (result instanceof Error) {
+                winston.warn(`Task-${this.name}.done(Error)`, result.stack);
+            } else {
+                winston.info(`Task-${this.name}.done(ok)`);
+            }
             if (this.msRecur === RECUR_NONE) {
                 this.dueDate = null;
                 this.state = Scheduler.TASK_DONE;
@@ -62,9 +67,13 @@
             });
         }
 
+        isActive() {
+            return !!this.interval;
+        }
+
         start() {
             if (this.interval == null) {
-                this.interval = setInterval(() => this.onRefresh(), this.msRefresh);
+                this.interval = setInterval(() => this.processTasks(), this.msRefresh);
             }
             return this;
         }
@@ -84,14 +93,14 @@
             this.tasks.push(task);
         }
 
-        onRefresh() {
+        processTasks() {
             var now = new Date();
             for (var i=0; i < this.tasks.length; i++) {
                 var task = this.tasks[i];
                 if (task.state === Scheduler.TASK_SCHEDULED) {
                     if (task.dueDate < now) {
                         task.state = Scheduler.TASK_INVOKED;
-                        winston.info(`Scheduler.onRefresh() task:${task.name} event:${task.event_invoke}`);
+                        winston.info(`Scheduler.processTasks() task:${task.name} event:${task.event_invoke}`);
                         this.emitter.emit(task.event_invoke, task);
                     }
                 }
