@@ -16,6 +16,7 @@
             this.dueDate = opts.dueDate && new Date(opts.dueDate) || new Date();
             this.state = opts.state || TASK_SCHEDULED;
             this.event_invoke = opts.event_invoke || EVENT_INVOKE;
+            this.data = opts.data || {};
         }
 
 

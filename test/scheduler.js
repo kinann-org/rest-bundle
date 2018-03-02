@@ -9,16 +9,37 @@
     } = require('../index');
     const Task = Scheduler.Task;
 
-    it("Scheduler() creates scheduler", function(done) {
+    it("Scheduler(opts) creates scheduler", function() {
         var sched = new Scheduler();
-        var task1 = new Scheduler.Task();
+        should(sched).properties({
+            msRefresh: 1000,
+            tasks: [],
+        });
+    });
+    it("Task(opts) creates schedule task", function(done) {
+        var sched = new Scheduler();
+        const Task = Scheduler.Task;
+
+        // tasks have names
+        var task1 = new Task();
         should(task1.name).instanceOf(String);
-        var task2 = new Scheduler.Task();
+        var task2 = new Task();
         should(task2.name).not.equal(task1.name);
-        var task3 = new Scheduler.Task({
+        var task3 = new Task({
             name: 'work',
         });
         should(task3.name).equal('work');
+
+        // tasks can have client data
+        var taskClient = new Task({
+            data: {
+                color: 'red',
+            },
+        });
+        should.deepEqual(taskClient.data, {
+            color: 'red',
+        });
+
         done();
     });
     it("addTask() adds a new task", function(done) {
@@ -145,6 +166,9 @@
                 });
                 sched0.addTask(new Task({
                     name: 'test_scheduler_task1',
+                    data: {
+                        color: 'red',
+                    },
                 }));
                 sched0.addTask(new Scheduler.Task({
                     name: 'test_scheduler_task2',
@@ -155,6 +179,7 @@
                 var sched = new Scheduler(JSON.parse(json));
                 var task1 = sched.tasks[0];
                 var task2 = sched.tasks[1];
+                should.deepEqual(task1.data, sched0.tasks[0].data);
 
                 should(sched.msRefresh).equal(msRefresh);
                 var emitter = sched.emitter;
