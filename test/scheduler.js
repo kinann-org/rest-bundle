@@ -16,6 +16,21 @@
             tasks: [],
         });
     });
+    it("dueDate(h,m,s,ms) returns nearest due date", function() {
+        var now = new Date();
+
+        // time before now
+        var dueDate = Scheduler.dueDate(now.getHours(), now.getMinutes(), now.getSeconds()-1);
+        should(dueDate.getTime()-now.getTime()).below(24*3600*1000);
+        should(dueDate.getTime()-now.getTime()).above(24*3598*1000);
+        should(dueDate.getMilliseconds()).equal(0);
+
+        // time after now
+        var dueDate = Scheduler.dueDate(now.getHours(), now.getMinutes(), now.getSeconds()+1);
+        should(dueDate).above(now);
+        should(dueDate.getTime()-now.getTime()).below(1001);
+        should(dueDate.getMilliseconds()).equal(0);
+    });
     it("Task(opts) creates schedule task", function(done) {
         var sched = new Scheduler();
         const Task = Scheduler.Task;
