@@ -20,11 +20,9 @@
         }
 
 
-        done(doneDate = new Date()) {
-            if (!(doneDate instanceof Date)) {
-                throw new Error(`Task.done() expected Date`);
-            }
-            this.lastDone = doneDate;
+        done(result) {
+            this.result = result;
+            this.lastDone = new Date();
             if (this.msRecur === RECUR_NONE) {
                 this.dueDate = null;
                 this.state = Scheduler.TASK_DONE;

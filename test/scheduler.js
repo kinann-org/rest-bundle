@@ -68,7 +68,7 @@
         should(sched.interval).equal(null);
         done();
     });
-    it("done(date) marks task as done for given date", function(done) {
+    it("done(result) marks task as done for given date", function(done) {
         var async = function*() {
             try {
                 var now = new Date();
@@ -77,7 +77,8 @@
                 var task = new Task();
                 should(task.lastDone).equal(null);
                 should(task.state).equal(Scheduler.TASK_SCHEDULED);
-                should(task.done()).equal(task);
+                should(task.done('hello')).equal(task);
+                should(task.result).equal('hello');
                 should(task.state).equal(Scheduler.TASK_DONE);
                 should(task.lastDone).instanceOf(Date);
                 should(task.lastDone).above(now);
@@ -90,7 +91,9 @@
                 should(task.state).equal(Scheduler.TASK_SCHEDULED);
                 task.state = Scheduler.TASK_INVOKED;
                 should(task.state).equal(Scheduler.TASK_INVOKED);
-                should(task.done()).equal(task);
+                var err = new Error('badness');
+                should(task.done(err)).equal(task);
+                should(task.result).equal(err);
                 should(task.state).equal(Scheduler.TASK_SCHEDULED);
                 should(task.lastDone).instanceOf(Date);
                 should(task.lastDone).above(now);
