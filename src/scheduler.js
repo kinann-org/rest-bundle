@@ -97,12 +97,29 @@
             var now = new Date();
             for (var i=0; i < this.tasks.length; i++) {
                 var task = this.tasks[i];
-                if (task.state === Scheduler.TASK_SCHEDULED) {
-                    if (task.dueDate < now) {
+                if (task.dueDate && task.dueDate <= now) {
+                    if (task.state === Scheduler.TASK_SCHEDULED) {
                         task.state = Scheduler.TASK_INVOKED;
                         winston.info(`Scheduler.processTasks() task:${task.name} event:${task.event_invoke}`);
                         this.emitter.emit(task.event_invoke, task);
+                    } else {
+                        winston.info(`Scheduler.processTasks() ignored`,
+                            `task:${task.name} state:${task.state} dueDate:${task.dueDate}`);
                     }
+                } else if (task.state === Scheduler.TASK_SCHEDULED) {
+                    var err = new Error(`Scheduler.processTasks() no due date for scheduled task:${task.name}`);
+                    winston.error(err);
+                    throw err;
+                } else if (task.state === Scheduler.TASK_INVOKED) {
+                    winston.info(`Scheduler.processTasks() busy`,
+                        `task:${task.name} state:${task.state}`);
+                } else if (task.state === Scheduler.TASK_DONE) {
+                    winston.debug(`Scheduler.processTasks() skipped completed`,
+                        `task:${task.name} state:${task.state}`);
+                } else {
+                    var err = new Error(`Scheduler.processTasks() invalid task:${task.name} state:${task.state}`);
+                    winston.error(err);
+                    throw err;
                 }
             }
         }
