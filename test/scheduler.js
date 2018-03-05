@@ -39,6 +39,14 @@
         // tasks have names
         var task1 = new Task();
         should(task1.name).instanceOf(String);
+        should(task1.dueDate.getTime()).approximately(Date.now(), 100);
+        should(task1).properties({
+            state: Scheduler.TASK_SCHEDULED,
+            data: {},
+            event_invoke: Scheduler.EVENT_INVOKE,
+            msRecur: Scheduler.RECUR_NONE,
+            lastDone: null,
+        });
         var task2 = new Task();
         should(task2.name).not.equal(task1.name);
         var task3 = new Task({
@@ -54,6 +62,14 @@
         });
         should.deepEqual(taskClient.data, {
             color: 'red',
+        });
+
+        var dueDate = new Date(2018, 1, 2);
+        var task = new Task({
+            dueDate,
+        });
+        should(task).properties({
+            dueDate,
         });
 
         done();
@@ -73,6 +89,7 @@
         sched.addTask(task2);
         should(sched.tasks.length).equal(2);
         should(sched.tasks[1]).equal(task2);
+
         done();
     });
     it("start() starts scheduler", function(done) {
@@ -182,6 +199,65 @@
             }
         }();
         async.next();
+    });
+    it("processTasks() invokes scheduled events", function(done) {
+        var sched = new Scheduler();
+        var now = new Date();
+        var tasks = [];
+        var name1 = 'test_processTask1';
+        var dueDate1 = new Date(Date.now()-100);
+        var name2 = 'test_processTask2';
+        var dueDate2 = new Date(Date.now()+100);
+        sched.emitter.on(Scheduler.EVENT_INVOKE, task => {
+            tasks.push(task);
+        });
+        sched.addTask(new Task({
+            name: name1,
+            msRecur: 100,
+            dueDate: dueDate1,
+        }));
+        sched.addTask(new Task({
+            name: name2,
+            msRecur: 100,
+            dueDate: dueDate2,
+        }));
+        should(sched.tasks[0]).properties({
+            name: name1,
+            state: Scheduler.TASK_SCHEDULED,
+            dueDate: dueDate1,
+        });
+        should(sched.tasks[1]).properties({
+            name: name2,
+            state: Scheduler.TASK_SCHEDULED,
+            dueDate: dueDate2,
+        });
+
+        // processTasks() is normally called by scheduler
+        should(sched.processTasks()).equal(sched);
+        should(tasks.length).equal(1);
+        should(tasks[0]).equal(sched.tasks[0]);
+        should(sched.tasks[0]).properties({
+            name: name1,
+            state: Scheduler.TASK_INVOKED,
+            dueDate: dueDate1,
+        });
+        should(sched.tasks[1]).properties({
+            name: name2,
+            state: Scheduler.TASK_SCHEDULED,
+            dueDate: dueDate2,
+        });
+
+        // task completed and state reverts invoked->scheduled
+        tasks[0].done('happy');
+        should(tasks.length).equal(1);
+        should(sched.tasks[0]).properties({
+            name: name1,
+            state: Scheduler.TASK_SCHEDULED,
+            result: 'happy',
+        });
+        should(sched.tasks[0].dueDate.getTime()).approximately(dueDate1.getTime()+100, 1);
+
+        done();
     });
     it("Scheduler is serializable", function(done){
         var async = function*(){
