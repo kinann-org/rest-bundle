@@ -108,14 +108,14 @@
                                 `task:${task.name} state:${task.state} dueDate:${task.dueDate}`);
                         }
                     } else if (task.state === Scheduler.TASK_SCHEDULED) {
-                        winston.info(`Scheduler.processTasks() skipping scheduled`,
+                        winston.debug(`Scheduler.processTasks() skipping scheduled`,
                             `task:${task.name} dueDate:${task.dueDate}`);
                     } else if (task.state === Scheduler.TASK_DONE) {
                         var err = new Error(`Scheduler.processTasks() due date for completed task:${task.name}`);
                         winston.error(err.staack);
                         throw err;
                     } else if (task.state === Scheduler.TASK_INVOKED) {
-                        winston.info(`Scheduler.processTasks() skipping invoked`,
+                        winston.debug(`Scheduler.processTasks() skipping invoked`,
                             `task:${task.name} dueDate:${task.dueDate}`);
                         throw err;
                     } else {
