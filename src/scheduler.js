@@ -19,6 +19,13 @@
             this.data = opts.data || {};
         }
 
+        static recurDate(msRecur, dueDate=new Date()) {
+            var msDay = 24*3600*1000;
+            var dateRecur = msRecur / msDay;
+            var date =  new Date(dueDate);
+            date.setDate(date.getDate()+dateRecur); // allow for DST
+            return date;
+        }
 
         done(result) {
             this.result = result;
@@ -34,7 +41,8 @@
             } else {
                 this.state = Scheduler.TASK_SCHEDULED;
                 if (this.dueDate) {
-                    this.dueDate = new Date(this.dueDate.getTime() + this.msRecur);
+                    //this.dueDate = new Date(this.dueDate.getTime() + this.msRecur);
+                    this.dueDate = Scheduler.recurDate(this.msRecur, this.dueDate);
                 }
             }
             return this;

@@ -17,6 +17,18 @@
             tasks: [],
         });
     });
+    it("TESTTESTrecurDate(msRecur,dueDate returns next due date", function() {
+        var date = new Date(2018,2,11,0,30);
+        var recurDate = new Date(date);
+        recurDate.setDate(recurDate.getDate()+1);
+        should.deepEqual(Task.recurDate(24*3600*1000,date),recurDate);
+
+        var date = new Date(2018,2,12,0,30);
+        var recurDate = new Date(date);
+        recurDate.setDate(recurDate.getDate()+1);
+        should.deepEqual(Task.recurDate(24*3600*1000,date),recurDate);
+
+    });
     it("TESTTESTdueDate(h,m,s,ms) returns nearest due date", function() {
         var now = new Date();
 
