@@ -29,7 +29,7 @@
         should.deepEqual(Task.recurDate(24*3600*1000,date),recurDate);
 
     });
-    it("TESTTESTdueDate(h,m,s,ms) returns nearest due date", function() {
+    it("dueDate(h,m,s,ms) returns nearest due date", function() {
         var now = new Date();
 
         // time before now

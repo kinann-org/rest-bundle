@@ -20,11 +20,14 @@
         }
 
         static recurDate(msRecur, dueDate=new Date()) {
-            var msDay = 24*3600*1000;
-            var dateRecur = msRecur / msDay;
-            var date =  new Date(dueDate);
-            date.setDate(date.getDate()+dateRecur); // allow for DST
-            return date;
+            if (msRecur > 36000*1000) {
+                var msDay = 24*3600*1000;
+                var dateRecur = msRecur / msDay;
+                var date =  new Date(dueDate);
+                date.setDate(date.getDate()+dateRecur); // allow for DST
+                return date;
+            }
+            return new Date(dueDate.getTime() + msRecur);
         }
 
         done(result) {
@@ -41,8 +44,9 @@
             } else {
                 this.state = Scheduler.TASK_SCHEDULED;
                 if (this.dueDate) {
-                    //this.dueDate = new Date(this.dueDate.getTime() + this.msRecur);
-                    this.dueDate = Scheduler.recurDate(this.msRecur, this.dueDate);
+                    var msRecur = this.msRecur;
+                    var dueDate = this.dueDate;
+                    this.dueDate = Task.recurDate(msRecur, dueDate);
                 }
             }
             return this;
