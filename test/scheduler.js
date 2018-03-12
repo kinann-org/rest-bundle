@@ -17,7 +17,7 @@
             tasks: [],
         });
     });
-    it("dueDate(h,m,s,ms) returns nearest due date", function() {
+    it("TESTTESTdueDate(h,m,s,ms) returns nearest due date", function() {
         var now = new Date();
 
         // time before now
@@ -31,6 +31,30 @@
         should(dueDate).above(now);
         should(dueDate.getTime()-now.getTime()).below(1001);
         should(dueDate.getMilliseconds()).equal(0);
+
+        var date = new Date(2018,2,11,0,30);
+        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
+
+        var date = new Date(2018,2,11,1,30);
+        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
+
+        var date = new Date(2018,2,11,2,30);
+        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
+
+        var date = new Date(2018,2,11,23,30);
+        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
+
+        var date = new Date(2018,2,11,0,30);
+        var dueDate = Scheduler.dueDate(23,30,0,0,date);
+        should.deepEqual(dueDate, new Date(2018,2,12,23,30,0,0));
+
+        var date = new Date(2018,2,11,23,30);
+        var dueDate = Scheduler.dueDate(23,30,0,0,date);
+        should.deepEqual(dueDate, new Date(2018,2,12,23,30,0,0));
     });
     it("Task(opts) creates schedule task", function(done) {
         var sched = new Scheduler();
