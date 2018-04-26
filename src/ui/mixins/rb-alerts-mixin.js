@@ -15,15 +15,16 @@ module.exports = {
             alerts.push(alert);
             Vue.set(this.$store.state,'alerts', alerts);
             console.log(`${type}: ${text}`);
+            return alert;
         },
         alertSuccess(text) {
-            this.alert(text, 'success');
+            return this.alert(text, 'success');
         },
         alertError(text) {
-            this.alert(text, 'error');
+            return this.alert(text, 'error');
         },
         alertWarning(text) {
-            this.alert(text, 'warning');
+            return this.alert(text, 'warning');
         },
     },
 };

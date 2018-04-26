@@ -77,7 +77,7 @@
                 var used = b.space_used_size / (10e6);
                 var available = b.space_available_size / (10e6);
                 var physical = b.physical_space_size / (10e6);
-                winston.info(`v8.getHeapSpaceStatistics() ${b.space_name} MB`,
+                winston.debug(`v8.getHeapSpaceStatistics() ${b.space_name} MB`,
                     `size:${sz.toFixed(precision)}`,
                     `used:${used.toFixed(precision)}`,
                     `available:${available.toFixed(precision)}`,

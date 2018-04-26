@@ -332,7 +332,7 @@
                         }
                     });
                 } else {
-                    winston.info(`RestBundle-${this.name}.loadApiModel() unavailable:${modelPath} `);
+                    winston.debug(`RestBundle-${this.name}.loadApiModel() unavailable:${modelPath} `);
                     resolve(null);
                 }
             });
