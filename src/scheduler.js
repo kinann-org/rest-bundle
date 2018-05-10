@@ -33,10 +33,10 @@
             return recurDate;
         }
 
-        updateDueDate() {
+        updateDueDate(afterDate = this.dueDate) {
             this.dueDate = this.dueDate == null || this.msRecur === RECUR_NONE
                 ? null
-                : Task.recurDate(this.msRecur, this.dueDate);
+                : Task.recurDate(this.msRecur, this.dueDate, afterDate);
             return this.dueDate;
         }
 
@@ -114,6 +114,7 @@
                 if (task.dueDate) {
                     if (task.dueDate <= now) {
                         if (task.state === Scheduler.TASK_SCHEDULED) {
+                            //this.updateDueDate();
                             task.state = Scheduler.TASK_INVOKED;
                             winston.info(`Scheduler.processTasks() task:${task.name} event:${task.event_invoke}`);
                             this.emitter.emit(task.event_invoke, task);

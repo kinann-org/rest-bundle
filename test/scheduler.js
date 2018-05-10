@@ -18,23 +18,36 @@
         });
     });
     it("TESTTESTrecurDate(msRecur,dueDate returns next due date", function() {
-        var dueDate = new Date(2018,2,11,0,30);
         var msRecur = 24*3600*1000;
-        var expectedDate = new Date(dueDate);
-        expectedDate.setDate(dueDate.getDate()+1);
-        should.deepEqual(Task.recurDate(msRecur,dueDate),expectedDate);
 
+        // By default, return recurrence date immediately following the due date
         var dueDate = new Date(2018,2,12,0,30);
         var expectedDate = new Date(dueDate);
         expectedDate.setDate(dueDate.getDate()+1);
-        should.deepEqual(Task.recurDate(msRecur,dueDate),expectedDate);
+        var recurDate = Task.recurDate(msRecur,dueDate);
+        should.deepEqual(recurDate, expectedDate);
+        should(recurDate.getHours()).equal(dueDate.getHours());
+        should((recurDate-dueDate)/(3600*1000)).equal(24); // normal day
 
-        // returned date is later than afterDate 
-        var periods = 5.9;
+        // Daylight Savings Time
+        var dueDate = new Date(2018,2,11,0,30); // DST starts at 2AM March 11, 2018
+        var expectedDate = new Date(dueDate);
+        expectedDate.setDate(dueDate.getDate()+1);
+        var recurDate = Task.recurDate(msRecur,dueDate);
+        should.deepEqual(recurDate, expectedDate);
+        should(recurDate.getHours()).equal(dueDate.getHours());
+        should((recurDate-dueDate)/(3600*1000)).equal(23); // short day
+
+        // specify recurrence date lower bound (exclusive)
+        var dueDate = new Date(2018,2,12,0,30);
+        var periods = 5.9; 
+        var expectedPeriods = Math.ceil(periods); // integer multiple of msRecur
+        var expectedDate = new Date(dueDate.getTime()+expectedPeriods*msRecur);
         var afterDate = new Date(dueDate.getTime() + msRecur*periods);
         var recurDate = Task.recurDate(msRecur,dueDate,afterDate);
-        // (recurDate-dueDate) is an integer multiple of msRecur
-        should.deepEqual(recurDate, new Date(dueDate.getTime()+(Math.trunc(periods)+1)*msRecur));
+        should.deepEqual(recurDate, expectedDate); 
+        var recurDate = Task.recurDate(msRecur,recurDate,afterDate); // recurrence date is stable
+        should.deepEqual(recurDate, expectedDate);
 
     });
     it("dueDate(h,m,s,ms) returns nearest due date", function() {
