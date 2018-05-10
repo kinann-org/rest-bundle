@@ -19,15 +19,25 @@
             this.data = opts.data || {};
         }
 
-        static recurDate(msRecur, dueDate=new Date()) {
-            if (msRecur > 36000*1000) {
-                var msDay = 24*3600*1000;
-                var dateRecur = msRecur / msDay;
-                var date =  new Date(dueDate);
-                date.setDate(date.getDate()+dateRecur); // allow for DST
-                return date;
-            }
-            return new Date(dueDate.getTime() + msRecur);
+        static recurDate(msRecur, dueDate=new Date(), afterDate = dueDate) {
+            var recurDate = new Date(dueDate);
+            while (recurDate <= afterDate) {
+                if (msRecur > 36000*1000) {
+                    var msDay = 24*3600*1000;
+                    var dayRecur = msRecur / msDay;
+                    recurDate.setDate(recurDate.getDate()+dayRecur); // allow for DST
+                } else {
+                    recurDate = new Date(recurDate.getTime() + msRecur);
+                }
+            } 
+            return recurDate;
+        }
+
+        updateDueDate() {
+            this.dueDate = this.dueDate == null || this.msRecur === RECUR_NONE
+                ? null
+                : Task.recurDate(this.msRecur, this.dueDate);
+            return this.dueDate;
         }
 
         done(result) {
@@ -38,17 +48,9 @@
             } else {
                 winston.info(`Task-${this.name}.done(ok)`);
             }
-            if (this.msRecur === RECUR_NONE) {
-                this.dueDate = null;
-                this.state = Scheduler.TASK_DONE;
-            } else {
-                this.state = Scheduler.TASK_SCHEDULED;
-                if (this.dueDate) {
-                    var msRecur = this.msRecur;
-                    var dueDate = this.dueDate;
-                    this.dueDate = Task.recurDate(msRecur, dueDate);
-                }
-            }
+            this.updateDueDate();
+            this.state = this.msRecur === RECUR_NONE
+                ? Scheduler.TASK_DONE : Scheduler.TASK_SCHEDULED;
             return this;
         }
 
