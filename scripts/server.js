@@ -29,9 +29,11 @@ var async = function*() {
         for (var i = 0; i < argv.length; i++) {
             var a = argv[i];
             var rbName = i>1 && a[0]!=='-' && a!=='test' && a;
-            var rb = new RestBundle(rbName);
-            yield rb.initialize().then(r=>asnc.next(r)).catch(e=>async.throw(e));
-            rbName && restBundles.push(rb);
+            if (rbName) {
+                var rb = new RestBundle(rbName);
+                yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
+                restBundles.push(rb);
+            }
         }
         var rb = new RestBundle('test');
         yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));

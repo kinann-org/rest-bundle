@@ -13,9 +13,9 @@
     const v8 = require('v8');
 
     class RestBundle {
-        constructor(name, options = {}) {
-            if (typeof name != 'string') {
-                throw new Error("bundle name is required");
+        constructor(name='test', options = {}) {
+            if (typeof name !== 'string') {
+                throw new Error(`bundle name is required: ${name}`);
             }
             winston.info(`RestBundle.ctor(${name})`);
             this.name = name;

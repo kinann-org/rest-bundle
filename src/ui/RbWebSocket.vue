@@ -42,6 +42,7 @@
                 :rules="[apiRules.required, apiRules.gt0]">
             </v-text-field>
             <v-text-field label="Maximum heap" v-model='apiModelCopy.heapMax' 
+                hint="Log heap statistics when heap exceeds threshold"
                 :rules="[apiRules.required, apiRules.gt0]">
             </v-text-field>
         </rb-dialog-row>

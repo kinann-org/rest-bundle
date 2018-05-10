@@ -33,39 +33,39 @@
         var now = new Date();
 
         // time before now
-        var dueDate = Scheduler.dueDate(now.getHours(), now.getMinutes(), now.getSeconds()-1);
+        var dueDate = Scheduler.createDueDate(now.getHours(), now.getMinutes(), now.getSeconds()-1);
         should(dueDate.getTime()-now.getTime()).below(24*3600*1000);
         should(dueDate.getTime()-now.getTime()).above(24*3598*1000);
         should(dueDate.getMilliseconds()).equal(0);
 
         // time after now
-        var dueDate = Scheduler.dueDate(now.getHours(), now.getMinutes(), now.getSeconds()+1);
+        var dueDate = Scheduler.createDueDate(now.getHours(), now.getMinutes(), now.getSeconds()+1);
         should(dueDate).above(now);
         should(dueDate.getTime()-now.getTime()).below(1001);
         should(dueDate.getMilliseconds()).equal(0);
 
         var date = new Date(2018,2,11,0,30);
-        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        var dueDate = Scheduler.createDueDate(0,30,0,0,date);
         should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
 
         var date = new Date(2018,2,11,1,30);
-        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        var dueDate = Scheduler.createDueDate(0,30,0,0,date);
         should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
 
         var date = new Date(2018,2,11,2,30);
-        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        var dueDate = Scheduler.createDueDate(0,30,0,0,date);
         should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
 
         var date = new Date(2018,2,11,23,30);
-        var dueDate = Scheduler.dueDate(0,30,0,0,date);
+        var dueDate = Scheduler.createDueDate(0,30,0,0,date);
         should.deepEqual(dueDate, new Date(2018,2,12,0,30,0,0));
 
         var date = new Date(2018,2,11,0,30);
-        var dueDate = Scheduler.dueDate(23,30,0,0,date);
+        var dueDate = Scheduler.createDueDate(23,30,0,0,date);
         should.deepEqual(dueDate, new Date(2018,2,12,23,30,0,0));
 
         var date = new Date(2018,2,11,23,30);
-        var dueDate = Scheduler.dueDate(23,30,0,0,date);
+        var dueDate = Scheduler.createDueDate(23,30,0,0,date);
         should.deepEqual(dueDate, new Date(2018,2,12,23,30,0,0));
     });
     it("Task(opts) creates schedule task", function(done) {

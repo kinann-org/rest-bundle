@@ -163,7 +163,7 @@
         static get TASK_INVOKED() { return TASK_INVOKED; } 
         static get TASK_SCHEDULED() { return TASK_SCHEDULED; } 
 
-        static dueDate(hours=0, minutes=0, seconds=0, millis=0, startDate=new Date()) {
+        static createDueDate(hours=0, minutes=0, seconds=0, millis=0, startDate=new Date()) {
             var date = new Date(startDate);
             date.setHours(hours);
             date.setMinutes(minutes);

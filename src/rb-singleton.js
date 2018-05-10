@@ -6,8 +6,7 @@
     const Task = Scheduler.Task;
     const v8 = require('v8');
 
-    const rbEmitter = new EventEmitter();
-    rbEmitter.setMaxListeners(50); // increase this as required, but think about it
+    var rbEmitter;
 
     class RbSingleton {
 
@@ -50,12 +49,16 @@
             this.updateModel();
 
             this.heapWatcher();
-            RbSingleton.emitter.on("heapMax", stats => {
-                this.heapStat(stats);
-            });
         }
 
         static get emitter() {
+            if  (rbEmitter == null) {
+                rbEmitter = new EventEmitter();
+                rbEmitter.setMaxListeners(10); // increase this as required, but think about it
+                RbSingleton.emitter.on("heapMax", stats => {
+                    RbSingleton.heapStat(stats);
+                });
+            }
             return rbEmitter;
         }
 
@@ -69,7 +72,7 @@
             }, this.heapInterval * 1000);
         }
 
-        heapStat(heap) {
+        static heapStat(heap) {
             var precision=1;
             winston.info('memoryUsage()', process.memoryUsage());
             v8.getHeapSpaceStatistics().forEach(b => {
