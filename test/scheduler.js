@@ -239,13 +239,13 @@
     it("processTasks() invokes scheduled events", function(done) {
         var sched = new Scheduler();
         var now = new Date();
-        var tasks = [];
+        var invokedTasks = [];
         var name1 = 'test_processTask1';
         var dueDate1 = new Date(Date.now()-100);
         var name2 = 'test_processTask2';
         var dueDate2 = new Date(Date.now()+100);
         sched.emitter.on(Scheduler.EVENT_INVOKE, task => {
-            tasks.push(task);
+            invokedTasks.push(task);
         });
         sched.addTask(new Task({
             name: name1,
@@ -270,8 +270,8 @@
 
         // processTasks() is normally called by scheduler
         should(sched.processTasks()).equal(sched);
-        should(tasks.length).equal(1);
-        should(tasks[0]).equal(sched.tasks[0]);
+        should(invokedTasks.length).equal(1);
+        should(invokedTasks[0]).equal(sched.tasks[0]);
         should(sched.tasks[0]).properties({
             name: name1,
             state: Scheduler.TASK_INVOKED,
@@ -284,8 +284,8 @@
         });
 
         // task completed and state reverts invoked->scheduled
-        tasks[0].done('happy');
-        should(tasks.length).equal(1);
+        invokedTasks[0].done('happy');
+        should(invokedTasks.length).equal(1);
         should(sched.tasks[0]).properties({
             name: name1,
             state: Scheduler.TASK_SCHEDULED,
