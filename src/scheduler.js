@@ -21,12 +21,12 @@
 
         static recurDate(msRecur, dueDate=new Date(), afterDate = dueDate) {
             var recurDate = new Date(dueDate);
+            var msDay = 24*3600*1000;
             while (recurDate <= afterDate) {
-                if (msRecur > 36000*1000) {
-                    var msDay = 24*3600*1000;
+                if ((msRecur % msDay) === 0) { // maintain dueDate HH:MM:SS
                     var dayRecur = msRecur / msDay;
                     recurDate.setDate(recurDate.getDate()+dayRecur); // allow for DST
-                } else {
+                } else { // exact time
                     recurDate = new Date(recurDate.getTime() + msRecur);
                 }
             } 
