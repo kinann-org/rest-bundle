@@ -18,15 +18,23 @@
         });
     });
     it("TESTTESTrecurDate(msRecur,dueDate returns next due date", function() {
-        var date = new Date(2018,2,11,0,30);
-        var recurDate = new Date(date);
-        recurDate.setDate(recurDate.getDate()+1);
-        should.deepEqual(Task.recurDate(24*3600*1000,date),recurDate);
+        var dueDate = new Date(2018,2,11,0,30);
+        var msRecur = 24*3600*1000;
+        var expectedDate = new Date(dueDate);
+        expectedDate.setDate(dueDate.getDate()+1);
+        should.deepEqual(Task.recurDate(msRecur,dueDate),expectedDate);
 
-        var date = new Date(2018,2,12,0,30);
-        var recurDate = new Date(date);
-        recurDate.setDate(recurDate.getDate()+1);
-        should.deepEqual(Task.recurDate(24*3600*1000,date),recurDate);
+        var dueDate = new Date(2018,2,12,0,30);
+        var expectedDate = new Date(dueDate);
+        expectedDate.setDate(dueDate.getDate()+1);
+        should.deepEqual(Task.recurDate(msRecur,dueDate),expectedDate);
+
+        // returned date is later than afterDate 
+        var periods = 5.9;
+        var afterDate = new Date(dueDate.getTime() + msRecur*periods);
+        var recurDate = Task.recurDate(msRecur,dueDate,afterDate);
+        // (recurDate-dueDate) is an integer multiple of msRecur
+        should.deepEqual(recurDate, new Date(dueDate.getTime()+(Math.trunc(periods)+1)*msRecur));
 
     });
     it("dueDate(h,m,s,ms) returns nearest due date", function() {
