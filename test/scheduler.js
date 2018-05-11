@@ -17,7 +17,7 @@
             tasks: [],
         });
     });
-    it("TESTTESTrecurDate(msRecur,dueDate returns next due date", function() {
+    it("recurDate(msRecur,dueDate returns next due date", function() {
         var msDay = 24*3600*1000;
         var days = 2;
         var msRecur = days*msDay;
@@ -221,6 +221,7 @@
                 });
                 sched.addTask(task1);
                 sched.addTask(task2);
+                should(sched.processCount).equal(0);
                 should(sched.msRefresh).equal(msRefresh);
                 var emitter = sched.emitter;
                 should(emitter).instanceOf(EventEmitter);
@@ -233,11 +234,12 @@
                     should(task.state).not.equal(Scheduler.TASK_INVOKED);
                 });
 
-                var dueDate2 = task2.dueDate;
+                var dueDate2 = new Date(task2.dueDate);
                 sched.start();
 
                 // first task iteration invokes both tasks
                 yield setTimeout(() => async.next(),msRefresh);
+                should(sched.processCount).equal(1);
                 should(invoked).equal(2);
                 should(task1.state).equal(Scheduler.TASK_DONE);
                 should(task2.state).equal(Scheduler.TASK_SCHEDULED);
@@ -246,6 +248,7 @@
 
                 // second task iteration invokes only task2
                 yield setTimeout(() => async.next(),msRefresh);
+                should(sched.processCount).equal(2);
                 should(invoked).equal(3);
                 should(task1.state).equal(Scheduler.TASK_DONE);
                 should(task2.state).equal(Scheduler.TASK_SCHEDULED);
@@ -263,22 +266,23 @@
     it("processTasks() invokes scheduled events", function(done) {
         var sched = new Scheduler();
         var now = new Date();
+        var msRecur = 100;
         var invokedTasks = [];
         var name1 = 'test_processTask1';
-        var dueDate1 = new Date(Date.now()-100);
+        var dueDate1 = new Date(Date.now()-msRecur);
         var name2 = 'test_processTask2';
-        var dueDate2 = new Date(Date.now()+100);
+        var dueDate2 = new Date(Date.now()+msRecur);
         sched.emitter.on(Scheduler.EVENT_INVOKE, task => {
             invokedTasks.push(task);
         });
         sched.addTask(new Task({
             name: name1,
-            msRecur: 100,
+            msRecur,
             dueDate: dueDate1,
         }));
         sched.addTask(new Task({
             name: name2,
-            msRecur: 100,
+            msRecur,
             dueDate: dueDate2,
         }));
         should(sched.tasks[0]).properties({
@@ -299,7 +303,7 @@
         should(sched.tasks[0]).properties({
             name: name1,
             state: Scheduler.TASK_INVOKED,
-            dueDate: dueDate1,
+            dueDate: new Date(dueDate1.getTime()+msRecur),
         });
         should(sched.tasks[1]).properties({
             name: name2,
@@ -315,7 +319,7 @@
             state: Scheduler.TASK_SCHEDULED,
             result: 'happy',
         });
-        should(sched.tasks[0].dueDate.getTime()).approximately(dueDate1.getTime()+100, 1);
+        should(sched.tasks[0].dueDate.getTime()).approximately(dueDate1.getTime()+msRecur, 1);
 
         done();
     });
