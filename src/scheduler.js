@@ -45,9 +45,9 @@
             this.result = result;
             this.lastDone = new Date();
             if (result instanceof Error) {
-                winston.warn(`Task-${this.name}.done(Error)`, result.stack);
+                winston.warn(`Task-${this.name}.done(Error) dueDate:${this.dueDate}`, result.stack);
             } else {
-                winston.info(`Task-${this.name}.done(ok)`);
+                winston.info(`Task-${this.name}.done(ok) dueDate:${this.dueDate}`);
             }
             this.state = this.msRecur === RECUR_NONE
                 ? Scheduler.TASK_DONE : Scheduler.TASK_SCHEDULED;
@@ -157,7 +157,7 @@
                     winston.error(err.staack);
                     throw err;
                 } else if (task.state === Scheduler.TASK_INVOKED) {
-                    winston.info(`Scheduler.processTasks() busy`,
+                    winston.debug(`Scheduler.processTasks() busy`,
                         `task:${task.name} state:${task.state}`);
                 } else if (task.state === Scheduler.TASK_DONE) {
                     winston.debug(`Scheduler.processTasks() skipped completed`,
