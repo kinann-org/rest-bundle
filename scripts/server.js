@@ -43,7 +43,7 @@ var async = function*() {
         var ports = [80, 8080].concat(new Array(100).fill(3000).map((p,i)=>p+i));
         var rbServer =  app.locals.rbServer = new RbServer();
         rbServer.listen(app, restBundles, ports); 
-        yield rbServer.initialize(r=>async.next(r)).catch(e=>async.throw(e));
+        yield rbServer.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
     } catch(e) {
         winston.error(e.stack);
         throw e;
