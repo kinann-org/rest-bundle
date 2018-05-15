@@ -55,6 +55,7 @@
             if  (rbEmitter == null) {
                 rbEmitter = new EventEmitter();
                 rbEmitter.setMaxListeners(10); // increase this as required, but think about it
+                winston.info(`RbSingleton.emitter on:heapMax`);
                 RbSingleton.emitter.on("heapMax", stats => {
                     RbSingleton.heapStat(stats);
                 });

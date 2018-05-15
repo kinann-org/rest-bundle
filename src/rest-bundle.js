@@ -33,12 +33,12 @@
         }
 
         initialize() {
+            winston.info(`RestBundle-${this.name}.initialize()`);
             return new Promise((resolve,reject) => {
                 this.loadApiModel().then(r=> {
                     this.initialized = true;
-                resolve(r);}).catch(e=>{
-                    reject(e);
-                });
+                    resolve(r);
+                }).catch(e=>reject(e));
             });
         }
 
