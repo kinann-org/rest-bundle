@@ -37,7 +37,7 @@
             return new Promise((resolve,reject) => {
                 this.loadApiModel().then(r=> {
                     this.onApiModelLoaded(r); 
-                    this.onInitializeEvents(this.emitter); 
+                    this.onInitializeEvents(this.emitter, r); 
                     this.initialized = true;
                     resolve(r);
                 }).catch(e=>reject(e));
@@ -49,7 +49,7 @@
             //    2) send initial events
         }
 
-        onInitializeEvents(emitter) {
+        onInitializeEvents(emitter, apiModel) {
             //    1) construct configured objects
             // => 2) send initial events
         }

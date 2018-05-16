@@ -97,12 +97,20 @@ const supertest = require("supertest");
         async.next();
     })
     it("GET /state returns RestBundle singleton state", function(done) {
-        var app = require("../scripts/server.js");
-        supertest(app).get("/test/state").expect((res) => {
-            res.statusCode.should.equal(200);
-            res.headers["content-type"].should.match(/json/);
-            res.headers["content-type"].should.match(/utf-8/);
-        }).end((err,res) => {if (err) throw err; else done(); });
+        var async = function*() {
+            try {
+                var app = require("../scripts/server.js");
+                var r = yield supertest(app).get("/test/state").expect((res) => {
+                    res.statusCode.should.equal(200);
+                    res.headers["content-type"].should.match(/json/);
+                    res.headers["content-type"].should.match(/utf-8/);
+                }).end((e,r) => {e && async.throw(e) || async.next(r);});
+                done();
+            } catch(e) {
+                done(e);
+            }
+        }();
+        async.next();
     })
     it("GET /identity generates HTTP200 response", function(done) {
         var app = require("../scripts/server.js");
@@ -336,14 +344,17 @@ const supertest = require("supertest");
     });
     it("initialize() loads apiModel", function(done){
         var count = 0;
+        var apiModels = [];
         class TestBundle extends RestBundle {
             constructor(name='test', options = {}) {
                 super(name, options);
             }
             onApiModelLoaded(apiModel) { // initialize #1
+                apiModels.push(apiModel);
                 count = 2*count + 1;
             }
-            onInitializeEvents(emitter) { // initialize #2
+            onInitializeEvents(emitter, apiModel) { // initialize #2
+                apiModels.push(apiModel);
                 count = 2*count + 2;
             }
         }
@@ -353,9 +364,12 @@ const supertest = require("supertest");
                     apiModelDir: __dirname,
                 });
                 should(count).equal(0);
-                var r = yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
+                var apiModel = yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
+                should(apiModels.length).equal(2);
+                should.deepEqual(apiModels[0], apiModel);
+                should.deepEqual(apiModels[0], apiModels[1]);
+                should.deepEqual(apiModels[0].color, 'red');
                 should(count).equal(4);  // verify initialization order
-                should(r.color).equal('red');
                 done();
             } catch (e) {
                 done(e);

@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.35.1",
+  "version": "0.35.2",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -49,7 +49,7 @@
     "css-loader": "^0.28.0",
     "mocha": "^5.1.1",
     "should": "^11.2.0",
-    "supertest": "^3.0.0",
+    "supertest": "^3.1.0",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.2.0"
   },
@@ -68,7 +68,7 @@
     "start": "concurrently \"node --version\" \"scripts/server.js\" ",
     "test": "npm run test:verbose",
     "test:test": "mocha -w -R min --inline-diffs -g TEST",
-    "test:verbose": "mocha --inline-diffs",
+    "test:verbose": "mocha --inline-diffs --exit",
     "test:watch": "mocha -w --inline-diffs"
   },
   "repository": {
