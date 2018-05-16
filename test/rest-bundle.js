@@ -335,12 +335,26 @@ const supertest = require("supertest");
         async.next();
     });
     it("initialize() loads apiModel", function(done){
+        var count = 0;
+        class TestBundle extends RestBundle {
+            constructor(name='test', options = {}) {
+                super(name, options);
+            }
+            onApiModelLoaded(apiModel) { // initialize #1
+                count = 2*count + 1;
+            }
+            onInitializeEvents(emitter) { // initialize #2
+                count = 2*count + 2;
+            }
+        }
         var async = function*() {
             try {
-                var rb = new RestBundle("testInitialize", {
+                var rb = new TestBundle("testInitialize", {
                     apiModelDir: __dirname,
                 });
+                should(count).equal(0);
                 var r = yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
+                should(count).equal(4);  // verify initialization order
                 should(r.color).equal('red');
                 done();
             } catch (e) {

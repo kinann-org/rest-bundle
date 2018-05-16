@@ -36,10 +36,22 @@
             winston.info(`RestBundle-${this.name}.initialize()`);
             return new Promise((resolve,reject) => {
                 this.loadApiModel().then(r=> {
+                    this.onApiModelLoaded(r); 
+                    this.onInitializeEvents(this.emitter); 
                     this.initialized = true;
                     resolve(r);
                 }).catch(e=>reject(e));
             });
+        }
+
+        onApiModelLoaded(apiModel) {
+            // => 1) construct configured objects
+            //    2) send initial events
+        }
+
+        onInitializeEvents(emitter) {
+            //    1) construct configured objects
+            // => 2) send initial events
         }
 
         resourceMethod(method, name, handler, mime) {
