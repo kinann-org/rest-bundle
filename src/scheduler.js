@@ -121,6 +121,7 @@
                     try {
                         this.processTasks();
                     } catch(e) {
+                        e = e || new Error("(no error)");
                         this.interval && clearInterval(this.interval);
                         winston.error("Scheduler stopped", e.stack);
                     }
