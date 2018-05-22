@@ -46,12 +46,14 @@ module.exports = {
             });
             return new Promise((resolve, reject) => {
                 that.$http.get(url).then((res) => {
+                    console.log(`GET /${url.split('/').slice(3).join('/')} =>`, res.data);
                     context.commit('update', res.data);
                     setTimeout(() => context.commit('update', {
                         httpStatus: "",
                     }), 500);
                     resolve(res.data);
                 }).catch(err => {
+                    console.error(`GET ${url} => error`, err);
                     var msg = url + " ";
                     if (err.response) {
                         var res = err.response;
@@ -76,15 +78,16 @@ module.exports = {
             var store = this.$store;
             var state = store.state;
             var rbSvc = state.restBundle[service];
-            var getApiModel = () => rbSvc && rbSvc.hasOwnProperty(apiName) && rbSvc[apiName].apiModel || null;
-            if (getApiModel()) {
-                return Promise.resolve(getApiModel());
+            var cachedApiModel = () => rbSvc && rbSvc.hasOwnProperty(apiName) && rbSvc[apiName].apiModel || null;
+            var apiModel = cachedApiModel();
+            if (apiModel) {
+                return Promise.resolve(cachedApiModel());
             }
             return new Promise((resolve,reject) => {
                 var unwatch = store.watch(()=>{
-                    return getApiModel();
+                    let apiModel = cachedApiModel();
+                    return apiModel;
                 }, (apiModel)=> {
-                    console.log(`onApiModelLoaded() apiModel:restBundle/${service}/${apiName}`, apiModel);
                     unwatch();
                     resolve(apiModel);
                 });
@@ -106,10 +109,12 @@ module.exports = {
                 });
                 var actions = that.actions({
                     apiLoad(context, payload) {
+                        console.log(`apiLoad: ${that.service}/${apiName}`);
                         var url = that.restOrigin() + "/" + that.service + "/" + apiName;
                         return that.updateComponentStore(context, url);
                     },
                 });
+                console.log(`registerModule: restBundle/${that.service}/${apiName}`);
                 that.$store.registerModule(["restBundle", that.service, apiName], {
                     namespaced: true,
                     state: initialState || {},

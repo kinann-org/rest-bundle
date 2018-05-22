@@ -27,8 +27,11 @@ class RbApi {
         return this.mutable = JSON.parse(JSON.stringify(rbm.apiModel));
     }
     save() {
-        var url = this.apiSvc.restOrigin() + "/" + this.apiSvc.service + "/" + this.apiSvc.apiName;
-        return this.apiSvc.$http.put(url, { apiModel: this.apiSvc.apiModelCopy })
+        var urlPath = "/" + this.apiSvc.service + "/" + this.apiSvc.apiName;
+        var url = this.apiSvc.restOrigin() + urlPath;
+        var data = { apiModel: this.apiSvc.apiModelCopy };
+        console.log(`PUT ${urlPath}`, data);
+        return this.apiSvc.$http.put(url, data)
         .then(res => {
             this.apiSvc.rbCommit(res.data);
             this.toggle = false;
