@@ -115,19 +115,23 @@
             return !!this.interval;
         }
 
-        start() {
-            if (this.interval == null) {
-                this.interval = setInterval(() => {
-                    try {
-                        this.processTasks();
-                    } catch(e) {
-                        e = e || new Error("(no error)");
-                        this.interval && clearInterval(this.interval);
-                        winston.error("Scheduler stopped", e.stack);
-                    }
-                }, this.msRefresh);
+        run() {
+            try {
+                this.processTasks();
+            } catch(e) {
+                e = e || new Error("(unknown)");
+                winston.error("Scheduler.run() processTasks error:", e.stack);
+                //TODO that.interval && clearInterval(that.interval);
+                //TODO winston.error("Scheduler stopped");
             }
-            return this;
+        }
+
+        start() {
+            var that = this;
+            if (that.interval == null) {
+                that.interval = setInterval(() => that.run(), that.msRefresh);
+            }
+            return that;
         }
 
         stop() {
