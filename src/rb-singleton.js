@@ -48,7 +48,7 @@
             this.pushCount = 0;
             this.updateModel();
 
-            this.heapWatcher();
+            options.watchHeap && this.heapWatcher();
         }
 
         static get emitter() {
