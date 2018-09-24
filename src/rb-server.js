@@ -125,6 +125,9 @@
                         }
                     })
                 }, {});
+                if (!this.httpServer.listening) {
+                    throw new Error(`Could not create HTTP listener for any ports:${ports}`);
+                }
                 this.rbss = new RbSingleton(restBundles, this.httpServer);
                 this.loadApiModel(WEB_SOCKET_MODEL)
                     .then(result => {
