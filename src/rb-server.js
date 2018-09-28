@@ -23,9 +23,7 @@
         }
 
         static logDefault() {
-            var basename = path.basename(__filename);
-            logger.warn(`logDefault [${basename}]`);
-            return;
+            // deprecated
         }
 
         get handlers() {

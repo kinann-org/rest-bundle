@@ -32,7 +32,7 @@
             });
             this.sockets = new Set();
             var port = listener.address().port;
-            logger.info("RbSingleton listening on port:", port);
+            logger.info(`RbSingleton listening on port:${port}`);
             this.wss.on('connection', (ws, req) => {
                 const ip = req.connection.remoteAddress;
                 this.sockets.add(ws);
