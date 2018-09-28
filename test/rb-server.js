@@ -4,8 +4,10 @@
     const should = require("should");
     const winston = require("winston");
     const fs = require("fs");
+    const path = require("path");
     const pkg = require("../package.json");
     const {
+        RbServer,
         RestBundle,
     } = require("../index.js");
     const express = require("express");
@@ -14,6 +16,8 @@
     const API_MODEL_FNAME = "api-model/rest-bundle.RbServer.web-socket.json";
     var rbh = new RbHash();
     winston.level = "warn";
+    RbServer.logDefault();
+
     function testRb(app) {
         return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
     }
@@ -29,6 +33,9 @@
         fs.writeFileSync(API_MODEL_FNAME, json);
     }
 
+    it("TESTTESTwinston", function() {
+        winston.warn("Testing", path.basename(__filename));
+    });
     it("GET /server/web-socket returns server singleton web socket model", function(done) {
         var app = require("../scripts/server.js");
         setTestModel(1000);

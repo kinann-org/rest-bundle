@@ -4,6 +4,7 @@
  */
 (function(exports) {
     const winston = require("winston");
+    const path = require('path');
     const RbSingleton = require("./rb-singleton");
     const RestBundle = require("./rest-bundle");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
@@ -43,8 +44,11 @@
         }
 
         static logDefault() {
-            if (winston.transports.Console !== WINSTON_CONSOLE) {
-                console.log("Configuring winston default console");
+            var basename = path.basename(__filename);
+            if (winston.transports.Console === WINSTON_CONSOLE) {
+                console.log(`winston default console configured (OK) [${basename}]`);
+            } else {
+                console.log(`Configuring winston default console [${basename}]`);
                 winston.remove(winston.transports.Console);
                 winston.add(winston.transports.Console, WINSTON_CONSOLE);
             }
