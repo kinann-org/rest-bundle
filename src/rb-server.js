@@ -7,6 +7,27 @@
     const RbSingleton = require("./rb-singleton");
     const RestBundle = require("./rest-bundle");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
+    const WINSTON_CONSOLE = {
+        timestamp: () => new Date().toLocaleString([], { hour12: false, }),
+        formatter: (options) => {
+            var result =  options.timestamp() +' '+ 
+                options.level.toUpperCase() +' '+ 
+                (options.message ? options.message : '');
+            try {
+                if (options.meta) {
+                    var keys = Object.keys(options.meta);
+                    if (keys.length) {
+                        result +=  ' '+ (options.meta.message != null 
+                            ? options.meta.message : JSON.stringify(options.meta));
+                    }
+                }
+                return result;
+            } catch (err) {
+                console.log("winston logging error", err, Object.keys(options.meta));
+                return result + err.message;
+            }
+        },
+    };
 
     class RbServer extends RestBundle {
         constructor(name=WEB_SOCKET_MODEL, options = {}) {
@@ -22,28 +43,11 @@
         }
 
         static logDefault() {
-            winston.remove(winston.transports.Console);
-            winston.add(winston.transports.Console, {
-                timestamp: () => new Date().toLocaleString([], { hour12: false, }),
-                formatter: (options) => {
-                    var result =  options.timestamp() +' '+ 
-                        options.level.toUpperCase() +' '+ 
-                        (options.message ? options.message : '');
-                    try {
-                        if (options.meta) {
-                            var keys = Object.keys(options.meta);
-                            if (keys.length) {
-                                result +=  ' '+ (options.meta.message != null 
-                                    ? options.meta.message : JSON.stringify(options.meta));
-                            }
-                        }
-                        return result;
-                    } catch (err) {
-                        console.log("winston logging error", err, Object.keys(options.meta));
-                        return result + err.message;
-                    }
-                },
-            });
+            if (winston.transports.Console !== WINSTON_CONSOLE) {
+                console.log("Configuring winston default console");
+                winston.remove(winston.transports.Console);
+                winston.add(winston.transports.Console, WINSTON_CONSOLE);
+            }
         }
 
         get handlers() {
