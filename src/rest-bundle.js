@@ -8,7 +8,7 @@
     const fs = require("fs");
     const express = require("express");
     const bodyParser = require("body-parser");
-    const winston = require("winston");
+    const logger = require("./logger");
     const _rbHash = new RbHash();
     const v8 = require('v8');
 
@@ -17,7 +17,7 @@
             if (typeof name !== 'string') {
                 throw new Error(`bundle name is required: ${name}`);
             }
-            winston.info(`RestBundle.ctor(${name})`);
+            logger.info(`RestBundle.ctor(${name})`);
             this.name = name;
             this.uribase = options.uribase || "/" + this.name;
             this.appDir = options.appDir || require.resolve("vue").split("node_modules")[0];
@@ -33,7 +33,7 @@
         }
 
         initialize() {
-            winston.info(`RestBundle-${this.name}.initialize()`);
+            logger.info(`RestBundle-${this.name}.initialize()`);
             return new Promise((resolve,reject) => {
                 this.loadApiModel().then(r=> {
                     this.onApiModelLoaded(r); 
@@ -81,7 +81,7 @@
                 res.type(res.locals.mime);
                 res.send(data);
             } catch (err) {
-                winston.warn(err.stack);
+                logger.warn(err.stack);
                 res.status(500);
                 res.send({error:err.message});
             }
@@ -92,21 +92,21 @@
             var status = res.locals.status !== 200 && res.locals.status || 500;
             res.status(status);
             res.type(res.locals.mime || 'application/json');
-            winston.info(req.method, req.url, "=> HTTP"+status, err.message);
-            winston.debug(err);
-            winston.warn('onRequestFail res.locals.data', res.locals.data);
+            logger.info(req.method, req.url, "=> HTTP"+status, err.message);
+            logger.debug(err);
+            logger.warn('onRequestFail res.locals.data', res.locals.data);
             res.send(res.locals.data || { error: err.message });
             next && next('route');
         }
 
         pushState() {
-            winston.warn("RestBundle.pushState() ignored (no web socket)");
+            logger.warn("RestBundle.pushState() ignored (no web socket)");
         }
 
         taskPromise(name, cbPromise) {
             return new Promise((resolve, reject) => {
                 var onError = (err, n, level) => {
-                    winston[level]("taskPromise#" + n + ":", err.stack);
+                    logger[level]("taskPromise#" + n + ":", err.stack);
                     this.taskEnd(name);
                     reject(err);
                 }
@@ -157,7 +157,7 @@
                         resolve(v8.getHeapSpaceStatistics());
                     }
                 } catch (e) {
-                    winston.warn(e.stack);
+                    logger.warn(e.stack);
                     reject(e);
                 }
             });
@@ -201,14 +201,14 @@
                     result.then(data => {
                         this.$onRequestSuccess(req, res, data, next, mime);
                     }).catch(err => {
-                        winston.warn(err.stack);
+                        logger.warn(err.stack);
                         this.$onRequestFail(req, res, err, next)
                     });
                 } else {
                     this.$onRequestSuccess(req, res, result, next, mime);
                 }
             } catch (err) {
-                winston.warn(err.stack);
+                logger.warn(err.stack);
                 this.$onRequestFail(req, res, err, next);
             }
         }
@@ -254,7 +254,7 @@
             }
             var uripath = "/ui/index-service";
             var template = "index-service.ejs";
-            winston.debug(" binding", uripath, "to", views + "/" + template);
+            logger.debug(" binding", uripath, "to", views + "/" + template);
             app.get(uripath, (req, res, next) => {
                 res.render(template, ejsmap);
             });
@@ -279,7 +279,7 @@
                 return cmp;
             });
             restHandlers.forEach((resource) => {
-                winston.debug("RestBundle.bindExpress:", resource.method,
+                logger.debug("RestBundle.bindExpress:", resource.method,
                     "/" + this.name + "/" + resource.name + " => " + resource.mime);
                 this.bindResource(app, resource);
             });
@@ -309,11 +309,11 @@
                     this.loadApiFile(modelPath).then(fileApiModel => {
                         resolve(this.updateApiModel(fileApiModel));
                     }).catch(e => {
-                        winston.error(`RestBundle.loadApiModel(${name})`, e.stack);
+                        logger.error(`RestBundle.loadApiModel(${name})`, e.stack);
                         reject(e);
                     });
                 } catch (e) {
-                    winston.error(`RestBundle.loadApiModel(${name})`, e.stack);
+                    logger.error(`RestBundle.loadApiModel(${name})`, e.stack);
                     reject(e);
                 }
             });
@@ -328,23 +328,23 @@
                 if (fs.existsSync(modelPath)) {
                     fs.readFile(modelPath, (err, data) => {
                         if (err) {
-                            winston.warn(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`, err, 'E01');
+                            logger.warn(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`, err, 'E01');
                             reject(err);
                         } else {
                             try {
                                 var obj = JSON.parse(data);
                                 var rbHash = obj.rbHash;
-                                winston.debug(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`);
-                                winston.info(`RestBundle-${this.name}.loadApiModel() rbHash:${rbHash}`);
+                                logger.debug(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`);
+                                logger.info(`RestBundle-${this.name}.loadApiModel() rbHash:${rbHash}`);
                                 resolve(obj);
                             } catch (err) {
-                                winston.warn(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`, err.message, 'E02');
+                                logger.warn(`RestBundle-${this.name}.loadApiModel() file:${modelPath}`, err.message, 'E02');
                                 reject(err);
                             }
                         }
                     });
                 } else {
-                    winston.debug(`RestBundle-${this.name}.loadApiModel() unavailable:${modelPath} `);
+                    logger.debug(`RestBundle-${this.name}.loadApiModel() unavailable:${modelPath} `);
                     resolve(null);
                 }
             });
@@ -370,14 +370,14 @@
                             if (err) {
                                 async.throw(err);
                             } else {
-                                winston.info(`RestBundle.saveApiModel()`,
+                                logger.info(`RestBundle.saveApiModel()`,
                                     `${json.length} characters written to ${modelPath}`);
                                 async.next(true);
                             }
                         });
                         resolve(apiModel);
                     } catch (err) {
-                        winston.warn(err.stack);
+                        logger.warn(err.stack);
                         reject(err);
                     }
                 }.call(this);
@@ -391,7 +391,7 @@
                     apiModel: this.apiHash(model),
                 }))
                 .catch(e=>{
-                    winston.warn(e.stack);
+                    logger.warn(e.stack);
                     reject(e);
                 });
             });
@@ -419,7 +419,7 @@
                             var err = null;
                         } 
                         if (err) { // expected error
-                            winston.info(err.stack);
+                            logger.info(err.stack);
                             res.locals.data = {
                                 error: err.message,
                                 data: {
@@ -437,7 +437,7 @@
                             });
                         }
                     } catch (err) { // unexpected error
-                        winston.warn(err.stack);
+                        logger.warn(err.stack);
                         reject(err);
                     }
                 }.call(that);

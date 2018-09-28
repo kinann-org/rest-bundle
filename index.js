@@ -1,6 +1,7 @@
 (function(exports) {
     ///////////////// class ////////////////////
     var pkg = {
+        logger: require('./src/logger'),
         RestBundle: require("./src/rest-bundle"),
         RbSingleton: require("./src/rb-singleton"),
         RbServer: require("./src/rb-server"),

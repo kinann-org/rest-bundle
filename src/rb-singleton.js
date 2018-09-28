@@ -1,5 +1,5 @@
 (function(exports) {
-    const winston = require("winston");
+    const logger = require("./logger");
     const WebSocket = require("ws");
     const EventEmitter = require("events");
     const Scheduler = require('./scheduler');
@@ -20,7 +20,7 @@
             this.restBundles = restBundles;
             this.restBundles.forEach(rb => {
                 rb.pushState = () => {
-                    winston.debug("direct pushState");
+                    logger.debug("direct pushState");
                     return this.pushState();
                 }
             });
@@ -32,17 +32,17 @@
             });
             this.sockets = new Set();
             var port = listener.address().port;
-            winston.info("RbSingleton listening on port:", port);
+            logger.info("RbSingleton listening on port:", port);
             this.wss.on('connection', (ws, req) => {
                 const ip = req.connection.remoteAddress;
                 this.sockets.add(ws);
-                winston.debug("WebSocket connected client:", ip);
+                logger.debug("WebSocket connected client:", ip);
                 ws.on('close', () => {
                     this.sockets.delete(ws);
-                    winston.debug('WebSocket disconnected client:', ip);
+                    logger.debug('WebSocket disconnected client:', ip);
                 });
                 ws.on('error', (e) => {
-                    winston.error(this.constructor.name, e);
+                    logger.error(this.constructor.name, e);
                 });
             });
             this.pushCount = 0;
@@ -55,7 +55,7 @@
             if  (rbEmitter == null) {
                 rbEmitter = new EventEmitter();
                 rbEmitter.setMaxListeners(10); // increase this as required, but think about it
-                winston.info(`RbSingleton.emitter on:heapMax`);
+                logger.info(`RbSingleton.emitter on:heapMax`);
                 RbSingleton.emitter.on("heapMax", stats => {
                     RbSingleton.heapStat(stats);
                 });
@@ -75,13 +75,13 @@
 
         static heapStat(heap) {
             var precision=1;
-            winston.info('memoryUsage()', process.memoryUsage());
+            logger.info('memoryUsage()', process.memoryUsage());
             v8.getHeapSpaceStatistics().forEach(b => {
                 var sz = b.space_size / (10e6);
                 var used = b.space_used_size / (10e6);
                 var available = b.space_available_size / (10e6);
                 var physical = b.physical_space_size / (10e6);
-                winston.debug(`v8.getHeapSpaceStatistics() ${b.space_name} MB`,
+                logger.debug(`v8.getHeapSpaceStatistics() ${b.space_name} MB`,
                     `size:${sz.toFixed(precision)}`,
                     `used:${used.toFixed(precision)}`,
                     `available:${available.toFixed(precision)}`,
@@ -92,7 +92,7 @@
             var heapavail = heap.total_available_size / 10e6;
             var heapused = heap.used_heap_size / 10e6;
             var heaplimit = heap.heap_size_limit / 10e6;
-            winston.info(`v8.getHeapStatistics() MB`,
+            logger.info(`v8.getHeapStatistics() MB`,
                 `total:${heaptot.toFixed(precision)}`,
                 `used:${heapused.toFixed(precision)}`,
                 `available:${heapavail.toFixed(precision)}`,
@@ -101,11 +101,11 @@
         }
 
         close() {
-            winston.debug(this.constructor.name, "close()...");
+            logger.debug(this.constructor.name, "close()...");
             this.scheduler.stop();
             clearInterval(this.pushStateId);
             this.wss.close();
-            winston.info(this.constructor.name, "close()");
+            logger.info(this.constructor.name, "close()");
         }
 
         pushData(type, data) {
@@ -115,7 +115,7 @@
                 data
             });
             this.pushCount++;
-            winston.debug("push", this.pushCount,  message);
+            logger.debug("push", this.pushCount,  message);
             this.sockets.forEach((ws) => ws.send(message));
         }
 
@@ -167,7 +167,7 @@
                 try {
                     this.pushData("state", this.getAllState());
                 } catch (err) {
-                    winston.error('rb-singleton', err.stack);
+                    logger.error('rb-singleton', err.stack);
                     reject(err);
                 }
             });

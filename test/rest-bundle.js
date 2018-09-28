@@ -2,7 +2,6 @@ const supertest = require("supertest");
 
 (typeof describe === 'function') && describe("RestBundle", function() {
     const should = require("should");
-    const winston = require("winston");
     const pkg = require("../package.json");
     const RestBundle = require("../index.js").RestBundle;
     const supertest = require('supertest');
@@ -10,8 +9,11 @@ const supertest = require("supertest");
     const WebSocket = require("ws");
     const fs = require('fs');
     const path = require('path');
-    const RbHash = require('../src/rb-hash');
-    winston.level = "warn";
+    const {
+        logger,
+        RbHash,
+    } = require('../index');
+    logger.level = "warn";
     function testRb(app) {
         return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
     }
@@ -82,9 +84,9 @@ const supertest = require("supertest");
                 var app = express();
                 var tb = new TestBundle("testBadJSON").bindExpress(app);
                 yield tb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
-                winston.warn("Expected error (BEGIN)");
+                logger.warn("Expected error (BEGIN)");
                 supertest(app).get("/testBadJSON/bad-json").expect((res) => {
-                    winston.warn("Expected error (END)");
+                    logger.warn("Expected error (END)");
                     res.statusCode.should.equal(500);
                     should.deepEqual(res.body, {
                         error: "Converting circular structure to JSON",
@@ -152,9 +154,9 @@ const supertest = require("supertest");
     })
     it("POST generates HTTP500 response for thrown exception", function(done) {
         var app = require("../scripts/server.js");
-        winston.warn("Expected error (BEGIN)");
+        logger.warn("Expected error (BEGIN)");
         supertest(app).post("/test/identity").send({greeting:"whoa"}).expect((res) => {
-            winston.warn("Expected error (END)");
+            logger.warn("Expected error (END)");
             res.statusCode.should.equal(500);
             res.headers["content-type"].should.match(/json/);
             res.headers["content-type"].should.match(/utf-8/);
@@ -299,7 +301,7 @@ const supertest = require("supertest");
 
                 done();
             } catch (err) {
-                winston.error(err.stack);
+                logger.error(err.stack);
                 done(err);
             }
         }();
@@ -332,7 +334,7 @@ const supertest = require("supertest");
                     should(stats.length).equal(5);
                     res.body.forEach(b => {
                         var mb = b.space_used_size / (10e6);
-                        winston.info(`heap used ${mb.toFixed(1)}MB ${b.space_name}`);
+                        logger.info(`heap used ${mb.toFixed(1)}MB ${b.space_name}`);
                     });
                 }).end((e,r) => e ? async.throw(e) : async.next(r));
                 done();

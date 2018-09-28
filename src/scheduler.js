@@ -1,6 +1,6 @@
 (function(exports) {
     const EventEmitter = require('events');
-    const winston = require('winston');
+    const logger = require('./logger');
     const RECUR_NONE = 0;
     const RECUR_DAILY = 24*3600*1000;
     const EVENT_INVOKE = "invoke_task";
@@ -17,7 +17,7 @@
             this.state = opts.state || TASK_SCHEDULED;
             this.event_invoke = opts.event_invoke || EVENT_INVOKE;
             this.data = opts.data || {};
-            winston.info(`Task-${this.name}.ctor()`,
+            logger.info(`Task-${this.name}.ctor()`,
                 `dueDate:${this.dueDate && this.dueDate.toISOString()}`,
                 `state:${this.state}`,
                 `msRecur:${this.msRecur}`,
@@ -53,12 +53,12 @@
             this.state = this.msRecur === RECUR_NONE
                 ? Scheduler.TASK_DONE : Scheduler.TASK_SCHEDULED;
             if (result instanceof Error) {
-                winston.warn(`Task-${this.name}.done(Error)`,
+                logger.warn(`Task-${this.name}.done(Error)`,
                     `dueDate:${this.dueDate && this.dueDate.toISOString()}`,
                     `state:${this.state}`, 
                     result.stack);
             } else {
-                winston.info(`Task-${this.name}.done(ok)`,
+                logger.info(`Task-${this.name}.done(ok)`,
                     `dueDate:${this.dueDate && this.dueDate.toISOString()}`,
                     `state:${this.state}`);
             }
@@ -69,12 +69,12 @@
             if (this.state === Scheduler.TASK_SCHEDULED) {
                 this.updateDueDate();
                 this.state = Scheduler.TASK_INVOKED;
-                winston.info(`Task-${this.name}.invoke(${this.event_invoke})`,
+                logger.info(`Task-${this.name}.invoke(${this.event_invoke})`,
                     `dueDate:${this.dueDate && this.dueDate.toISOString()}`,
                     `state:${this.state}`);
                 emitter.emit(this.event_invoke, this);
             } else {
-                winston.warn(`Task-${this.name}.invoke() ignored`,
+                logger.warn(`Task-${this.name}.invoke() ignored`,
                     `dueDate:${this.dueDate && this.dueDate.toISOString()}`,
                     `state:${this.state}`);
             }
@@ -120,9 +120,9 @@
                 this.processTasks();
             } catch(e) {
                 e = e || new Error("(unknown)");
-                winston.error("Scheduler.run() processTasks error:", e.stack);
+                logger.error("Scheduler.run() processTasks error:", e.stack);
                 //TODO that.interval && clearInterval(that.interval);
-                //TODO winston.error("Scheduler stopped");
+                //TODO logger.error("Scheduler stopped");
             }
         }
 
@@ -158,36 +158,36 @@
                     if (task.dueDate <= now) {
                         task.invoke(this.emitter);
                     } else if (task.state === Scheduler.TASK_SCHEDULED) {
-                        winston.debug(`Scheduler.processTasks() skipping scheduled`,
+                        logger.debug(`Scheduler.processTasks() skipping scheduled`,
                             `task:${task.name} dueDate:${task.dueDate}`);
                     } else if (task.state === Scheduler.TASK_DONE) {
                         var err = new Error(`Scheduler.processTasks() completed task has `+
                             `dueDate:${task.dueDate} task:${task.name}`);
-                        winston.error(err.stack);
+                        logger.error(err.stack);
                         throw err;
                     } else if (task.state === Scheduler.TASK_INVOKED) {
-                        winston.debug(`Scheduler.processTasks() skipping invoked`,
+                        logger.debug(`Scheduler.processTasks() skipping invoked`,
                             `task:${task.name} dueDate:${task.dueDate}`);
                         throw err;
                     } else {
                         var err = new Error(`Scheduler.processTasks() invalid `+
                                 `task:${task.name} state:${task.state} dueDate:${task.dueDate}`);
-                        winston.error(err.stack);
+                        logger.error(err.stack);
                         throw err;
                     }
                 } else if (task.state === Scheduler.TASK_SCHEDULED) {
                     var err = new Error(`Scheduler.processTasks() no due date for scheduled task:${task.name}`);
-                    winston.error(err.staack);
+                    logger.error(err.staack);
                     throw err;
                 } else if (task.state === Scheduler.TASK_INVOKED) {
-                    winston.debug(`Scheduler.processTasks() busy`,
+                    logger.debug(`Scheduler.processTasks() busy`,
                         `task:${task.name} state:${task.state}`);
                 } else if (task.state === Scheduler.TASK_DONE) {
-                    winston.debug(`Scheduler.processTasks() skipped completed`,
+                    logger.debug(`Scheduler.processTasks() skipped completed`,
                         `task:${task.name} state:${task.state}`);
                 } else {
                     var err = new Error(`Scheduler.processTasks() invalid task:${task.name} state:${task.state}`);
-                    winston.error(err);
+                    logger.error(err);
                     throw err;
                 }
             }

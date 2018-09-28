@@ -4,10 +4,10 @@ const path = require("path");
 const express = require('express');
 const app = module.exports = express();
 const {
+    logger,
     RestBundle,
     RbServer,
 } = require("../index.js");
-const winston = require("winston");
 
 // Application setup
 app.all('*', function(req, res, next) {
@@ -45,7 +45,7 @@ var async = function*() {
         rbServer.listen(app, restBundles, ports); 
         yield rbServer.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
     } catch(e) {
-        winston.error(e.stack);
+        logger.error(e.stack);
         throw e;
     }
 }();

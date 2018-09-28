@@ -1,14 +1,14 @@
 (typeof describe === 'function') && describe("Scheduler", function() {
     const should = require("should");
     const EventEmitter = require('events');
-    const winston = require('winston');
     const fs = require('fs');
     const path = require('path');
     const {
+        logger,
         Scheduler,
     } = require('../index');
     const Task = Scheduler.Task;
-    winston.level='warn';
+    logger.level='warn';
 
     it("Scheduler(opts) creates scheduler", function() {
         var sched = new Scheduler();
@@ -189,10 +189,10 @@
                 should(task.state).equal(Scheduler.TASK_SCHEDULED);
                 task.state = Scheduler.TASK_INVOKED;
                 should(task.state).equal(Scheduler.TASK_INVOKED);
-                winston.warn(`Expected error (BEGIN)`);
+                logger.warn(`Expected error (BEGIN)`);
                 var err = new Error('badness');
                 should(task.done(err)).equal(task);
-                winston.warn(`Expected error (END)`);
+                logger.warn(`Expected error (END)`);
                 should(task.result).equal(err);
                 should(task.state).equal(Scheduler.TASK_SCHEDULED);
                 should(task.lastDone).instanceOf(Date);

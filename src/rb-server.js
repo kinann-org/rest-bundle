@@ -3,32 +3,11 @@
  * that manages shared resources such as rb-singleton.
  */
 (function(exports) {
-    const winston = require("winston");
+    const logger = require("./logger");
     const path = require('path');
     const RbSingleton = require("./rb-singleton");
     const RestBundle = require("./rest-bundle");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
-    const WINSTON_CONSOLE = {
-        timestamp: () => new Date().toLocaleString([], { hour12: false, }),
-        formatter: (options) => {
-            var result =  options.timestamp() +' '+ 
-                options.level.toUpperCase() +' '+ 
-                (options.message ? options.message : '');
-            try {
-                if (options.meta) {
-                    var keys = Object.keys(options.meta);
-                    if (keys.length) {
-                        result +=  ' '+ (options.meta.message != null 
-                            ? options.meta.message : JSON.stringify(options.meta));
-                    }
-                }
-                return result;
-            } catch (err) {
-                console.log("winston logging error", err, Object.keys(options.meta));
-                return result + err.message;
-            }
-        },
-    };
 
     class RbServer extends RestBundle {
         constructor(name=WEB_SOCKET_MODEL, options = {}) {
@@ -45,13 +24,8 @@
 
         static logDefault() {
             var basename = path.basename(__filename);
-            if (winston.transports.Console === WINSTON_CONSOLE) {
-                console.log(`winston default console configured (OK) [${basename}]`);
-            } else {
-                console.log(`Configuring winston default console [${basename}]`);
-                winston.remove(winston.transports.Console);
-                winston.add(winston.transports.Console, WINSTON_CONSOLE);
-            }
+            logger.warn(`logDefault [${basename}]`);
+            return;
         }
 
         get handlers() {
@@ -100,11 +74,11 @@
         close() {
             if (this.rootApp) {
                 if (this.rbss) {
-                    winston.info("closing RbSingleton");
+                    logger.info("closing RbSingleton");
                     this.rbss.close();
                 }
                 if (this.httpServer) {
-                    winston.info("closing web server");
+                    logger.info("closing web server");
                     this.httpServer && this.httpServer.close();
                 }
             }
@@ -145,7 +119,7 @@
                     })
                     .catch(e=>{throw(e);});
             } catch (err) {
-                winston.error('rb-server:', err.stack);
+                logger.error('rb-server:', err.stack);
                 throw err;
             }
             return this;

@@ -2,20 +2,21 @@
 (typeof describe === 'function') && describe("RbServer", function() {
     const supertest = require("supertest");
     const should = require("should");
-    const winston = require("winston");
     const fs = require("fs");
     const path = require("path");
     const pkg = require("../package.json");
     const {
+        logger,
         RbServer,
         RestBundle,
     } = require("../index.js");
+
     const express = require("express");
     const WebSocket = require("ws");
     const RbHash = require("../index.js").RbHash;
     const API_MODEL_FNAME = "api-model/rest-bundle.RbServer.web-socket.json";
     var rbh = new RbHash();
-    winston.level = "warn";
+    logger.level = "warn";
     RbServer.logDefault();
 
     function testRb(app) {
@@ -33,8 +34,8 @@
         fs.writeFileSync(API_MODEL_FNAME, json);
     }
 
-    it("TESTTESTwinston", function() {
-        winston.warn("Testing", path.basename(__filename));
+    it("TESTTESTlogger", function() {
+        logger.warn("Testing", path.basename(__filename));
     });
     it("GET /server/web-socket returns server singleton web socket model", function(done) {
         var app = require("../scripts/server.js");
@@ -74,7 +75,7 @@
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 done();
             } catch (err) {
-                winston.error(err.message, err.stack);
+                logger.error(err.message, err.stack);
                 throw(err);
             }
         }();
@@ -96,9 +97,9 @@
                         rbHash: 'some-other-hash',
                     }
                 }); 
-                winston.warn("Expected error (BEGIN)");
+                logger.warn("Expected error (BEGIN)");
                 var res = yield supertest(app).put("/RbServer/web-socket").send(conflictingUpdate).expect((res) => {
-                    winston.warn("Expected error (END)");
+                    logger.warn("Expected error (END)");
                     res.statusCode.should.equal(409);
                     res.headers["content-type"].should.match(/json/);
                     res.headers["content-type"].should.match(/utf-8/);
@@ -108,7 +109,7 @@
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 done();
             } catch (err) {
-                winston.error(err);
+                logger.error(err);
                 throw(err);
             }
         }();
@@ -124,9 +125,9 @@
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 var rbHash = res.body.rbHash;
                 var modelCurrent = res.body;
-                winston.warn("Expected error (BEGIN)");
+                logger.warn("Expected error (BEGIN)");
                 var res = yield supertest(app).put("/RbServer/web-socket").send("bad request").expect((res) => {
-                    winston.warn("Expected error (END)");
+                    logger.warn("Expected error (END)");
                     res.statusCode.should.equal(400);
                     res.headers["content-type"].should.match(/json/);
                     res.headers["content-type"].should.match(/utf-8/);
@@ -136,7 +137,7 @@
                 }).end((err,res) => {if (err) async.throw(err); else async.next(res);});
                 done();
             } catch (err) {
-                winston.error(err);
+                logger.error(err);
                 throw(err);
             }
         }();
@@ -174,7 +175,7 @@
                     app.locals.rbServer.rbss.pushStateMillis.should.equal(2000);
                 }).end((err,res) => {if (err) throw err; else done(); });
             } catch (err) {
-                winston.error(err.message, err.stack);
+                logger.error(err.message, err.stack);
                 throw(err);
             }
         }();
