@@ -92,9 +92,6 @@
             var status = res.locals.status !== 200 && res.locals.status || 500;
             res.status(status);
             res.type(res.locals.mime || 'application/json');
-            logger.info(req.method, req.url, "=> HTTP"+status, err.message);
-            logger.debug(err);
-            logger.warn('onRequestFail res.locals.data', res.locals.data);
             res.send(res.locals.data || { error: err.message });
             next && next('route');
         }
@@ -192,6 +189,12 @@
             });
         }
 
+        handleRequestError(req, res, err, next) {
+            logger.warn(`RestBundle.handleRequstError(${req.method} ${req.url})`);
+            logger.warn(err.stack);
+            this.$onRequestFail(req, res, err, next)
+        }
+
         processRequest(req, res, next, handler, mime) {
             res.locals.status = 200;
             res.locals.mime = mime;
@@ -201,15 +204,13 @@
                     result.then(data => {
                         this.$onRequestSuccess(req, res, data, next, mime);
                     }).catch(err => {
-                        logger.warn(err.stack);
-                        this.$onRequestFail(req, res, err, next)
+                        this.handleRequestError(req, res, err, next);
                     });
                 } else {
                     this.$onRequestSuccess(req, res, result, next, mime);
                 }
             } catch (err) {
-                logger.warn(err.stack);
-                this.$onRequestFail(req, res, err, next);
+                this.handleRequestError(req, res, err, next);
             }
         }
 
