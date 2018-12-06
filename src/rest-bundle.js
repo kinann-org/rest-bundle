@@ -190,7 +190,7 @@
         }
 
         handleRequestError(req, res, err, next) {
-            logger.warn(`RestBundle.handleRequstError(${req.method} ${req.url})`);
+            logger.warn(`RestBundle.handleRequestError(${req.method} ${req.url})`);
             logger.warn(err.stack);
             this.$onRequestFail(req, res, err, next)
         }
@@ -285,6 +285,8 @@
                 this.bindResource(app, resource);
             });
             rootApp.use(this.uribase, app); // don't pollute client's app
+            rootApp.disable('x-powered-by'); // suppress header warning
+            app.disable('x-powered-by'); // suppress header warning
             return this;
         }
 

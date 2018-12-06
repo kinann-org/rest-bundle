@@ -98,7 +98,7 @@ const supertest = require("supertest");
         }();
         async.next();
     })
-    it("GET /state returns RestBundle singleton state", function(done) {
+    it("TESTTESTGET /state returns RestBundle singleton state", function(done) {
         var async = function*() {
             try {
                 var app = require("../scripts/server.js");
@@ -106,6 +106,7 @@ const supertest = require("supertest");
                     res.statusCode.should.equal(200);
                     res.headers["content-type"].should.match(/json/);
                     res.headers["content-type"].should.match(/utf-8/);
+                    should(res.headers["x-powered-by"]).equal(undefined);
                 }).end((e,r) => {e && async.throw(e) || async.next(r);});
                 done();
             } catch(e) {
@@ -322,7 +323,7 @@ const supertest = require("supertest");
             done();
         },2);
     });
-    it("GET /app/stats/heap returns v8.getHeapSpaceStatistics", function(done) {
+    it("TESTTESTGET /app/stats/heap returns v8.getHeapSpaceStatistics", function(done) {
         var async = function* () {
             try {
                 var app = express();
@@ -336,6 +337,7 @@ const supertest = require("supertest");
                         var mb = b.space_used_size / (10e6);
                         logger.info(`heap used ${mb.toFixed(1)}MB ${b.space_name}`);
                     });
+                    should(res.headers["x-powered-by"]).equal(undefined);
                 }).end((e,r) => e ? async.throw(e) : async.next(r));
                 done();
             } catch (e) {
