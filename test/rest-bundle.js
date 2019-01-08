@@ -384,6 +384,10 @@ const supertest = require("supertest");
                 var apiModel1 = yield init1.then(r=>async.next(r))
                     .catch(e=>async.throw(e));
                 should(apiModel1).equal(apiModel);
+                var apiModel2 = yield rb.initialize().then(r=>async.next(r))
+                    .catch(e=>async.throw(e));
+                should(apiModel2).equal(apiModel);
+
                 should(apiModels.length).equal(2);
                 should.deepEqual(apiModels[0], apiModel);
                 should.deepEqual(apiModels[0], apiModels[1]);

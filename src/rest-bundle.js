@@ -34,7 +34,7 @@
 
         initialize() {
             if (this.initialized) {
-                return Promie.resolve(this.initializeResult);
+                return Promise.resolve(this.initializeResult);
             }
             if (this.initialized === false) {
                 return new Promise((resolve, reject) => {
