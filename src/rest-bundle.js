@@ -33,12 +33,26 @@
         }
 
         initialize() {
+            if (this.initialized) {
+                return Promie.resolve(this.initializeResult);
+            }
+            if (this.initialized === false) {
+                return new Promise((resolve, reject) => {
+                    this.emitter.addListener('initialized', (that)=>{
+                        resolve(that.initializeResult);
+                    });
+                });
+            }
+            this.initialized = false;
             logger.info(`RestBundle-${this.name}.initialize()`);
             return new Promise((resolve,reject) => {
-                this.loadApiModel().then(r=> {
-                    this.onApiModelLoaded(r); 
-                    this.onInitializeEvents(this.emitter, r); 
-                    this.initialized = true;
+                var that = this;
+                that.loadApiModel().then(r=> {
+                    that.onApiModelLoaded(r); 
+                    that.onInitializeEvents(that.emitter, r); 
+                    that.initialized = true;
+                    that.initializeResult = r;
+                    that.emitter.emit('initialized', that);
                     resolve(r);
                 }).catch(e=>reject(e));
             });

@@ -98,7 +98,7 @@ const supertest = require("supertest");
         }();
         async.next();
     })
-    it("TESTTESTGET /state returns RestBundle singleton state", function(done) {
+    it("GET /state returns RestBundle singleton state", function(done) {
         var async = function*() {
             try {
                 var app = require("../scripts/server.js");
@@ -323,7 +323,7 @@ const supertest = require("supertest");
             done();
         },2);
     });
-    it("TESTTESTGET /app/stats/heap returns v8.getHeapSpaceStatistics", function(done) {
+    it("GET /app/stats/heap returns v8.getHeapSpaceStatistics", function(done) {
         var async = function* () {
             try {
                 var app = express();
@@ -346,7 +346,7 @@ const supertest = require("supertest");
         }();
         async.next();
     });
-    it("initialize() loads apiModel", function(done){
+    it("TESTTESTinitialize() loads apiModel", function(done){
         var count = 0;
         var apiModels = [];
         class TestBundle extends RestBundle {
@@ -368,7 +368,22 @@ const supertest = require("supertest");
                     apiModelDir: __dirname,
                 });
                 should(count).equal(0);
-                var apiModel = yield rb.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
+                should(rb.initialized).equal(undefined);
+
+                // initialize() yields the apiModel
+                var init1 = rb.initialize();
+                should(init1).instanceOf(Promise);
+                should(rb.initialized).equal(false);
+
+                // initialize can be called multiple times
+                var apiModel = yield rb.initialize().then(r=>async.next(r))
+                    .catch(e=>async.throw(e));
+                should(rb.initialized).equal(true);
+
+                // all calls to initialize() yield the same apiModel
+                var apiModel1 = yield init1.then(r=>async.next(r))
+                    .catch(e=>async.throw(e));
+                should(apiModel1).equal(apiModel);
                 should(apiModels.length).equal(2);
                 should.deepEqual(apiModels[0], apiModel);
                 should.deepEqual(apiModels[0], apiModels[1]);
