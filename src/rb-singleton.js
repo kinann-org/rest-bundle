@@ -27,12 +27,13 @@
             this.scheduler = new Scheduler();
             this.scheduler.start();
             this.listener = listener;
-            this.wss = new WebSocket.Server({
-                server: listener
-            });
-            this.sockets = new Set();
             var port = listener.address().port;
             logger.info(`RbSingleton listening on port:${port}`);
+
+            this.wss = new WebSocket.Server({
+                server: listener,
+            });
+            this.sockets = new Set();
             this.wss.on('connection', (ws, req) => {
                 const ip = req.connection.remoteAddress;
                 this.sockets.add(ws);
@@ -45,6 +46,7 @@
                     logger.error(this.constructor.name, e);
                 });
             });
+
             this.pushCount = 0;
             this.updateModel();
 

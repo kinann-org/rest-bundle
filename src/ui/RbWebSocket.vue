@@ -126,7 +126,10 @@ export default {
     },
     created() {
         try {
-            var wsurl = this.restOrigin().replace(/[^:]*/, 'ws');
+            var wsurl = location.protocol === 'https:' 
+                ? this.restOrigin().replace(/[^:]*/, 'wss')
+                : this.restOrigin().replace(/[^:]*/, 'ws');
+            console.log(`connecting WebSocket ${wsurl}`);
             this.webSocket = new WebSocket(wsurl);
             this.webSocket.onmessage = this.wsOnMessage;
             this.webSocket.onopen = (event) => {

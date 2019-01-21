@@ -4,10 +4,13 @@
  */
 (function(exports) {
     const logger = require("./logger");
+    const fs = require('fs');
     const path = require('path');
+    const https = require('https');
     const RbSingleton = require("./rb-singleton");
     const RestBundle = require("./rest-bundle");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
+    const SSL_PATH = path.join(__dirname, '..', 'ssl');
 
     class RbServer extends RestBundle {
         constructor(name=WEB_SOCKET_MODEL, options = {}) {
@@ -106,7 +109,45 @@
                     })
                 }, {});
                 if (!this.httpServer.listening) {
-                    throw new Error(`Could not create HTTP listener for any ports:${ports}`);
+                    throw new Error(
+                        `Could not create HTTP listener for any ports:${ports}`);
+                }
+                console.log('dbg', Object.keys(this.httpServer));
+                this.rbss = new RbSingleton(restBundles, this.httpServer);
+                this.loadApiModel(WEB_SOCKET_MODEL)
+                    .then(result => {
+                        if (result) {
+                            this.rbss.updateModel(result);
+                        }
+                    })
+                    .catch(e=>{throw(e);});
+            } catch (err) {
+                logger.error('rb-server:', err.stack);
+                throw err;
+            }
+            return this;
+        }
+
+        listenSSL(app, restBundles, sslOpts) {
+            try {
+                sslOpts = sslOpts || {
+                    cert: fs.readFileSync(path.join(SSL_PATH, 'server.crt')),
+                    key: fs.readFileSync(path.join(SSL_PATH, 'server.key')),
+                };
+                if (this.httpsServer) {
+                    throw new Error(this.constructor.name + 
+                        ".listenSSL() can only be called once");
+                }
+                if (restBundles.filter(rb=>rb===this)[0] == null) {
+                    restBundles.push(this);
+                }
+                restBundles.forEach(rb => rb.bindExpress(app));
+                var server = https.createServer(sslOpts, app);
+                this.httpServer = server.listen(443);
+                if (!this.httpServer.listening) {
+                    console.log('dbg', Object.keys(this.httpServer), 
+                        this.httpServer.listener);
+                    //throw new Error(`Could not create HTTPS listener`);
                 }
                 this.rbss = new RbSingleton(restBundles, this.httpServer);
                 this.loadApiModel(WEB_SOCKET_MODEL)
@@ -117,6 +158,7 @@
                     })
                     .catch(e=>{throw(e);});
             } catch (err) {
+                console.log('dbg', err.stack);
                 logger.error('rb-server:', err.stack);
                 throw err;
             }
