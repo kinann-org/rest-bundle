@@ -40,10 +40,16 @@ var async = function*() {
         restBundles.push(rb); // documentation and test
 
         // create http server and web socket
-        var ports = [80, 8080].concat(new Array(100).fill(3000).map((p,i)=>p+i));
         var rbServer =  app.locals.rbServer = new RbServer();
-        rbServer.listen(app, restBundles, ports); 
-        yield rbServer.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
+        if (argv.some(a => a === '--ssl')) {
+            rbServer.listenSSL(app, restBundles); 
+        } else {
+            var ports = [80, 8080].concat(new Array(100)
+                .fill(3000).map((p,i)=>p+i));
+            rbServer.listen(app, restBundles, ports); 
+        }
+        yield rbServer.initialize()
+            .then(r=>async.next(r)).catch(e=>async.throw(e));
     } catch(e) {
         logger.error(e.stack);
         throw e;

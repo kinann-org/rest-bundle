@@ -15,6 +15,7 @@
     class RbServer extends RestBundle {
         constructor(name=WEB_SOCKET_MODEL, options = {}) {
             super("RbServer", RbServer.initOptions(options));
+            this.sslPath = options.sslPath;
         }
         
         static initOptions(options) {
@@ -129,9 +130,20 @@
 
         listenSSL(app, restBundles, sslOpts) {
             try {
+                var sslPath = this.sslPath;
+                if (sslPath == undefined) {
+                    sslPath = path.join(process.cwd(), 'ssl');
+                    if (!fs.existsSync(sslPath)) {
+                        sslPath = path.join(process.cwd(), '..', 'ssl');
+                    }
+                }
+                if (!fs.existsSync(sslPath)) {
+                    throw new Error(
+                        `Could not find SSL folder at sslPath:${sslPath}`);
+                }
                 sslOpts = sslOpts || {
-                    cert: fs.readFileSync(path.join(SSL_PATH, 'server.crt')),
-                    key: fs.readFileSync(path.join(SSL_PATH, 'server.key')),
+                    cert: fs.readFileSync(path.join(sslPath, 'server.crt')),
+                    key: fs.readFileSync(path.join(sslPath, 'server.key')),
                 };
                 if (this.httpsServer) {
                     throw new Error(this.constructor.name + 
