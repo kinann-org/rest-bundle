@@ -112,7 +112,6 @@
                     throw new Error(
                         `Could not create HTTP listener for any ports:${ports}`);
                 }
-                console.log('dbg', Object.keys(this.httpServer));
                 this.rbss = new RbSingleton(restBundles, this.httpServer);
                 this.loadApiModel(WEB_SOCKET_MODEL)
                     .then(result => {
@@ -145,9 +144,7 @@
                 var server = https.createServer(sslOpts, app);
                 this.httpServer = server.listen(443);
                 if (!this.httpServer.listening) {
-                    console.log('dbg', Object.keys(this.httpServer), 
-                        this.httpServer.listener);
-                    //throw new Error(`Could not create HTTPS listener`);
+                    throw new Error(`Could not create HTTPS listener`);
                 }
                 this.rbss = new RbSingleton(restBundles, this.httpServer);
                 this.loadApiModel(WEB_SOCKET_MODEL)
@@ -158,7 +155,6 @@
                     })
                     .catch(e=>{throw(e);});
             } catch (err) {
-                console.log('dbg', err.stack);
                 logger.error('rb-server:', err.stack);
                 throw err;
             }
