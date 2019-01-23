@@ -1,6 +1,7 @@
 # #rest-bundle
 ssl/
 api-model/
+local/
 
 # Angular
 src/**/*.map

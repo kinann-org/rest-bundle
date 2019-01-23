@@ -10,7 +10,10 @@
     const RbSingleton = require("./rb-singleton");
     const RestBundle = require("./rest-bundle");
     const WEB_SOCKET_MODEL = "RbServer.web-socket";
-    const SSL_PATH = path.join(__dirname, '..', 'ssl');
+    var LOCAL_PATH = path.join(process.cwd(), 'local');
+    if (!fs.existsSync(LOCAL_PATH)) {
+        LOCAL_PATH = path.join(process.cwd(), '..', 'local');
+    }
 
     class RbServer extends RestBundle {
         constructor(name=WEB_SOCKET_MODEL, options = {}) {
@@ -132,10 +135,7 @@
             try {
                 var sslPath = this.sslPath;
                 if (sslPath == undefined) {
-                    sslPath = path.join(process.cwd(), 'ssl');
-                    if (!fs.existsSync(sslPath)) {
-                        sslPath = path.join(process.cwd(), '..', 'ssl');
-                    }
+                    sslPath = path.join(LOCAL_PATH, 'ssl');
                 }
                 if (!fs.existsSync(sslPath)) {
                     throw new Error(
