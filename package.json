@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.38.3",
+  "version": "0.39.0",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -13,6 +13,7 @@
     "axios": "^0.16.1",
     "body-parser": "^1.14.1",
     "bufferutil": "^4.0.0",
+    "credential": "^2.0.0",
     "diff-upsert": "^0.1.2",
     "ejs": "^2.5.6",
     "express": "^4.13.3",
@@ -21,6 +22,7 @@
     "style-loader": "^0.17.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
+    "test": "^0.6.0",
     "utf-8-validate": "^5.0.1",
     "vue": "^2.5.2",
     "vue-axios": "^2.0.2",
@@ -50,8 +52,9 @@
     "mocha": "^5.1.1",
     "should": "^11.2.0",
     "supertest": "^3.1.0",
+    "temp": "^0.9.0",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.2.0"
+    "webpack-dev-server": "^3.1.14"
   },
   "engine-strict": true,
   "engines": {
