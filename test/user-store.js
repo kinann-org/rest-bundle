@@ -10,20 +10,42 @@
     } = require("../index");
     const USERS_PATH = path.join(__dirname, '../local/users.json');
 
-    it("UserStore(opts) creates a user profile store", function() {
-        var users = new UserStore();
+    it("TESTTESTUserStore(opts) creates a user profile store", function(done) {
+        this.timeout(10*1000);
+        (async function() { try {
+            var users = new UserStore();
 
-        // default path
-        should(users.filePath).equal(USERS_PATH);
-        
-        var testPath = temp.path();
-        var users = new UserStore({
-            filePath: testPath,
-        });
-        var json = JSON.parse(fs.readFileSync(testPath));
-        should(json.admin).properties(['username', 'credentials']);
-        should(json.admin.username).equal('admin');
-        fs.unlinkSync(testPath);
+            // default path
+            should(users.filePath).equal(USERS_PATH);
+            
+            // custom filePath, defaultUser, cred
+            var testPath = temp.path();
+            var credentials = await cred.hash('testpassword');
+            var defaultUser = {
+                username: 'TestUser',
+                credentials,
+                isAdmin: true,
+            };
+            var users = new UserStore({
+                filePath: testPath,
+                cred,
+                defaultUser,
+            });
+            should(users.cred).equal(cred);
+            should(users.filePath).equal(testPath);
+
+            // custom file is created
+            var json = JSON.parse(fs.readFileSync(testPath));
+            should(json.testuser).properties(['username', 'credentials']);
+            should(json.testuser.username).equal('TestUser');
+
+            // defaultUser is authenticated
+            var authuser = await users.authenticate('testUSER', 'testpassword');
+            should.deepEqual(authuser, defaultUser);
+
+            fs.unlinkSync(testPath);
+            done();
+        } catch(e) {done(e);} })();
     });
     it("addUser(user) creates a new user", function(done) {
         this.timeout(10*1000);

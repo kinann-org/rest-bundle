@@ -17,12 +17,24 @@
                 var text = fs.readFileSync(this.filePath).toString();
                 this.users = JSON.parse(text);
             } else {
-                this.users = Object.assign({}, {
-                    admin: DEFAULT_USER,
-                });
+                if (opts.defaultUser) {
+                    if (opts.defaultUser.credentials == null) {
+                        throw new Error(`default user must have credentials`);
+                    } 
+                    var username = opts.defaultUser.username.toLowerCase();
+                    this.users = Object.assign({}, {
+                        [username]: opts.defaultUser || DEFAULT_USER,
+                    });
+                } else {
+                    this.users = {};
+                }
                 var text = JSON.stringify(this.users, null, 4);
                 fs.writeFileSync(this.filePath, text);
             }
+        }
+
+        hash(password) {
+            return cred.hash(password);
         }
 
         addUser(user) {
