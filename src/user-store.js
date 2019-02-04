@@ -67,7 +67,7 @@
                         ? await that.cred.verify(DEFAULT_USER.credentials, 'invalidpassword')
                         : await that.cred.verify(user.credentials, password);
                     logger.info(`authenticate(${username}) => ${result}`);
-                    resolve(result ? user : null);
+                    resolve(result ? Object.assign({}, user) : null);
                 } catch(e) {reject(e);} })();
             });
         }

@@ -75,10 +75,9 @@
             var filePath = temp.path();
             var users = new UserStore({ filePath, });
             var user = {
-                username: "test",
+                username: "testuser",
                 password: "secret",
-                isAdmin: true,
-                isTranslator: true,
+                isHoly: true,
             };
             var result = await users.addUser(user);
             var MIN_TIME = 1000; // ALL authentications take time
@@ -87,13 +86,14 @@
             var users2 = new UserStore({ filePath, });
             should(result.password).equal(undefined);
             var msStart = Date.now();
-            var auth = await users2.authenticate("test", "secret");
-            should(auth).properties({
-                username: "test",
-                isAdmin: true,
-                isTranslator: true,
+            var authuser = await users2.authenticate("testuser", "secret");
+            should(authuser).properties({
+                username: "testuser",
+                isHoly: true,
             });
-            should(auth.password).equal(undefined);
+            should(authuser.password).equal(undefined);
+            authuser.username = 'hack-attempt'; 
+            should(users.users.testuser.username).equal('testuser'); // no change
             should(Date.now()-msStart).above(MIN_TIME);
 
             // wrong user
