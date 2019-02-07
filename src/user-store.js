@@ -13,28 +13,86 @@
         constructor(opts={}) {
             this.filePath = opts.filePath || USERS_PATH;
             this.cred = opts.cred || cred;
-            if (fs.existsSync(this.filePath)) {
+            if (opts.users) {
+                var _users = opts.users;
+            } else if (fs.existsSync(this.filePath)) {
                 var text = fs.readFileSync(this.filePath).toString();
-                this.users = JSON.parse(text);
+                var _users = JSON.parse(text);
+                var text = JSON.stringify(_users, null, 4);
+                fs.writeFileSync(this.filePath, text);
             } else {
                 if (opts.defaultUser) {
                     if (opts.defaultUser.credentials == null) {
                         throw new Error(`default user must have credentials`);
                     } 
                     var username = opts.defaultUser.username.toLowerCase();
-                    this.users = Object.assign({}, {
+                    var _users = Object.assign({}, {
                         [username]: opts.defaultUser || DEFAULT_USER,
                     });
                 } else {
-                    this.users = {};
+                    var _users = {};
                 }
-                var text = JSON.stringify(this.users, null, 4);
+                var text = JSON.stringify(_users, null, 4);
                 fs.writeFileSync(this.filePath, text);
             }
+            Object.defineProperty(this, "_users", {
+                value: _users,
+            });
         }
 
         hash(password) {
             return cred.hash(password);
+        }
+
+        userInfo(username) {
+            var user = this._users[username];
+            if (user) {
+                user = JSON.parse(JSON.stringify(user));
+                delete user.credentials;
+            }
+
+            return user || null;
+        }
+
+        users() {
+            var result = {};
+            Object.keys(this._users).map(k => {
+                result[k] = this.userInfo(k);
+            });
+            return result;
+        }
+
+        deleteUser(username) {
+            var that = this;
+            return new Promise((resolve, reject) => { 
+                (async function() { try {
+                    var userinfo = that.userInfo(username);
+                    if (userinfo == null) {
+                        throw new Error(`Invalid username:${username}`);
+                    }
+                    delete that._users[username];
+                    fs.writeFileSync(that.filePath, 
+                        JSON.stringify(that._users, null, 4));
+                    resolve(userinfo);
+                } catch(e) {reject(e);} })();
+            });
+        }
+
+        setPassword(username, password) {
+            var that = this;
+            return new Promise((resolve, reject) => { 
+                (async function() { try {
+                    var user = that._users[username];
+                    if (user == null) {
+                        throw new Error(`Invalid username:${username}`);
+                    }
+                    user.dateSetPassword = new Date();
+                    user.credentials = await that.cred.hash(password);
+                    fs.writeFileSync(that.filePath, 
+                        JSON.stringify(that._users, null, 4));
+                    resolve(that.userInfo(username));
+                } catch(e) {reject(e);} })();
+            });
         }
 
         addUser(user) {
@@ -42,17 +100,16 @@
             return new Promise((resolve, reject) => { 
                 (async function() { try {
                     user = Object.assign({}, user);
+                    user.dateAdded = new Date();
                     var username = user.username;
                     var password = user.password;
-                    if (!!that.users[username]) {
+                    delete user.password;
+                    if (!!that._users[username]) {
                         reject(new Error(`Attempt to add existing user:${username}`));
                     }
-                    user.credentials = await that.cred.hash(password);
-                    delete user.password;
-                    that.users[username] = user;
-                    fs.writeFileSync(that.filePath, 
-                        JSON.stringify(that.users,null,4));
-                    resolve(user);
+                    that._users[username] = user;
+                    var result = await that.setPassword(username, password);
+                    resolve(result);
                 } catch(e) {reject(e);} })();
             });
         }
@@ -62,12 +119,14 @@
             return new Promise((resolve, reject) => { 
                 (async function() { try {
                     username = username.toLowerCase();
-                    var user = that.users[username];
+                    var user = that._users[username];
                     var result =  user == null
-                        ? await that.cred.verify(DEFAULT_USER.credentials, 'invalidpassword')
+                        ? await that.cred.verify(DEFAULT_USER.credentials, 
+                            'invalidpassword')
                         : await that.cred.verify(user.credentials, password);
-                    logger.info(`authenticate(${username}) => ${result}`);
-                    resolve(result ? Object.assign({}, user) : null);
+                    var userinfo = that.userInfo(username);
+                    logger.info(`authenticate(${username}) => ${userinfo}`);
+                    resolve(userinfo);
                 } catch(e) {reject(e);} })();
             });
         }
