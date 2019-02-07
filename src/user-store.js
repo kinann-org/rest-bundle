@@ -125,7 +125,7 @@
                             'invalidpassword')
                         : await that.cred.verify(user.credentials, password);
                     var userinfo = that.userInfo(username);
-                    logger.info(`authenticate(${username}) => ${userinfo}`);
+                    logger.info(`UserStore.authenticate(${username}) => ${JSON.stringify(userinfo)}`);
                     resolve(userinfo);
                 } catch(e) {reject(e);} })();
             });
