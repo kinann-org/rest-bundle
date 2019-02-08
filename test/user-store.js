@@ -10,7 +10,7 @@
     } = require("../index");
     const USERS_PATH = path.join(__dirname, '../local/users.json');
 
-    it("UserStore(opts) creates a user profile store", function(done) {
+    it("TESTTESTUserStore(opts) creates a user profile store", function(done) {
         this.timeout(10*1000);
         (async function() { try {
             var us = new UserStore();
@@ -40,12 +40,17 @@
             should(json.testuser.username).equal('TestUser');
 
             // defaultUser is authenticated
+            var msStart = Date.now();
             var authuser = await us.authenticate('testUSER', 'testpassword');
-            should.deepEqual(authuser, {
+            should(authuser).properties({
                 username: 'TestUser',
                 isAdmin: true,
                 // credentials,
             });
+            should(authuser.dateAdded).not.below(msStart);
+            should(authuser.dateAdded).not.above(Date.now());
+            should(authuser.dateAuthenticated).not.below(msStart);
+            should(authuser.dateAuthenticated).not.above(Date.now());
 
             fs.unlinkSync(testPath);
             done();
@@ -183,7 +188,7 @@
             done();
         } catch(e) {done(e);} })();
     });
-    it("setPassword(username,password) sets password", function(done) {
+    it("TESTTESTsetPassword(username,password) sets password", function(done) {
         this.timeout(10*1000);
         (async function() { try {
             var filePath = temp.path();
@@ -217,8 +222,11 @@
 
             // new user password is serialized
             var us2 = new UserStore({ filePath, });
+            var msStart = Date.now();
             var testuser2 = await us2.authenticate('test-user', 'new-secret');
-            should.deepEqual(testuser2, testuser1);
+            should(testuser2).properties(testuser1);
+            should(testuser2.dateAuthenticated).not.below(msStart);
+            should(testuser2.dateAuthenticated).not.above(Date.now());
 
             done();
         } catch(e) {done(e);} })();

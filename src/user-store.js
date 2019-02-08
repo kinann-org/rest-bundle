@@ -13,11 +13,12 @@
         constructor(opts={}) {
             this.filePath = opts.filePath || USERS_PATH;
             this.cred = opts.cred || cred;
+            var _users = {};
             if (opts.users) {
-                var _users = opts.users;
+                _users = opts.users;
             } else if (fs.existsSync(this.filePath)) {
                 var text = fs.readFileSync(this.filePath).toString();
-                var _users = JSON.parse(text);
+                _users = JSON.parse(text);
                 var text = JSON.stringify(_users, null, 4);
                 fs.writeFileSync(this.filePath, text);
             } else {
@@ -26,11 +27,13 @@
                         throw new Error(`default user must have credentials`);
                     } 
                     var username = opts.defaultUser.username.toLowerCase();
-                    var _users = Object.assign({}, {
-                        [username]: opts.defaultUser || DEFAULT_USER,
+                    _users = Object.assign({}, {
+                        [username]: Object.assign({
+                            dateAdded: new Date(),
+                        }, opts.defaultUser || DEFAULT_USER),
                     });
                 } else {
-                    var _users = {};
+                    _users = {};
                 }
                 var text = JSON.stringify(_users, null, 4);
                 fs.writeFileSync(this.filePath, text);
@@ -120,10 +123,14 @@
                 (async function() { try {
                     username = username.toLowerCase();
                     var user = that._users[username];
-                    var result =  user == null
-                        ? await that.cred.verify(DEFAULT_USER.credentials, 
-                            'invalidpassword')
-                        : await that.cred.verify(user.credentials, password);
+                    var result = null;
+                    if (user) {
+                        result = await that.cred.verify(user.credentials, password);
+                        user.dateAuthenticated = new Date();
+                    } else {
+                        var credentials = DEFAULT_USER.credentials;
+                        await that.cred.verify(credentials, 'invalidpassword');
+                    }
                     var userinfo = that.userInfo(username);
                     logger.debug(`UserStore.authenticate(${username}) => ${JSON.stringify(userinfo)}`);
                     resolve(userinfo);
