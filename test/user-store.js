@@ -10,7 +10,7 @@
     } = require("../index");
     const USERS_PATH = path.join(__dirname, '../local/users.json');
 
-    it("TESTTESTUserStore(opts) creates a user profile store", function(done) {
+    it("UserStore(opts) creates a user profile store", function(done) {
         this.timeout(10*1000);
         (async function() { try {
             var us = new UserStore();
@@ -188,7 +188,7 @@
             done();
         } catch(e) {done(e);} })();
     });
-    it("TESTTESTsetPassword(username,password) sets password", function(done) {
+    it("setPassword(username,password) sets password", function(done) {
         this.timeout(10*1000);
         (async function() { try {
             var filePath = temp.path();
@@ -231,7 +231,7 @@
             done();
         } catch(e) {done(e);} })();
     });
-    it("authenticate(u,pw) check username/password", function(done) {
+    it("TESTTESTauthenticate(u,pw) check username/password", function(done) {
         this.timeout(15*1000);
         (async function() { try {
             var filePath = temp.path();
@@ -269,7 +269,7 @@
 
             // wrong password
             var msStart = Date.now();
-            var auth = await us2.authenticate("test", "wrongsecret");
+            var auth = await us2.authenticate("testuser", "wrongsecret");
             should(auth).equal(null);
             should(Date.now()-msStart).above(MIN_TIME);
 

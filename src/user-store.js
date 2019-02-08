@@ -131,7 +131,12 @@
                         var credentials = DEFAULT_USER.credentials;
                         await that.cred.verify(credentials, 'invalidpassword');
                     }
-                    var userinfo = that.userInfo(username);
+                    if (!user || !result) {
+                        logger.info(`UserStore.authenticate(${username}) => FAILED`);
+                        resolve(null);
+                        return;
+                    }
+                    var userinfo = user && that.userInfo(username);
                     logger.debug(`UserStore.authenticate(${username}) => ${JSON.stringify(userinfo)}`);
                     resolve(userinfo);
                 } catch(e) {reject(e);} })();
