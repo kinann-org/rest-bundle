@@ -1,5 +1,8 @@
 (function(exports) {
     const {
+        LEVEL,
+    } = require('triple-beam');
+    const {
         createLogger,
         format,
         transports,
@@ -15,7 +18,10 @@
     const customFormat = format.printf(info => {
         return `${info.timestamp} ${LEVELS[info.level]} ${info.message}`;
     });
-
+    var consoleWarnLevels = ['info', 'warn', 'error', 'debug'];
+    var consoleTransport = new transports.Console({
+        consoleWarnLevels, // log all to stderr
+    });
     var _logger;
     _logger = createLogger({
         format: format.combine(
@@ -24,7 +30,7 @@
             }),
             customFormat,
         ),
-        transports: [new transports.Console()]
+        transports: [ consoleTransport ],
     });
     if (process.env.NODE_ENV !== 'production') {
         //_logger.add(new transports.Console());
