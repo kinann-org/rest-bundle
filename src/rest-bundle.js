@@ -8,6 +8,7 @@
     const fs = require("fs");
     const express = require("express");
     const bodyParser = require("body-parser");
+    const diskusage = require("diskusage");
     const logger = require("./logger");
     const _rbHash = new RbHash();
     const v8 = require('v8');
@@ -181,16 +182,26 @@
         }
 
         getIdentity(req, res, next) {
-            return {
-                name: this.name,
-                package: this.srcPkg.name,
-                version: this.srcPkg.version,
-                hostname: os.hostname(),
-                uptime: os.uptime(),
-                loadavg: os.loadavg(),
-                totalmem: os.totalmem(),
-                freemem: os.freemem(),
-            }
+            var that = this;
+            return new Promise((resolve, reject) => { 
+                (async function() { try {
+                    var disk = await diskusage.check("/");
+                    
+                    resolve({
+                        name: that.name,
+                        package: that.srcPkg.name,
+                        version: that.srcPkg.version,
+                        hostname: os.hostname(),
+                        uptime: os.uptime(),
+                        loadavg: os.loadavg(),
+                        totalmem: os.totalmem(),
+                        freemem: os.freemem(),
+                        diskavail: disk.available,
+                        diskfree: disk.free,
+                        disktotal: disk.total,
+                    });
+                } catch(e) {reject(e);} })();
+            });
         }
 
         postIdentity(req, res, next) {

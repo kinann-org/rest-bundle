@@ -231,7 +231,7 @@
             done();
         } catch(e) {done(e);} })();
     });
-    it("TESTTESTauthenticate(u,pw) check username/password", function(done) {
+    it("authenticate(u,pw) check username/password", function(done) {
         this.timeout(15*1000);
         (async function() { try {
             var filePath = temp.path();

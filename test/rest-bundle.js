@@ -115,7 +115,7 @@ const supertest = require("supertest");
         }();
         async.next();
     })
-    it("GET /identity generates HTTP200 response", function(done) {
+    it("TESTTESTGET /identity generates HTTP200 response", function(done) {
         var app = require("../scripts/server.js");
         supertest(app).get("/test/identity").expect((res) => {
             res.statusCode.should.equal(200);
@@ -132,7 +132,13 @@ const supertest = require("supertest");
                 "loadavg",
                 "totalmem",
                 "freemem",
+                "diskfree",
+                "diskavail",
+                "disktotal",
             ]);
+            should(res.body.diskavail).below(res.body.diskfree);
+            should(res.body.diskfree).below(res.body.disktotal);
+            should(res.body.totalmem).below(res.body.disktotal);
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
@@ -346,7 +352,7 @@ const supertest = require("supertest");
         }();
         async.next();
     });
-    it("TESTTESTinitialize() loads apiModel", function(done){
+    it("initialize() loads apiModel", function(done){
         var count = 0;
         var apiModels = [];
         class TestBundle extends RestBundle {
