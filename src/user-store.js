@@ -3,7 +3,8 @@
     const path = require('path');
     const cred = require('credential')();
     const logger = require('./logger');
-    const USERS_PATH = path.join(process.cwd(), 'local', 'users.json');
+    const LOCAL = path.join(process.cwd(), 'local');
+    const USERS_PATH = path.join(LOCAL, 'users.json');
     const DEFAULT_USER = {
         username: "admin",
         credentials: '{"hash":"13YYGuRGjiQad/G1+MOOmxmLC/1znGYBcHWh2vUgkdq7kzTAZ6dk76S3zpP0OwZq1eofgUUJ2kq45+TxOx5tvvag","salt":"Qf1NbN3Jblo8sCL9bo32yFmwiApHSeRkr3QOJZu3KJ0Q8hbWMXAaHdoQLUWceW83tOS0jN4tuUXqWQWCH2lNCx0S","keyLength":66,"hashMethod":"pbkdf2","iterations":748406}',
@@ -36,6 +37,9 @@
                     _users = {};
                 }
                 var text = JSON.stringify(_users, null, 4);
+                if (!fs.existsSync(LOCAL)) {
+                    fs.mkdirSync(LOCAL);
+                }
                 fs.writeFileSync(this.filePath, text);
             }
             Object.defineProperty(this, "_users", {
