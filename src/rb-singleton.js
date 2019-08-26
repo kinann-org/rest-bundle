@@ -117,7 +117,7 @@
                 data
             });
             this.pushCount++;
-            logger.debug("push", this.pushCount,  message);
+            //logger.debug(this.constructor.name, "push", this.pushCount,  message);
             this.sockets.forEach((ws) => ws.send(message));
         }
 
