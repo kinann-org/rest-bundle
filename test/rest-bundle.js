@@ -338,7 +338,7 @@ const supertest = require("supertest");
                     res.statusCode.should.equal(200);
                     var stats = res.body;
                     should(stats instanceof Array);
-                    should(stats.length).equal(5);
+                    should(stats.length).equal(6);
                     res.body.forEach(b => {
                         var mb = b.space_used_size / (10e6);
                         logger.info(`heap used ${mb.toFixed(1)}MB ${b.space_name}`);
