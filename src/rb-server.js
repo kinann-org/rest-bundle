@@ -3,7 +3,7 @@
  * that manages shared resources such as rb-singleton.
  */
 (function(exports) {
-    const logger = require("./logger");
+    const logger = require("log-instance").LogInstance.singleton;
     const fs = require('fs');
     const path = require('path');
     const https = require('https');

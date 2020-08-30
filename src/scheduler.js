@@ -1,6 +1,6 @@
 (function(exports) {
     const EventEmitter = require('events');
-    const logger = require('./logger');
+    const logger = require("log-instance").LogInstance.singleton;
     const RECUR_NONE = 0;
     const RECUR_DAILY = 24*3600*1000;
     const EVENT_INVOKE = "invoke_task";

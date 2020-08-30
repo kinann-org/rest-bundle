@@ -9,7 +9,7 @@
     const express = require("express");
     const bodyParser = require("body-parser");
     const diskusage = require("diskusage");
-    const logger = require("./logger");
+    const logger = require("log-instance").LogInstance.singleton;
     const _rbHash = new RbHash();
     const v8 = require('v8');
 

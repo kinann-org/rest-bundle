@@ -1,5 +1,5 @@
 (function(exports) {
-    const logger = require("./logger");
+    const logger = require("log-instance").LogInstance.singleton;
     const WebSocket = require("ws");
     const EventEmitter = require("events");
     const Scheduler = require('./scheduler');

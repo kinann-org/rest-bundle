@@ -2,7 +2,7 @@
     const fs = require('fs');
     const path = require('path');
     const cred = require('credential')();
-    const logger = require('./logger');
+    const logger = require("log-instance").LogInstance.singleton;
     const LOCAL = path.join(process.cwd(), 'local');
     const USERS_PATH = path.join(LOCAL, 'users.json');
     const DEFAULT_USER = {
