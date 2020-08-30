@@ -20,7 +20,7 @@
     "express": "^4.13.3",
     "file-loader": "^0.11.1",
     "lodash": "^4.17.20",
-    "log-instance": "^0.1.1",
+    "log-instance": "^0.1.3",
     "style-loader": "^0.17.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
