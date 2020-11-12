@@ -9,6 +9,9 @@ const supertest = require("supertest");
     const WebSocket = require("ws");
     const fs = require('fs');
     const path = require('path');
+    const { exec } = require("child_process");
+    const util = require('util');
+    const app = require("../scripts/server.js");
     const {
         logger,
         RbHash,
@@ -17,6 +20,7 @@ const supertest = require("supertest");
     function testRb(app) {
         return app.locals.restBundles.filter(rb => rb.name === 'test')[0];
     }
+    this.timeout(5*1000);
 
     it("RestBundle can be extended", function(done) {
         var async = function*() {
@@ -61,7 +65,7 @@ const supertest = require("supertest");
         var app = express();
         should.throws(() => tb.bindExpress(app));
     })
-    it("RestBundle returns 500 for bad responses", function(done) {
+    it("TESTTESTRestBundle returns 500 for bad responses", function(done) {
         var async = function*() {
             try {
                 class TestBundle extends RestBundle {
@@ -88,9 +92,8 @@ const supertest = require("supertest");
                 supertest(app).get("/testBadJSON/bad-json").expect((res) => {
                     logger.warn("Expected error (END)");
                     res.statusCode.should.equal(500);
-                    should.deepEqual(res.body, {
-                        error: "Converting circular structure to JSON",
-                    });
+                    should(res.body.error)
+                        .match(/Converting circular structure to JSON/);
                 }).end((err,res) => {if (err) throw err; else done(); });
             } catch(e) {
                 done(e);
@@ -101,7 +104,6 @@ const supertest = require("supertest");
     it("GET /state returns RestBundle singleton state", function(done) {
         var async = function*() {
             try {
-                var app = require("../scripts/server.js");
                 var r = yield supertest(app).get("/test/state").expect((res) => {
                     res.statusCode.should.equal(200);
                     res.headers["content-type"].should.match(/json/);
@@ -115,8 +117,29 @@ const supertest = require("supertest");
         }();
         async.next();
     })
-    it("TESTTESTGET /identity generates HTTP200 response", function(done) {
-        var app = require("../scripts/server.js");
+    it("diskusage", async()=>{
+        var execPromise = util.promisify(exec);
+        var cmd = "df --total -B 1 /";
+        var execOpts = {
+            cwd: __dirname,
+        }
+        var res = await execPromise(cmd, execOpts);
+        var stdout = res.stdout.split('\n');
+        var stats = stdout[2].split(/\s\s*/);
+        let used = Number(stats[2]);
+        let avail = Number(stats[3]);
+        let total = used + avail;
+        //console.log(`dbg diskusage`, {used, avail, total});
+
+        var rb = testRb(app);
+        var res = await rb.getIdentity();
+        should(res.diskavail).equal(avail);
+        should(res.diskfree).equal(avail);
+        should(res.disktotal).equal(total);
+        //console.log(`dbg getIdientity`, res);
+        
+    });
+    it("GET /identity generates HTTP200 response", function(done) {
         supertest(app).get("/test/identity").expect((res) => {
             res.statusCode.should.equal(200);
             res.headers["content-type"].should.match(/json/);
@@ -136,14 +159,13 @@ const supertest = require("supertest");
                 "diskavail",
                 "disktotal",
             ]);
-            should(res.body.diskavail).below(res.body.diskfree);
+            should(res.body.diskavail).below(res.body.diskfree+1);
             should(res.body.diskfree).below(res.body.disktotal);
             should(res.body.totalmem).below(res.body.disktotal);
             res.body.version.should.match(/\d+.\d+.\d+/);
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST /echo generates HTTP200 response with a Promise", function(done) {
-        var app = require("../scripts/server.js");
         var service = testRb(app);
         service.taskBag.length.should.equal(0);
         service.taskBegin("testTask");
@@ -160,7 +182,6 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("POST generates HTTP500 response for thrown exception", function(done) {
-        var app = require("../scripts/server.js");
         logger.warn("Expected error (BEGIN)");
         supertest(app).post("/test/identity").send({greeting:"whoa"}).expect((res) => {
             logger.warn("Expected error (END)");
@@ -173,8 +194,6 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; else done(); });
     })
     it("GET /ui redirects to service HTML", function(done) {
-        var app = require("../scripts/server.js");
-
         supertest(app).get("/test/ui").expect((res) => {
             res.statusCode.should.equal(302); // redirect
             res.headers["content-type"].should.match(/text/);
@@ -184,8 +203,6 @@ const supertest = require("supertest");
         }).end((err,res) => {if (err) throw err; });
     })
     it("GET /ui/index-service returns service HTML", function(done) {
-        var app = require("../scripts/server.js");
-
         supertest(app).get("/test/ui/index-service").expect((res) => {
             res.statusCode.should.equal(200); 
             res.headers["content-type"].should.match(/text\/html/);
@@ -334,11 +351,12 @@ const supertest = require("supertest");
             try {
                 var app = express();
                 var rb = new RestBundle("test").bindExpress(app);
-                var response = yield supertest(app).get("/test/app/stats/heap").expect((res) => {
+                var response = yield supertest(app).get("/test/app/stats/heap")
+                .expect((res) => {
                     res.statusCode.should.equal(200);
                     var stats = res.body;
                     should(stats instanceof Array);
-                    should(stats.length).equal(6);
+                    should(stats.length).above(5);
                     res.body.forEach(b => {
                         var mb = b.space_used_size / (10e6);
                         logger.info(`heap used ${mb.toFixed(1)}MB ${b.space_name}`);
@@ -407,7 +425,6 @@ const supertest = require("supertest");
         async.next();
     });
     it("Last TEST closes test suite for watch", function() {
-        var app = require("../scripts/server.js");
         app.locals.rbServer.close();
     });
 })

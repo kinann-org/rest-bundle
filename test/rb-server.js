@@ -34,7 +34,7 @@
         fs.writeFileSync(API_MODEL_FNAME, json);
     }
 
-    it("TESTTESTlogger", function() {
+    it("logger", function() {
         logger.warn("Testing", path.basename(__filename));
     });
     it("GET /server/web-socket returns server singleton web socket model", function(done) {

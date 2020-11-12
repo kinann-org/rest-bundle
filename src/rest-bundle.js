@@ -8,9 +8,10 @@
     const fs = require("fs");
     const express = require("express");
     const bodyParser = require("body-parser");
-    const diskusage = require("diskusage");
     const logger = require("log-instance").LogInstance.singleton;
     const _rbHash = new RbHash();
+    const { exec } = require("child_process");
+    const util = require('util');
     const v8 = require('v8');
 
     class RestBundle {
@@ -21,16 +22,19 @@
             logger.info(`RestBundle.ctor(${name})`);
             this.name = name;
             this.uribase = options.uribase || "/" + this.name;
-            this.appDir = options.appDir || require.resolve("vue").split("node_modules")[0];
+            this.appDir = options.appDir || 
+                require.resolve("vue").split("node_modules")[0];
             this.svcDir = options.svcDir || path.join(__dirname, "..");
             this.srcPkg = options.srcPkg || require("../package.json");
             this.node_modules = path.join(this.appDir, "node_modules");
             this.emitter = options.emtitter || new EventEmitter();
             this.ui_index = options.ui_index || "/ui/index-service";
-            this.$onRequestSuccess = options.onRequestSuccess || RestBundle.onRequestSuccess;
+            this.$onRequestSuccess = options.onRequestSuccess || 
+                RestBundle.onRequestSuccess;
             this.$onRequestFail = options.onRequestFail || RestBundle.onRequestFail;
             this.taskBag = []; // unordered task collection with duplicates
-            this.apiModelDir = options.apiModelDir || path.join(process.cwd(), "api-model");
+            this.apiModelDir = options.apiModelDir || 
+                path.join(process.cwd(), "api-model");
         }
 
         initialize() {
@@ -181,28 +185,35 @@
             }
         }
 
-        getIdentity(req, res, next) {
-            var that = this;
-            return new Promise((resolve, reject) => { 
-                (async function() { try {
-                    var disk = await diskusage.check("/");
-                    
-                    resolve({
-                        name: that.name,
-                        package: that.srcPkg.name,
-                        version: that.srcPkg.version,
-                        hostname: os.hostname(),
-                        uptime: os.uptime(),
-                        loadavg: os.loadavg(),
-                        totalmem: os.totalmem(),
-                        freemem: os.freemem(),
-                        diskavail: disk.available,
-                        diskfree: disk.free,
-                        disktotal: disk.total,
-                    });
-                } catch(e) {reject(e);} })();
-            });
-        }
+        async getIdentity(req, res, next) { try {
+            var execPromise = util.promisify(exec);
+            var cmd = "df --total -B 1 /";
+            var execOpts = {
+                cwd: __dirname,
+            }
+            var res = await execPromise(cmd, execOpts);
+            var stdout = res.stdout.split('\n');
+            var stats = stdout[2].split(/\s\s*/);
+            let diskused = Number(stats[2]);
+            let diskavail = Number(stats[3]);
+            let disktotal = diskused + diskavail;
+            return {
+                name: this.name,
+                package: this.srcPkg.name,
+                version: this.srcPkg.version,
+                hostname: os.hostname(),
+                uptime: os.uptime(),
+                loadavg: os.loadavg(),
+                totalmem: os.totalmem(),
+                freemem: os.freemem(),
+                diskavail,
+                diskfree: diskavail,
+                disktotal: disktotal,
+            }
+        } catch(e) {
+            logger.warn(`getIdentity()`, e.message);
+            throw e;
+        }}
 
         postIdentity(req, res, next) {
             throw new Error("POST not supported: " + JSON.stringify(req.body));
