@@ -1,6 +1,6 @@
 {
   "name": "rest-bundle",
-  "version": "0.40.20",
+  "version": "0.40.21",
   "description": "RestBundle is a Javascript base class for a REST resource bundles that can be plugged into a nodejs express application",
   "main": "index.js",
   "directories": {
@@ -54,7 +54,7 @@
     "should": "^11.2.0",
     "supertest": "^3.1.0",
     "temp": "^0.9.0",
-    "webpack": "^4.42.1",
+    "webpack": "^5.11.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
